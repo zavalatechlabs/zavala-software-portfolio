@@ -1,5 +1,7 @@
 # Zavala Software Portfolio
 
+[![CI](https://github.com/zavalatechlabs/zavala-software-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/zavalatechlabs/zavala-software-portfolio/actions/workflows/ci.yml)
+
 Professional software portfolio showcasing projects, skills, and experience for Zavala TechLabs.
 
 ## 📋 Project Resources

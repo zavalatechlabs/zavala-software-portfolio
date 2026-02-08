@@ -55,6 +55,9 @@ export function HeroNameReveal({
   name = 'Maximiliano Zavala',
   tagline = 'Software Engineer | AI Enthusiast'
 }: HeroNameRevealProps) {
+  // Split name into words to prevent breaking within last name
+  const words = name.split(' ')
+  
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="text-center">
@@ -65,15 +68,22 @@ export function HeroNameReveal({
           animate="visible"
           className="text-6xl md:text-8xl font-bold tracking-tight text-zavala-text-primary"
         >
-          {name.split('').map((char, index) => (
-            <motion.span
-              key={`${char}-${index}`}
-              variants={letterVariants}
-              className="inline-block"
-              style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
+          {words.map((word, wordIndex) => (
+            <span
+              key={`word-${wordIndex}`}
+              className="inline-block whitespace-nowrap"
+              style={{ marginRight: wordIndex < words.length - 1 ? '0.25em' : '0' }}
             >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
+              {word.split('').map((char, charIndex) => (
+                <motion.span
+                  key={`${char}-${wordIndex}-${charIndex}`}
+                  variants={letterVariants}
+                  className="inline-block"
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </span>
           ))}
         </motion.h1>
         

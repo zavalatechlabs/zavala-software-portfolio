@@ -10,23 +10,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Custom Zavala color palette
+        // Custom Zavala color palette - uses CSS variables for light/dark mode
         zavala: {
           bg: {
-            primary: '#0a0a0a',
-            surface: '#1a1a1a',
-            elevated: '#242424',
+            primary: 'var(--bg-primary)',
+            surface: 'var(--bg-surface)',
+            elevated: 'var(--bg-elevated)',
           },
           border: {
-            subtle: '#2a2a2a',
-            DEFAULT: '#3a3a3a',
-            strong: '#4a4a4a',
+            subtle: 'var(--border-subtle)',
+            DEFAULT: 'var(--border-default)',
+            strong: 'var(--border-strong)',
           },
           text: {
-            primary: '#f5f5f5',
-            secondary: '#a3a3a3',
-            tertiary: '#737373',
-            inverse: '#0a0a0a',
+            primary: 'var(--text-primary)',
+            secondary: 'var(--text-secondary)',
+            tertiary: 'var(--text-tertiary)',
+            inverse: 'var(--text-inverse)',
           },
           accent: {
             primary: '#3b82f6',

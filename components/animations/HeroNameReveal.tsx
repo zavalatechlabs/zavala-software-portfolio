@@ -59,7 +59,7 @@ export function HeroNameReveal({
   const words = name.split(' ')
   
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
+    <div className="py-24 md:py-32 flex items-center justify-center px-6">
       <div className="text-center">
         {/* Name with letter-by-letter reveal */}
         <motion.h1
@@ -102,7 +102,7 @@ export function HeroNameReveal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 3, duration: 0.8 }}
-          className="mt-16"
+          className="mt-8"
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}

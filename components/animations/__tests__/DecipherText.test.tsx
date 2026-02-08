@@ -1,0 +1,173 @@
+import { render, screen, waitFor } from '@testing-library/react'
+import { DecipherText } from '../DecipherText'
+import { useInView } from 'framer-motion'
+
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  useInView: jest.fn(),
+}))
+
+const mockUseInView = useInView as jest.MockedFunction<typeof useInView>
+
+describe('DecipherText', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers()
+    jest.useRealTimers()
+  })
+
+  it('renders with initial text', () => {
+    mockUseInView.mockReturnValue(false)
+    
+    render(<DecipherText text="Hello World" />)
+    
+    expect(screen.getByText('Hello World')).toBeInTheDocument()
+  })
+
+  it('applies custom className', () => {
+    mockUseInView.mockReturnValue(false)
+    
+    const { container } = render(
+      <DecipherText text="Test" className="custom-class" />
+    )
+    
+    const span = container.querySelector('span')
+    expect(span).toHaveClass('custom-class')
+  })
+
+  it('animates when in view', async () => {
+    mockUseInView.mockReturnValue(true)
+    
+    render(<DecipherText text="Test" duration={100} />)
+    
+    // Fast-forward through animation
+    jest.advanceTimersByTime(150)
+    
+    await waitFor(() => {
+      expect(screen.getByText('Test')).toBeInTheDocument()
+    })
+  })
+
+  it('respects duration prop', async () => {
+    mockUseInView.mockReturnValue(true)
+    const customDuration = 200
+    
+    render(<DecipherText text="Hello" duration={customDuration} />)
+    
+    // Should not be complete before duration
+    jest.advanceTimersByTime(100)
+    
+    // Should be complete after duration + buffer
+    jest.advanceTimersByTime(150)
+    
+    await waitFor(() => {
+      expect(screen.getByText('Hello')).toBeInTheDocument()
+    })
+  })
+
+  it('handles stagger delay', async () => {
+    mockUseInView.mockReturnValue(true)
+    const staggerDelay = 500
+    
+    render(<DecipherText text="Test" staggerDelay={staggerDelay} duration={100} />)
+    
+    // Should not start animating before stagger delay
+    jest.advanceTimersByTime(200)
+    
+    // After stagger delay, animation should proceed
+    jest.advanceTimersByTime(400)
+    
+    await waitFor(() => {
+      const element = screen.getByText(/Test/i)
+      expect(element).toBeInTheDocument()
+    })
+  })
+
+  it('only animates once (hasAnimated flag)', async () => {
+    const { rerender } = render(<DecipherText text="Initial" />)
+    
+    // First render - not in view
+    mockUseInView.mockReturnValue(false)
+    rerender(<DecipherText text="Initial" />)
+    
+    // Second render - in view (triggers animation)
+    mockUseInView.mockReturnValue(true)
+    rerender(<DecipherText text="Initial" />)
+    
+    jest.advanceTimersByTime(1000)
+    
+    await waitFor(() => {
+      expect(screen.getByText('Initial')).toBeInTheDocument()
+    })
+    
+    // Third render - still in view but should not re-animate
+    mockUseInView.mockReturnValue(true)
+    rerender(<DecipherText text="Initial" />)
+    
+    // Text should remain stable (not re-animating)
+    expect(screen.getByText('Initial')).toBeInTheDocument()
+  })
+
+  it('preserves spaces in text', async () => {
+    mockUseInView.mockReturnValue(true)
+    
+    render(<DecipherText text="Hello World" duration={100} />)
+    
+    jest.advanceTimersByTime(150)
+    
+    await waitFor(() => {
+      const text = screen.getByText('Hello World')
+      expect(text.textContent).toBe('Hello World')
+    })
+  })
+
+  it('does not animate when not in view', () => {
+    mockUseInView.mockReturnValue(false)
+    
+    render(<DecipherText text="Test" />)
+    
+    jest.advanceTimersByTime(1000)
+    
+    // Should remain as initial text
+    expect(screen.getByText('Test')).toBeInTheDocument()
+  })
+
+  it('uses default duration when not specified', async () => {
+    mockUseInView.mockReturnValue(true)
+    
+    render(<DecipherText text="Short" />)
+    
+    // Should use calculated duration based on text length
+    jest.advanceTimersByTime(1000)
+    
+    await waitFor(() => {
+      expect(screen.getByText('Short')).toBeInTheDocument()
+    })
+  })
+
+  it('handles single character text', async () => {
+    mockUseInView.mockReturnValue(true)
+    
+    render(<DecipherText text="A" duration={50} />)
+    
+    jest.advanceTimersByTime(100)
+    
+    await waitFor(() => {
+      expect(screen.getByText('A')).toBeInTheDocument()
+    })
+  })
+
+  it('handles empty text gracefully', () => {
+    mockUseInView.mockReturnValue(false)
+    
+    const { container } = render(<DecipherText text="" />)
+    
+    const span = container.querySelector('span')
+    expect(span).toBeInTheDocument()
+    expect(span?.textContent).toBe('')
+  })
+})

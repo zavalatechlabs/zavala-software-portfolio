@@ -1,0 +1,88 @@
+---
+title: "Task Management Dashboard"
+description: "Real-time collaborative task management platform with team workspaces, automation, and analytics"
+date: "2025-12-10"
+tags: ["React", "Node.js", "MongoDB", "Socket.io", "Express", "Redux"]
+image: "/images/projects/task-management-dashboard.svg"
+github: "https://github.com/zavala/task-dashboard"
+demo: "https://tasks-demo.vercel.app"
+featured: false
+---
+
+# Task Management Dashboard
+
+A powerful, real-time task management platform designed for remote teams, featuring collaborative workspaces, automation rules, and comprehensive analytics.
+
+## Problem
+
+Remote teams struggle with fragmented task management tools that lack real-time collaboration, flexible workflows, and meaningful insights into team productivity.
+
+## Solution
+
+Built a modern task management platform that provides:
+- **Real-time Collaboration:** See team updates instantly with WebSocket connections
+- **Flexible Workflows:** Kanban, list, calendar, and timeline views
+- **Smart Automation:** Rule-based task assignment and status updates
+- **Team Analytics:** Velocity tracking, burndown charts, and bottleneck detection
+
+## Tech Stack
+
+### Frontend
+- **React 18:** Modern component architecture with hooks
+- **Redux Toolkit:** Predictable state management
+- **TypeScript:** End-to-end type safety
+- **React Beautiful DnD:** Smooth drag-and-drop interactions
+- **Chart.js:** Interactive data visualization
+
+### Backend
+- **Node.js:** JavaScript runtime with Express framework
+- **MongoDB:** Document database for flexible schema
+- **Socket.io:** Real-time bidirectional communication
+- **JWT:** Secure authentication and authorization
+- **Bull:** Job queue for background processing
+
+## Key Features
+
+### Task Management
+- **Multiple Views:** Switch between Kanban, list, calendar, and Gantt chart
+- **Custom Fields:** Add project-specific metadata to tasks
+- **Dependencies:** Link tasks with blocking relationships
+- **Recurring Tasks:** Automatic creation on schedules
+- **Templates:** Quick project setup with predefined structures
+
+### Real-time Collaboration
+- **Live Updates:** See changes as teammates make them
+- **Presence Indicators:** Know who's viewing what
+- **Collaborative Editing:** Multiple users on the same task
+- **Activity Feed:** Chronological log of all changes
+- **Mentions & Notifications:** Tag teammates for attention
+
+### Automation
+- **Rule Engine:** If-this-then-that workflow automation
+- **Auto-Assignment:** Distribute tasks based on workload
+- **Status Transitions:** Automatic progression through workflows
+- **Due Date Reminders:** Smart notifications before deadlines
+- **Integration Webhooks:** Connect to external tools
+
+## Performance Metrics
+
+- **Page Load:** Less than 2s initial render (lazy loading routes)
+- **WebSocket Latency:** Less than 50ms round-trip time
+- **Drag Performance:** 60fps with 500+ tasks
+- **Database Queries:** Less than 200ms average response time
+
+## User Feedback
+
+> "Finally, a task tool that actually keeps up with our fast-paced team. The real-time updates are game-changing."  
+> — Sarah K., Engineering Manager
+
+> "Automation rules saved us hours per week on routine task management."  
+> — Mike T., Product Owner
+
+## Future Improvements
+
+- **Mobile Apps:** Native iOS and Android clients
+- **Time Tracking:** Built-in timer with billing integration
+- **Advanced Permissions:** Role-based access control at task level
+- **API Webhooks:** Two-way sync with external tools
+- **AI Suggestions:** Smart task breakdown and time estimates

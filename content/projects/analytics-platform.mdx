@@ -1,0 +1,95 @@
+---
+title: "Real-time Analytics Platform"
+description: "High-performance analytics dashboard with live data streaming, custom metrics, and interactive visualizations"
+date: "2025-11-20"
+tags: ["Next.js", "TypeScript", "Vercel", "Redis", "TimescaleDB", "D3.js"]
+image: "/images/projects/analytics-platform.svg"
+github: "https://github.com/zavala/analytics-platform"
+demo: "https://analytics-demo.vercel.app"
+featured: false
+---
+
+# Real-time Analytics Platform
+
+A blazing-fast analytics dashboard built for modern web applications, featuring real-time data streaming, custom event tracking, and beautiful interactive visualizations.
+
+## Problem
+
+Traditional analytics platforms (Google Analytics, Mixpanel) have limitations: delayed data, privacy concerns, lack of customization, and high costs at scale.
+
+## Solution
+
+Developed a self-hosted analytics platform that offers:
+- **Real-time Insights:** Sub-second data freshness with event streaming
+- **Privacy-First:** GDPR compliant with no third-party tracking
+- **Custom Events:** Track any metric relevant to your business
+- **Beautiful Visualizations:** Interactive charts with drill-down capabilities
+
+## Tech Stack
+
+### Frontend
+- **Next.js 14:** App Router with React Server Components
+- **TypeScript:** Strict type checking throughout
+- **D3.js:** Custom data visualizations
+- **Recharts:** Pre-built chart components
+- **Tailwind CSS:** Responsive dashboard layout
+
+### Backend
+- **Vercel Edge Functions:** Serverless API endpoints
+- **Redis:** Real-time data cache and pub/sub
+- **TimescaleDB:** Time-series PostgreSQL extension
+- **ClickHouse:** Columnar database for analytical queries
+
+## Key Features
+
+### Data Collection
+- **Lightweight SDK:** Less than 3KB JavaScript tracker
+- **Auto-Capture:** Pageviews, clicks, form submissions
+- **Custom Events:** Track conversions, feature usage, errors
+- **Server-Side Tracking:** Node.js SDK for backend events
+- **Privacy Controls:** IP anonymization, opt-out support
+
+### Real-time Dashboard
+- **Live Activity Feed:** See events as they happen
+- **Active Users Counter:** Current visitors on site
+- **Real-time Charts:** Auto-updating line and bar charts
+- **Anomaly Detection:** Alert on unusual traffic patterns
+- **WebSocket Updates:** Push data to dashboard without polling
+
+### Analytics
+- **Traffic Overview:** Sessions, pageviews, bounce rate
+- **User Behavior:** Path analysis, retention cohorts
+- **Conversion Funnels:** Multi-step conversion tracking
+- **Geographic Data:** Visitor locations and demographics
+- **Performance Metrics:** Page load times, Core Web Vitals
+
+## Performance Metrics
+
+- **Event Ingestion:** Less than 50ms P95 latency
+- **Dashboard Load:** Less than 1.5s Time to Interactive
+- **Query Performance:** Less than 200ms for most analytics queries
+- **Real-time Latency:** Less than 100ms from event to dashboard update
+- **Throughput:** 10,000+ events/second sustained
+
+## Privacy Features
+
+- **GDPR Compliant:** Data deletion requests, consent management
+- **IP Anonymization:** Last octet removed by default
+- **No Cookies:** LocalStorage-based session tracking
+- **Data Ownership:** All data stored in user-controlled databases
+- **Transparent Tracking:** Clear disclosure of what's tracked
+
+## Cost Efficiency
+
+- **Open Source:** No per-seat licensing fees
+- **Self-Hosted:** Control infrastructure costs
+- **Efficient Storage:** Less than 1MB per 10,000 events compressed
+- **Serverless Benefits:** Pay-per-request pricing on Vercel
+
+## Future Improvements
+
+- **Mobile SDKs:** Native iOS and Android tracking
+- **Session Replay:** Visual playback of user sessions
+- **Heatmaps:** Click and scroll maps
+- **A/B Testing:** Built-in experimentation framework
+- **Machine Learning:** Predictive analytics and forecasting

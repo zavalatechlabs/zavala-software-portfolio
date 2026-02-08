@@ -1,7 +1,13 @@
 import { HeroNameReveal, DecipherText, FadeInView } from '@/components/animations'
 import { Card } from '@/components/ui'
+import { Button } from '@/components/ui/Button'
+import { ProjectCard } from '@/components/ProjectCard'
+import { getFeaturedProjects } from '@/lib/projects'
+import Link from 'next/link'
 
 export default function Home() {
+  const featuredProjects = getFeaturedProjects(4)
+
   return (
     <div>
       {/* Hero Section with Name Reveal Animation */}
@@ -12,16 +18,30 @@ export default function Home() {
         />
       </section>
 
-      {/* About Section with Decipher Effect */}
+      {/* About Brief Section */}
       <section className="py-16 md:py-24 px-6">
         <div className="max-w-7xl mx-auto">
+          <FadeInView>
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <p className="text-lg md:text-xl text-zavala-text-primary leading-relaxed mb-6">
+                I&apos;m a software engineer passionate about building intelligent systems and exploring 
+                the intersection of full-stack development and AI. I specialize in creating scalable 
+                web applications and experimenting with cutting-edge technologies.
+              </p>
+              <p className="text-base md:text-lg text-zavala-text-secondary leading-relaxed">
+                From e-commerce platforms to AI-powered assistants, I love turning complex problems 
+                into elegant solutions.
+              </p>
+            </div>
+          </FadeInView>
+
           <FadeInView>
             <h2 className="text-3xl md:text-5xl font-bold mb-12 text-center">
               <DecipherText text="What I Do" />
             </h2>
           </FadeInView>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <FadeInView delay={0.1}>
               <Card className="p-6 transition-all duration-200 hover:border-zavala-accent-secondary/50 hover:shadow-lg hover:shadow-black/20">
                 <div className="w-12 h-12 bg-zavala-accent-secondary/10 rounded-lg flex items-center justify-center mb-4">
@@ -31,7 +51,8 @@ export default function Home() {
                   Full-Stack Development
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Building scalable web applications with modern frameworks and best practices.
+                  Building scalable web applications with modern frameworks and best practices. 
+                  From database design to responsive UIs, I handle the entire stack.
                 </p>
               </Card>
             </FadeInView>
@@ -45,7 +66,8 @@ export default function Home() {
                   AI & Automation
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Exploring intelligent systems and conversational AI to solve real problems.
+                  Exploring intelligent systems and conversational AI to solve real problems. 
+                  Building tools that leverage language models and machine learning.
                 </p>
               </Card>
             </FadeInView>
@@ -59,11 +81,23 @@ export default function Home() {
                   Cloud Infrastructure
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Designing and deploying reliable, scalable systems on modern cloud platforms.
+                  Designing and deploying reliable, scalable systems on modern cloud platforms. 
+                  Infrastructure as code, monitoring, and DevOps best practices.
                 </p>
               </Card>
             </FadeInView>
           </div>
+
+          {/* Learn More CTA */}
+          <FadeInView delay={0.4}>
+            <div className="text-center">
+              <Link href="/about">
+                <Button variant="secondary" size="lg">
+                  Learn More About Me
+                </Button>
+              </Link>
+            </div>
+          </FadeInView>
         </div>
       </section>
 
@@ -71,16 +105,90 @@ export default function Home() {
       <section className="py-16 md:py-24 px-6 bg-zavala-bg-surface">
         <div className="max-w-7xl mx-auto">
           <FadeInView>
-            <h2 className="text-3xl md:text-5xl font-bold mb-12 text-center">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-center">
               <DecipherText text="Featured Projects" duration={1200} />
             </h2>
           </FadeInView>
 
+          <FadeInView delay={0.1}>
+            <p className="text-center text-zavala-text-secondary text-lg mb-12 max-w-2xl mx-auto">
+              A selection of recent projects showcasing full-stack development, AI integration, 
+              and cloud infrastructure.
+            </p>
+          </FadeInView>
+
+          {featuredProjects.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                {featuredProjects.map((project, index) => (
+                  <FadeInView key={project.slug} delay={0.1 * (index + 1)}>
+                    <ProjectCard
+                      title={project.title}
+                      description={project.description}
+                      tags={project.tags}
+                      slug={project.slug}
+                      demo={project.demo}
+                      github={project.github}
+                    />
+                  </FadeInView>
+                ))}
+              </div>
+
+              {/* View All Projects CTA */}
+              <FadeInView delay={0.5}>
+                <div className="text-center">
+                  <Link href="/projects">
+                    <Button variant="primary" size="lg">
+                      View All Projects
+                    </Button>
+                  </Link>
+                </div>
+              </FadeInView>
+            </>
+          ) : (
+            <FadeInView delay={0.2}>
+              <div className="text-center">
+                <p className="text-zavala-text-secondary text-lg mb-8">
+                  Project showcases coming soon! Check back for updates.
+                </p>
+              </div>
+            </FadeInView>
+          )}
+        </div>
+      </section>
+
+      {/* Contact CTA Section */}
+      <section className="py-16 md:py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <FadeInView>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              <DecipherText text="Let's Build Something Together" duration={1500} />
+            </h2>
+          </FadeInView>
+
           <FadeInView delay={0.2}>
-            <div className="text-center">
-              <p className="text-zavala-text-secondary text-lg mb-8">
-                Coming soon! Check back for project showcases.
-              </p>
+            <p className="text-lg md:text-xl text-zavala-text-secondary mb-8 leading-relaxed">
+              Have an interesting project in mind? Whether it&apos;s a web application, AI integration, 
+              or cloud infrastructure challenge, I&apos;d love to hear about it.
+            </p>
+          </FadeInView>
+
+          <FadeInView delay={0.3}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact">
+                <Button variant="primary" size="lg">
+                  Get in Touch
+                </Button>
+              </Link>
+              <a 
+                href="https://github.com/zavalatechlabs" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Button variant="secondary" size="lg">
+                  View GitHub
+                </Button>
+              </a>
             </div>
           </FadeInView>
         </div>

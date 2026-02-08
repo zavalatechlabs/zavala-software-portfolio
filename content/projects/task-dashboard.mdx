@@ -1,0 +1,72 @@
+---
+title: "Task Management Dashboard"
+description: "Real-time collaborative task tracking with WebSocket synchronization"
+date: "2025-07-10"
+tags: ["React", "Node.js", "Socket.io", "MongoDB"]
+image: "/images/projects/task-dashboard.svg"
+github: "https://github.com/maxzavala/task-dashboard"
+demo: "https://tasks-demo.vercel.app"
+featured: true
+---
+
+# Task Management Dashboard
+
+A real-time collaborative task management system with live updates, team collaboration features, and intuitive drag-and-drop interface.
+
+## Overview
+
+Built for teams who need seamless collaboration, this dashboard provides real-time task tracking with WebSocket-powered live updates. Multiple users can work simultaneously without conflicts.
+
+## Tech Stack
+
+- **Frontend:** React, TypeScript, React DnD
+- **Backend:** Node.js, Express
+- **Database:** MongoDB with Mongoose
+- **Real-time:** Socket.io
+- **Authentication:** JWT, bcrypt
+- **Deployment:** Railway (backend), Vercel (frontend)
+
+## Features
+
+1. Real-time task updates across all connected clients
+2. Drag-and-drop task organization
+3. Team collaboration with role-based access
+4. Task comments and activity history
+5. Filtering and search capabilities
+6. Custom task labels and priorities
+7. Dashboard analytics
+
+## Code Example
+
+```typescript
+// WebSocket event handler for task updates
+socket.on('task:update', async (taskId, updates) => {
+  const task = await Task.findByIdAndUpdate(
+    taskId,
+    { $set: updates },
+    { new: true }
+  )
+  
+  // Broadcast to all clients in the same workspace
+  io.to(task.workspaceId).emit('task:updated', task)
+})
+```
+
+## Challenges
+
+The main technical challenge was handling concurrent updates from multiple users without data conflicts. I implemented optimistic updates on the frontend with server-side validation and conflict resolution using timestamps and version numbers.
+
+## Learnings
+
+- WebSocket architecture and scaling
+- Optimistic UI patterns
+- Conflict resolution strategies
+- State management for real-time apps
+
+## Future Improvements
+
+- Mobile app (React Native)
+- Offline support with sync
+- Advanced reporting and exports
+- Integration with calendar apps
+- Time tracking features

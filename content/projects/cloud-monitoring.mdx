@@ -1,0 +1,77 @@
+---
+title: "Cloud Infrastructure Monitor"
+description: "Real-time monitoring dashboard for AWS resources with intelligent alerting"
+date: "2025-05-15"
+tags: ["TypeScript", "AWS", "Docker", "Grafana"]
+image: "/images/projects/cloud-monitor.svg"
+github: "https://github.com/maxzavala/cloud-monitor"
+demo: null
+featured: true
+---
+
+# Cloud Infrastructure Monitor
+
+A comprehensive monitoring solution for AWS infrastructure with real-time metrics, intelligent alerting, and cost optimization insights.
+
+## Overview
+
+This project helps DevOps teams monitor their cloud infrastructure efficiently. It aggregates metrics from multiple AWS services, provides visualizations, and sends alerts based on custom thresholds.
+
+## Tech Stack
+
+- **Backend:** Node.js, TypeScript
+- **Infrastructure:** AWS Lambda, CloudWatch, SNS
+- **Monitoring:** Grafana, Prometheus
+- **Container:** Docker, ECS
+- **IaC:** Terraform
+
+## Features
+
+1. Real-time metrics from EC2, RDS, Lambda, S3
+2. Custom alerting rules with SNS integration
+3. Cost analysis and optimization recommendations
+4. Historical data retention and analysis
+5. Multi-account support
+6. Custom dashboards with Grafana
+7. Automated health checks
+
+## Code Example
+
+```typescript
+// AWS Lambda function for metric collection
+export const handler = async (event: CloudWatchEvent) => {
+  const ec2Metrics = await cloudwatch.getMetricStatistics({
+    Namespace: 'AWS/EC2',
+    MetricName: 'CPUUtilization',
+    StartTime: new Date(Date.now() - 5 * 60 * 1000),
+    EndTime: new Date(),
+    Period: 300,
+    Statistics: ['Average'],
+  }).promise()
+  
+  // Store in TimescaleDB for long-term analysis
+  await storeMetrics(ec2Metrics.Datapoints)
+  
+  // Check alert thresholds
+  await checkAlertRules(ec2Metrics)
+}
+```
+
+## Challenges
+
+Efficiently aggregating and storing time-series data at scale while keeping costs low was challenging. I implemented a multi-tier storage strategy with hot/warm/cold data tiers based on access patterns.
+
+## Learnings
+
+- AWS architecture and best practices
+- Time-series database optimization
+- Infrastructure as Code with Terraform
+- Monitoring and observability patterns
+
+## Future Improvements
+
+- Machine learning for anomaly detection
+- Predictive scaling recommendations
+- Multi-cloud support (Azure, GCP)
+- Cost forecasting models
+- Integration with incident management tools

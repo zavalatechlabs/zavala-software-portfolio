@@ -1,40 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-
-type Project = {
-  title: string
-  description: string
-  date: string
-  tags: string[]
-  github?: string
-  demo?: string
-}
-
-// This will be replaced with actual MDX content loading in issue #6
-const mockProjects: Record<string, Project> = {
-  'sample-project': {
-    title: 'Sample Project',
-    description: 'A sample project demonstrating the MDX content structure',
-    date: '2024-01-01',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
-    github: 'https://github.com/username/project',
-    demo: 'https://project-demo.vercel.app',
-  },
-  'project-two': {
-    title: 'Project Two',
-    description: 'Another example project',
-    date: '2024-01-15',
-    tags: ['React', 'Node.js', 'PostgreSQL'],
-    github: 'https://github.com/username/project-two',
-  },
-  'project-three': {
-    title: 'Project Three',
-    description: 'Third project placeholder',
-    date: '2024-02-01',
-    tags: ['Next.js', 'Tailwind', 'Vercel'],
-  },
-}
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import { getProjectBySlug, getAllProjectSlugs } from '@/lib/getProjects'
 
 type ProjectPageProps = {
   params: {
@@ -45,7 +13,7 @@ type ProjectPageProps = {
 export async function generateMetadata({
   params,
 }: ProjectPageProps): Promise<Metadata> {
-  const project = mockProjects[params.slug]
+  const project = getProjectBySlug(params.slug)
   
   if (!project) {
     return {
@@ -54,13 +22,13 @@ export async function generateMetadata({
   }
 
   return {
-    title: project.title,
-    description: project.description,
+    title: project.metadata.title,
+    description: project.metadata.description,
   }
 }
 
 export default function ProjectPage({ params }: ProjectPageProps) {
-  const project = mockProjects[params.slug]
+  const project = getProjectBySlug(params.slug)
 
   if (!project) {
     notFound()
@@ -91,12 +59,12 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
       {/* Project Header */}
       <header className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
-        <p className="text-xl text-gray-600 mb-6">{project.description}</p>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.metadata.title}</h1>
+        <p className="text-xl text-gray-600 mb-6">{project.metadata.description}</p>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-6">
-          {project.tags.map((tag) => (
+          {project.metadata.tags.map((tag) => (
             <span
               key={tag}
               className="px-3 py-1 bg-primary-50 text-primary-700 text-sm rounded-full"
@@ -108,9 +76,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
         {/* Links */}
         <div className="flex gap-4">
-          {project.github && (
+          {project.metadata.github && (
             <a
-              href={project.github}
+              href={project.metadata.github}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
@@ -118,9 +86,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
               View on GitHub
             </a>
           )}
-          {project.demo && (
+          {project.metadata.demo && (
             <a
-              href={project.demo}
+              href={project.metadata.demo}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
@@ -131,37 +99,18 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </header>
 
-      {/* Project Content */}
-      <div className="prose prose-lg max-w-none">
-        <h2>Overview</h2>
-        <p>
-          [Placeholder: This content will be loaded from MDX files in issue #6]
-        </p>
-
-        <h2>Features</h2>
-        <ul>
-          <li>Feature one</li>
-          <li>Feature two</li>
-          <li>Feature three</li>
-        </ul>
-
-        <h2>Tech Stack</h2>
-        <p>
-          This project uses: {project.tags.join(', ')}
-        </p>
-
-        <h2>Challenges & Learnings</h2>
-        <p>
-          [Placeholder: Details about challenges faced and solutions implemented]
-        </p>
-      </div>
+      {/* Project Content from MDX */}
+      <article className="prose prose-lg max-w-none">
+        <MDXRemote source={project.content} />
+      </article>
     </div>
   )
 }
 
 // Generate static paths for all projects
 export async function generateStaticParams() {
-  return Object.keys(mockProjects).map((slug) => ({
+  const slugs = getAllProjectSlugs()
+  return slugs.map((slug) => ({
     slug,
   }))
 }

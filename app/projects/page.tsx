@@ -1,41 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { getAllProjects } from '@/lib/getProjects'
 
 export const metadata: Metadata = {
   title: 'Projects',
   description: 'Browse my portfolio of web development projects',
 }
 
-// Placeholder projects data
-const projects = [
-  {
-    slug: 'sample-project',
-    title: 'Sample Project',
-    description:
-      'A sample project demonstrating the MDX content structure and project showcase capabilities.',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
-    image: '/images/projects/sample-project.jpg',
-    featured: true,
-  },
-  {
-    slug: 'project-two',
-    title: 'Project Two',
-    description: 'Another example project to demonstrate the projects list page layout.',
-    tags: ['React', 'Node.js', 'PostgreSQL'],
-    image: '/images/projects/project-two.jpg',
-    featured: false,
-  },
-  {
-    slug: 'project-three',
-    title: 'Project Three',
-    description: 'Third project placeholder showcasing different tech stack.',
-    tags: ['Next.js', 'Tailwind', 'Vercel'],
-    image: '/images/projects/project-three.jpg',
-    featured: false,
-  },
-]
-
 export default function ProjectsPage() {
+  const projects = getAllProjects()
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       <div className="mb-12">
@@ -56,19 +29,19 @@ export default function ProjectsPage() {
               {/* Placeholder Image */}
               <div className="bg-gradient-to-br from-primary-400 to-primary-600 h-48 flex items-center justify-center">
                 <span className="text-white text-4xl font-bold">
-                  {project.title.charAt(0)}
+                  {project.metadata.title.charAt(0)}
                 </span>
               </div>
 
               <div className="p-6">
                 <h2 className="text-2xl font-bold mb-2 group-hover:text-primary-600 transition-colors">
-                  {project.title}
+                  {project.metadata.title}
                 </h2>
-                <p className="text-gray-600 mb-4">{project.description}</p>
+                <p className="text-gray-600 mb-4">{project.metadata.description}</p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
+                  {project.metadata.tags.map((tag) => (
                     <span
                       key={tag}
                       className="px-3 py-1 bg-primary-50 text-primary-700 text-sm rounded-full"

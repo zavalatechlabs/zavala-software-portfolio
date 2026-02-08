@@ -35,6 +35,22 @@ const config: Config = {
             warning: '#f59e0b',
             error: '#ef4444',
           },
+          terminal: {
+            bg: 'var(--terminal-bg)',
+            header: 'var(--terminal-header)',
+            border: 'var(--terminal-border)',
+            text: 'var(--terminal-text)',
+            'text-muted': 'var(--terminal-text-muted)',
+            'line-number': 'var(--terminal-line-number)',
+          },
+          footer: {
+            bg: 'var(--footer-bg)',
+            'terminal-section': 'var(--footer-terminal-section)',
+            text: 'var(--footer-text)',
+            'text-muted': 'var(--footer-text-muted)',
+            heading: 'var(--footer-heading)',
+            border: 'var(--footer-border)',
+          },
         },
       },
       fontFamily: {

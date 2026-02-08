@@ -1,10 +1,21 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -32,11 +43,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Navbar />
-        <main className="min-h-screen pt-16">{children}</main>
-        <Footer />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+        <ThemeProvider>
+          <Navbar />
+          <main className="min-h-screen pt-16">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   )

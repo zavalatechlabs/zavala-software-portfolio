@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,23 +10,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+        // Custom Zavala color palette
+        zavala: {
+          bg: {
+            primary: '#0a0a0a',
+            surface: '#1a1a1a',
+            elevated: '#242424',
+          },
+          border: {
+            subtle: '#2a2a2a',
+            DEFAULT: '#3a3a3a',
+            strong: '#4a4a4a',
+          },
+          text: {
+            primary: '#f5f5f5',
+            secondary: '#a3a3a3',
+            tertiary: '#737373',
+            inverse: '#0a0a0a',
+          },
+          accent: {
+            primary: '#3b82f6',
+            secondary: '#10b981',
+            code: '#f97316',
+            warning: '#f59e0b',
+            error: '#ef4444',
+          },
         },
       },
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-geist-mono)', 'monospace'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'Fira Code', 'monospace'],
       },
     },
   },

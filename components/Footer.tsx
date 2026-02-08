@@ -23,9 +23,6 @@ export default function Footer() {
       {/* Terminal Window Section */}
       <div className="bg-[#0a0a0a] py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
-            Developer Info<span className="text-[#3b82f6]">.</span>ts
-          </h2>
           <TerminalWindow />
         </div>
       </div>

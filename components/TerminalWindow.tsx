@@ -5,38 +5,20 @@ import { useState } from 'react'
 export default function TerminalWindow() {
   const [isMinimized, setIsMinimized] = useState(false)
 
-  const code = `// Portfolio.ts
-interface Developer {
-  name: string;
-  role: string;
-  focus: string[];
-  passion: string;
-  location: string;
-  contact: {
-    email: string;
-    github: string;
-    linkedin: string;
-  };
-}
-
-const max: Developer = {
-  name: "Max Zavala",
+  const code = `const Developer = {
+  name: "Maximiliano Zavala",
   role: "Software Engineer",
   focus: [
     "Full-Stack Development",
     "AI & Machine Learning",
     "Cloud Infrastructure"
   ],
-  passion: "Building intelligent systems that solve real problems",
-  location: "PST",
+  passion: true,
+  location: "Seattle, WA",
   contact: {
-    email: "contact@zavalatechlabs.com",
-    github: "https://github.com/zavalatechlabs",
-    linkedin: "https://linkedin.com/in/maxzavala"
+    email: "contact@zavalatechlabs.com"
   }
-};
-
-export default max;`
+};`
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -68,7 +50,7 @@ export default max;`
           <div className="flex items-center">
             <div className="bg-[#1e1e1e] px-4 py-1 rounded-t-md flex items-center gap-2 -mb-2">
               <span className="text-[#3b82f6] text-xs">📄</span>
-              <span className="text-gray-300 text-xs font-mono">Portfolio.ts</span>
+              <span className="text-gray-300 text-xs font-mono">Developer Info.ts</span>
             </div>
           </div>
 
@@ -88,26 +70,24 @@ export default max;`
                 {code.split('\n').map((line, index) => {
                   // Syntax highlighting logic
                   const highlightedLine = line
-                    // Comments
-                    .replace(/(\/\/.*)/g, '<span class="text-[#6a9955]">$1</span>')
                     // Keywords
                     .replace(
-                      /\b(interface|const|string|export|default)\b/g,
+                      /\b(const)\b/g,
                       '<span class="text-[#569cd6]">$1</span>'
                     )
-                    // Types
+                    // Booleans
                     .replace(
-                      /\b(Developer)\b/g,
-                      '<span class="text-[#4ec9b0]">$1</span>'
+                      /\b(true|false)\b/g,
+                      '<span class="text-[#569cd6]">$1</span>'
                     )
                     // Strings
                     .replace(
                       /"([^"]*)"/g,
                       '<span class="text-[#ce9178]">"$1"</span>'
                     )
-                    // Variable names
+                    // Variable/Property names
                     .replace(
-                      /\b(name|role|focus|passion|location|contact|email|github|linkedin|max)(?=:)/g,
+                      /\b(name|role|focus|passion|location|contact|email|Developer)(?=:)/g,
                       '<span class="text-[#9cdcfe]">$1</span>'
                     )
 

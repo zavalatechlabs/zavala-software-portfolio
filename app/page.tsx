@@ -13,7 +13,7 @@ export default function Home() {
       {/* Hero Section with Name Reveal Animation */}
       <section>
         <HeroNameReveal 
-          name="Max Zavala"
+          name="Maximiliano Zavala"
           tagline="Software Engineer | AI Enthusiast"
         />
       </section>

@@ -13,7 +13,7 @@ interface DecipherTextProps {
 export function DecipherText({ 
   text, 
   className = '', 
-  duration = 1000,
+  duration = 600,
   staggerDelay = 0
 }: DecipherTextProps) {
   const [displayText, setDisplayText] = useState(text)
@@ -29,7 +29,7 @@ export function DecipherText({
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
       let iterations = 0
       const totalIterations = text.length
-      const iterationsPerFrame = totalIterations / (duration / 30) // 30ms per frame
+      const iterationsPerFrame = totalIterations / (duration / 20) // 20ms per frame
       
       const interval = setInterval(() => {
         setDisplayText(
@@ -55,7 +55,7 @@ export function DecipherText({
           setDisplayText(text)
           setHasAnimated(true)
         }
-      }, 30)
+      }, 20)
       
       return () => clearInterval(interval)
     }, staggerDelay)

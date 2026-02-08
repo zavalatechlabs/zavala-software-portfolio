@@ -52,7 +52,7 @@ interface HeroNameRevealProps {
 }
 
 export function HeroNameReveal({ 
-  name = 'Max Zavala',
+  name = 'Maximiliano Zavala',
   tagline = 'Software Engineer | AI Enthusiast'
 }: HeroNameRevealProps) {
   return (

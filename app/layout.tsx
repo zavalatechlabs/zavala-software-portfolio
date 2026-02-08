@@ -19,24 +19,24 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Zavala Software Portfolio',
-    template: '%s | Zavala Software',
+    default: 'Maximiliano Zavala - Portfolio',
+    template: '%s | Maximiliano Zavala',
   },
   description: 'Modern developer portfolio showcasing projects, skills, and experience',
   keywords: ['portfolio', 'software development', 'web development', 'Next.js', 'TypeScript'],
-  authors: [{ name: 'Zavala Software' }],
-  creator: 'Zavala Software',
+  authors: [{ name: 'Maximiliano Zavala' }],
+  creator: 'Maximiliano Zavala',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://zavalatechlabs.com',
-    title: 'Zavala Software Portfolio',
+    title: 'Maximiliano Zavala - Portfolio',
     description: 'Modern developer portfolio showcasing projects, skills, and experience',
-    siteName: 'Zavala Software',
+    siteName: 'Maximiliano Zavala',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zavala Software Portfolio',
+    title: 'Maximiliano Zavala - Portfolio',
     description: 'Modern developer portfolio showcasing projects, skills, and experience',
   },
 }

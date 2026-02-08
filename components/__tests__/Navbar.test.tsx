@@ -4,7 +4,7 @@ import Navbar from '../Navbar'
 describe('Navbar', () => {
   it('renders the brand name', () => {
     render(<Navbar />)
-    const brandElement = screen.getByText(/Zavala/i)
+    const brandElement = screen.getByText('MZ')
     expect(brandElement).toBeInTheDocument()
   })
 

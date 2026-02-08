@@ -30,24 +30,24 @@ export default function AboutPage() {
 
             <div className="space-y-4 text-zavala-text-secondary leading-relaxed">
               <p>
-                I'm Max, a software engineer passionate about building intelligent systems and
+                I&apos;m Max, a software engineer passionate about building intelligent systems and
                 exploring the intersection of full-stack development and AI. My journey in tech is
                 driven by curiosity and a love for solving complex problems with elegant solutions.
               </p>
               <p>
                 With expertise spanning modern web frameworks, cloud infrastructure, and AI
                 automation, I specialize in creating scalable applications that push the boundaries
-                of what's possible. I believe in writing clean, maintainable code and building
+                of what&apos;s possible. I believe in writing clean, maintainable code and building
                 systems that stand the test of time.
               </p>
               <p>
-                Whether it's architecting a full-stack application from the ground up, training AI
+                Whether it&apos;s architecting a full-stack application from the ground up, training AI
                 models to solve real-world problems, or optimizing cloud deployments for maximum
                 efficiency, I bring both technical depth and creative problem-solving to every
                 project.
               </p>
               <p>
-                When I'm not coding, you'll find me diving deep into the latest AI research papers,
+                When I&apos;m not coding, you&apos;ll find me diving deep into the latest AI research papers,
                 contributing to open-source projects, or exploring new technologies that reshape how
                 we build software.
               </p>

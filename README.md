@@ -7,7 +7,8 @@ Professional software portfolio showcasing projects, skills, and experience for 
 - **GitHub Repository:** [zavalatechlabs/zavala-software-portfolio](https://github.com/zavalatechlabs/zavala-software-portfolio)
 - **Project Board:** [GitHub Project #1](https://github.com/users/zavalatechlabs/projects/1)
 - **Architecture Documentation:** [ARCHITECTURE.md](./ARCHITECTURE.md)
-- **Status:** 🚧 Planning & Design Phase
+- **Status:** 🚀 Phase 2: Implementation (Boilerplate) - In Progress
+- **Deployment Guide:** [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
 
 ## 🏗️ Architecture
 
@@ -39,8 +40,6 @@ zavala-software-portfolio/
 
 ## 🚀 Getting Started
 
-_Development setup instructions coming after initial implementation._
-
 ### Prerequisites
 - Node.js 18.x or higher
 - npm or yarn
@@ -60,6 +59,35 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
+
+### Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run test         # Run Jest tests
+npm run test:e2e     # Run Playwright E2E tests
+```
+
+## 🌐 Deployment
+
+This project is configured for deployment on Vercel with automatic builds from GitHub.
+
+### Quick Deploy to Vercel
+
+1. Push code to GitHub (already configured)
+2. Go to [vercel.com](https://vercel.com) and import the repository
+3. Vercel auto-detects Next.js and configures build settings
+4. Click "Deploy"
+
+For detailed deployment instructions, see [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
+
+**Deployment Status:**
+- ⏳ Awaiting manual Vercel connection
+- Repository ready for deployment
+- Build tested and passing
 
 ## 📚 Documentation
 

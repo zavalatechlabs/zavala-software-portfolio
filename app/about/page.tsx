@@ -11,21 +11,21 @@ export default function AboutPage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="max-w-4xl mx-auto px-6 py-16 md:py-24">
-        <div className="mb-16">
+        <div className="mb-12">
           {/* Name & Tagline */}
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-zavala-text-primary">
             Maximiliano Zavala
           </h1>
-          <p className="text-xl text-zavala-accent-primary font-medium mb-8">
+          <p className="text-xl text-zavala-accent-primary font-medium mb-4">
             Software Engineer | AI Enthusiast
           </p>
         </div>
       </section>
 
       {/* Resume Section */}
-      <section className="bg-zavala-bg-surface border-t border-b border-zavala-border py-16 md:py-24">
+      <section className="bg-zavala-bg-surface border-t border-b border-zavala-border py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-zavala-text-primary">
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-zavala-text-primary">
             Resume
           </h2>
 

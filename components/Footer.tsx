@@ -14,7 +14,6 @@ export default function Footer() {
     social: [
       { name: 'GitHub', href: 'https://github.com/zavalatechlabs' },
       { name: 'LinkedIn', href: '#' },
-      { name: 'Twitter', href: '#' },
     ],
   }
 
@@ -32,7 +31,7 @@ export default function Footer() {
           {/* Brand Section */}
           <div>
             <h3 className="text-white text-lg font-bold mb-4">
-              Zavala<span className="text-primary-500">Software</span>
+              Maximiliano Zavala
             </h3>
             <p className="text-sm text-gray-400">
               Building modern web applications with cutting-edge technologies.
@@ -79,7 +78,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-8 pt-8 border-t border-gray-800">
           <p className="text-center text-sm text-gray-400">
-            &copy; {currentYear} Zavala Software. All rights reserved.
+            &copy; {currentYear} Maximiliano Zavala. All rights reserved.
           </p>
         </div>
       </div>

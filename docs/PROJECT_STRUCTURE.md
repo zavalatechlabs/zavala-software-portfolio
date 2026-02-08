@@ -20,19 +20,23 @@ Milestone (Phase/Feature)
 ## Current Milestones
 
 ### 📋 Milestone 1: Phase 1 - Architecture & Research
+
 **Status:** In Progress (1 issue)
 **Description:** Research portfolio examples, evaluate tech stack options, and document architecture decisions
 
 **Issues:**
+
 - #1: Research & Architecture: Portfolio Tech Stack
 
 ---
 
 ### ⚙️ Milestone 2: Phase 2 - Implementation (Boilerplate)
+
 **Status:** Not Started (9 issues)
 **Description:** Set up Next.js project, configure tools, create basic structure, and establish testing infrastructure
 
 **Issues:**
+
 - #2: Initialize Next.js project with TypeScript and Tailwind
 - #3: Set up project folder structure
 - #4: Implement root layout with Navbar and Footer
@@ -48,10 +52,12 @@ Milestone (Phase/Feature)
 ---
 
 ### 🎨 Milestone 3: Phase 3 - Design & Content
+
 **Status:** Not Started (7 issues)
 **Description:** Define design system, create content strategy, and plan page layouts
 
 **Issues:**
+
 - #10: Design consultation and inspiration review
 - #11: Define homepage content and layout
 - #12: Define projects page structure and content
@@ -65,6 +71,7 @@ Milestone (Phase/Feature)
 ---
 
 ### 🚀 Milestone 4: Phase 4 - Execution (Features)
+
 **Status:** Not Started (0 issues)
 **Description:** Implement designed features, polish UI, and add animations
 
@@ -79,17 +86,20 @@ Milestone (Phase/Feature)
 ### Querying Work by Phase
 
 **View all issues in a phase:**
+
 ```bash
 gh issue list --milestone "Phase 2: Implementation (Boilerplate)"
 ```
 
 **Check milestone progress:**
+
 ```bash
 gh api repos/zavalatechlabs/zavala-software-portfolio/milestones | \
   jq -r '.[] | "\(.title): \(.open_issues) open / \(.closed_issues) closed"'
 ```
 
 **Assign issue to milestone:**
+
 ```bash
 gh issue edit <number> --milestone "Phase 2: Implementation (Boilerplate)"
 ```
@@ -107,6 +117,7 @@ gh issue edit <number> --milestone "Phase 2: Implementation (Boilerplate)"
 ## Progress Tracking
 
 Milestones show percentage complete:
+
 - Phase 1: X/1 complete (X%)
 - Phase 2: X/9 complete (X%)
 - Phase 3: X/7 complete (X%)

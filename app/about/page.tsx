@@ -9,11 +9,11 @@ export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
       <h1 className="text-4xl md:text-5xl font-bold mb-6">About Me</h1>
-      
+
       <div className="prose prose-lg max-w-none">
         <p className="text-xl text-gray-600 mb-8">
-          Software developer passionate about building modern web applications
-          with cutting-edge technologies.
+          Software developer passionate about building modern web applications with cutting-edge
+          technologies.
         </p>
 
         <section className="mb-12">
@@ -55,10 +55,10 @@ export default function AboutPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Let's Connect</h2>
+          <h2 className="text-2xl font-semibold mb-4">Let&apos;s Connect</h2>
           <p className="text-gray-700 mb-4">
-            I'm always open to discussing new projects, creative ideas, or
-            opportunities to be part of your vision.
+            I&apos;m always open to discussing new projects, creative ideas, or opportunities to be
+            part of your vision.
           </p>
           <a
             href="/contact"

@@ -8,16 +8,16 @@ Security headers are configured in `next.config.js` and applied to all routes.
 
 ### Headers Overview
 
-| Header | Value | Purpose |
-|--------|-------|---------|
-| **X-DNS-Prefetch-Control** | `on` | Enables DNS prefetching for improved performance |
-| **Strict-Transport-Security** | `max-age=63072000; includeSubDomains; preload` | Forces HTTPS for 2 years, including subdomains |
-| **X-Frame-Options** | `DENY` | Prevents clickjacking by blocking iframe embedding |
-| **X-Content-Type-Options** | `nosniff` | Prevents MIME type sniffing |
-| **X-XSS-Protection** | `1; mode=block` | Enables browser XSS protection |
-| **Referrer-Policy** | `strict-origin-when-cross-origin` | Controls referrer information sent with requests |
-| **Permissions-Policy** | `camera=(), microphone=(), geolocation=()` | Disables unnecessary browser features |
-| **Content-Security-Policy** | See below | Controls which resources can be loaded |
+| Header                        | Value                                          | Purpose                                            |
+| ----------------------------- | ---------------------------------------------- | -------------------------------------------------- |
+| **X-DNS-Prefetch-Control**    | `on`                                           | Enables DNS prefetching for improved performance   |
+| **Strict-Transport-Security** | `max-age=63072000; includeSubDomains; preload` | Forces HTTPS for 2 years, including subdomains     |
+| **X-Frame-Options**           | `DENY`                                         | Prevents clickjacking by blocking iframe embedding |
+| **X-Content-Type-Options**    | `nosniff`                                      | Prevents MIME type sniffing                        |
+| **X-XSS-Protection**          | `1; mode=block`                                | Enables browser XSS protection                     |
+| **Referrer-Policy**           | `strict-origin-when-cross-origin`              | Controls referrer information sent with requests   |
+| **Permissions-Policy**        | `camera=(), microphone=(), geolocation=()`     | Disables unnecessary browser features              |
+| **Content-Security-Policy**   | See below                                      | Controls which resources can be loaded             |
 
 ### Content Security Policy (CSP)
 
@@ -86,6 +86,7 @@ npm audit fix --force  # Fix all issues (may break things)
 ### Dependabot
 
 GitHub Dependabot is enabled to:
+
 - Monitor for vulnerable dependencies
 - Auto-create PRs for security updates
 - Alert on new vulnerabilities

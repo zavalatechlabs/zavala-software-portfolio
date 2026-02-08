@@ -41,11 +41,13 @@ zavala-software-portfolio/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18.x or higher
 - npm or yarn
 - Git
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/zavalatechlabs/zavala-software-portfolio.git
@@ -85,6 +87,7 @@ This project is configured for deployment on Vercel with automatic builds from G
 For detailed deployment instructions, see [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
 
 **Deployment Status:**
+
 - ⏳ Awaiting manual Vercel connection
 - Repository ready for deployment
 - Build tested and passing

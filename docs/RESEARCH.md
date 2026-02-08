@@ -1,4 +1,5 @@
 # Portfolio Tech Stack Research
+
 **Date:** 2026-02-07  
 **Phase:** Planning (Opus 4.6)  
 **Issue:** #1
@@ -22,6 +23,7 @@ After analyzing 1478+ developer portfolios and modern web development patterns, 
 ### Common Patterns Observed:
 
 **Tech Stack Distribution** (from sample analysis):
+
 - **Next.js:** ~40% of modern portfolios
 - **React (Vite/CRA):** ~25%
 - **Static HTML/CSS/JS:** ~15%
@@ -30,12 +32,14 @@ After analyzing 1478+ developer portfolios and modern web development patterns, 
 - **Others (Astro, SvelteKit):** ~5%
 
 **Hosting Patterns:**
+
 - **Vercel:** ~60% (seamless Next.js integration)
 - **Netlify:** ~20% (excellent for static sites)
 - **GitHub Pages:** ~10% (free, simple)
 - **Custom/Cloud:** ~10%
 
 **Notable Examples:**
+
 - Brittany Chiang (brittanychiang.com) - Gatsby + Netlify
 - Anshul Chauhan (anshulchauhan.dev) - Next.js iOS-style portfolio
 - Jhon Goh (shenggg2000.github.io/portfolio) - Clean, minimalist approach
@@ -52,6 +56,7 @@ The foundation of your portfolio's UI/UX.
 #### **Option A: Next.js 15 (App Router)** ⭐ RECOMMENDED
 
 **Pros:**
+
 - ✅ React-based (largest ecosystem)
 - ✅ Built-in SSG, SSR, ISR flexibility
 - ✅ Image optimization out of the box
@@ -63,6 +68,7 @@ The foundation of your portfolio's UI/UX.
 - ✅ Server Components (performance)
 
 **Cons:**
+
 - ⚠️ Larger bundle than alternatives
 - ⚠️ Learning curve if new to React
 - ⚠️ Overkill for purely static content
@@ -74,6 +80,7 @@ The foundation of your portfolio's UI/UX.
 #### **Option B: Astro**
 
 **Pros:**
+
 - ✅ Ultra-lightweight (ships zero JS by default)
 - ✅ Component framework agnostic (React, Vue, Svelte in one project)
 - ✅ Built for content-first websites
@@ -82,6 +89,7 @@ The foundation of your portfolio's UI/UX.
 - ✅ Island Architecture (interactive components on demand)
 
 **Cons:**
+
 - ⚠️ Smaller ecosystem than React
 - ⚠️ Less familiar to most developers
 - ⚠️ Fewer pre-built component libraries
@@ -93,6 +101,7 @@ The foundation of your portfolio's UI/UX.
 #### **Option C: React + Vite**
 
 **Pros:**
+
 - ✅ Lightweight alternative to Next.js
 - ✅ Blazing fast dev server
 - ✅ Full React ecosystem
@@ -100,6 +109,7 @@ The foundation of your portfolio's UI/UX.
 - ✅ Can deploy anywhere
 
 **Cons:**
+
 - ⚠️ No built-in SSG/SSR
 - ⚠️ Manual SEO optimization required
 - ⚠️ Need separate backend for API routes
@@ -111,12 +121,14 @@ The foundation of your portfolio's UI/UX.
 #### **Option D: SvelteKit**
 
 **Pros:**
+
 - ✅ Svelte's reactive paradigm (less boilerplate)
 - ✅ Built-in SSG/SSR like Next.js
 - ✅ Smaller bundle sizes than React
 - ✅ Excellent DX (Developer Experience)
 
 **Cons:**
+
 - ⚠️ Smaller ecosystem
 - ⚠️ Fewer job market skills (if portfolio goal is employment)
 - ⚠️ Less widespread adoption
@@ -130,6 +142,7 @@ The foundation of your portfolio's UI/UX.
 #### **Option A: Tailwind CSS** ⭐ RECOMMENDED
 
 **Pros:**
+
 - ✅ Utility-first (rapid development)
 - ✅ Consistent design system
 - ✅ Tree-shaking (only used classes ship)
@@ -138,6 +151,7 @@ The foundation of your portfolio's UI/UX.
 - ✅ Massive component library ecosystem (shadcn/ui, daisyUI, etc.)
 
 **Cons:**
+
 - ⚠️ HTML can look cluttered
 - ⚠️ Learning curve for class names
 
@@ -148,12 +162,14 @@ The foundation of your portfolio's UI/UX.
 #### **Option B: CSS Modules**
 
 **Pros:**
+
 - ✅ Scoped CSS (no global conflicts)
 - ✅ Standard CSS syntax
 - ✅ Works with all frameworks
 - ✅ No build dependency
 
 **Cons:**
+
 - ⚠️ More manual work than Tailwind
 - ⚠️ No built-in design system
 
@@ -164,11 +180,13 @@ The foundation of your portfolio's UI/UX.
 #### **Option C: styled-components / Emotion**
 
 **Pros:**
+
 - ✅ CSS-in-JS (component-scoped)
 - ✅ Dynamic styling with props
 - ✅ TypeScript integration
 
 **Cons:**
+
 - ⚠️ Runtime cost (unless zero-runtime options)
 - ⚠️ Debugging can be harder
 - ⚠️ Falling out of favor for performance reasons
@@ -184,12 +202,14 @@ Pre-built UI components for faster development.
 #### **Option A: shadcn/ui** ⭐ RECOMMENDED (with Tailwind)
 
 **Pros:**
+
 - ✅ Copy-paste components (not npm dependency)
 - ✅ Fully customizable
 - ✅ Radix UI primitives (accessibility)
 - ✅ Beautiful default styling
 
 **Cons:**
+
 - ⚠️ Requires Tailwind
 - ⚠️ Manual updates to components
 
@@ -198,11 +218,13 @@ Pre-built UI components for faster development.
 #### **Option B: Material-UI (MUI)**
 
 **Pros:**
+
 - ✅ Comprehensive component library
 - ✅ Material Design patterns
 - ✅ Enterprise-grade
 
 **Cons:**
+
 - ⚠️ Opinionated design (harder to customize)
 - ⚠️ Large bundle size
 
@@ -211,11 +233,13 @@ Pre-built UI components for faster development.
 #### **Option C: Chakra UI**
 
 **Pros:**
+
 - ✅ Accessible by default
 - ✅ Theme-able
 - ✅ Great DX
 
 **Cons:**
+
 - ⚠️ Maintenance has slowed
 - ⚠️ Migration concerns
 
@@ -226,6 +250,7 @@ Pre-built UI components for faster development.
 #### **Option A: Vercel** ⭐ RECOMMENDED
 
 **Pros:**
+
 - ✅ Zero-config for Next.js
 - ✅ Automatic HTTPS
 - ✅ Edge network (global CDN)
@@ -235,6 +260,7 @@ Pre-built UI components for faster development.
 - ✅ Serverless functions
 
 **Cons:**
+
 - ⚠️ Vendor lock-in (minimal)
 - ⚠️ Pricing can scale up for heavy usage
 
@@ -245,12 +271,14 @@ Pre-built UI components for faster development.
 #### **Option B: Netlify**
 
 **Pros:**
+
 - ✅ Similar to Vercel
 - ✅ Excellent CI/CD
 - ✅ Built-in forms (great for contact forms)
 - ✅ Generous free tier
 
 **Cons:**
+
 - ⚠️ Less Next.js-optimized than Vercel
 - ⚠️ Build times can be slower
 
@@ -261,11 +289,13 @@ Pre-built UI components for faster development.
 #### **Option C: GitHub Pages**
 
 **Pros:**
+
 - ✅ Free
 - ✅ Direct GitHub integration
 - ✅ Simple
 
 **Cons:**
+
 - ⚠️ Static only (no SSR/API routes)
 - ⚠️ Limited custom domain features
 - ⚠️ No preview deployments
@@ -277,11 +307,13 @@ Pre-built UI components for faster development.
 #### **Option D: Custom VPS (Current Setup)**
 
 **Pros:**
+
 - ✅ Full control
 - ✅ Can host multiple projects
 - ✅ No vendor lock-in
 
 **Cons:**
+
 - ⚠️ Manual security maintenance
 - ⚠️ No automatic scaling
 - ⚠️ Need to manage SSL, CDN, etc.
@@ -297,12 +329,14 @@ For blogs, projects, case studies.
 #### **Option A: Markdown/MDX** ⭐ RECOMMENDED FOR PORTFOLIOS
 
 **Pros:**
+
 - ✅ Version-controlled with Git
 - ✅ No external dependencies
 - ✅ MDX allows React components in markdown
 - ✅ Fast builds
 
 **Cons:**
+
 - ⚠️ Less user-friendly for non-devs
 - ⚠️ No GUI editor
 
@@ -311,11 +345,13 @@ For blogs, projects, case studies.
 #### **Option B: Headless CMS (Sanity, Contentful)**
 
 **Pros:**
+
 - ✅ Non-technical editing
 - ✅ Structured content
 - ✅ API-first
 
 **Cons:**
+
 - ⚠️ External dependency
 - ⚠️ Added complexity
 - ⚠️ Potential costs
@@ -327,6 +363,7 @@ For blogs, projects, case studies.
 #### **Option A: Vercel Analytics** ⭐ RECOMMENDED (if using Vercel)
 
 **Pros:**
+
 - ✅ Privacy-friendly
 - ✅ No cookie consent needed
 - ✅ Zero config
@@ -337,11 +374,13 @@ For blogs, projects, case studies.
 #### **Option B: Plausible / Umami**
 
 **Pros:**
+
 - ✅ Privacy-focused
 - ✅ GDPR compliant
 - ✅ Lightweight
 
 **Cons:**
+
 - ⚠️ Self-hosting required (Umami) or paid (Plausible)
 
 ---
@@ -349,10 +388,12 @@ For blogs, projects, case studies.
 #### **Option C: Google Analytics**
 
 **Pros:**
+
 - ✅ Free
 - ✅ Comprehensive
 
 **Cons:**
+
 - ⚠️ Privacy concerns
 - ⚠️ Cookie consent required (GDPR)
 - ⚠️ Overkill for portfolio
@@ -364,11 +405,13 @@ For blogs, projects, case studies.
 #### **Option A: Formspree / Netlify Forms** ⭐ RECOMMENDED
 
 **Pros:**
+
 - ✅ Simple integration
 - ✅ No backend needed
 - ✅ Spam protection
 
 **Cons:**
+
 - ⚠️ Limited free tier
 - ⚠️ External dependency
 
@@ -377,11 +420,13 @@ For blogs, projects, case studies.
 #### **Option B: Email via API Route (Next.js)**
 
 **Pros:**
+
 - ✅ Full control
 - ✅ Custom logic
 - ✅ Can integrate with Gmail (via gog!)
 
 **Cons:**
+
 - ⚠️ Need to handle spam
 - ⚠️ Requires API key management
 
@@ -392,6 +437,7 @@ For blogs, projects, case studies.
 #### **Option A: Framer Motion** ⭐ RECOMMENDED
 
 **Pros:**
+
 - ✅ React-first animations
 - ✅ Declarative API
 - ✅ Scroll animations built-in
@@ -401,10 +447,12 @@ For blogs, projects, case studies.
 #### **Option B: GSAP**
 
 **Pros:**
+
 - ✅ Most powerful animation library
 - ✅ Framework-agnostic
 
 **Cons:**
+
 - ⚠️ Steeper learning curve
 - ⚠️ Licensing for commercial use
 
@@ -426,6 +474,7 @@ For blogs, projects, case studies.
 ### Threat Model for a Portfolio Site:
 
 **Attack Vectors:**
+
 - Contact form spam/abuse
 - XSS (Cross-Site Scripting)
 - DDoS
@@ -473,6 +522,7 @@ For blogs, projects, case studies.
 ## RECOMMENDED STACK FOR ZAVALA SOFTWARE PORTFOLIO
 
 Based on:
+
 - ✅ Modern best practices
 - ✅ Security-first approach
 - ✅ Max's learning goals (full understanding before building)
@@ -481,6 +531,7 @@ Based on:
 ### **PRIMARY RECOMMENDATION:**
 
 **Frontend:**
+
 - **Framework:** Next.js 15 (App Router) + React 19
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS + shadcn/ui components
@@ -488,25 +539,30 @@ Based on:
 - **Icons:** Lucide React
 
 **Content:**
+
 - **Management:** MDX (Markdown + React components)
 - **Structure:** `/projects`, `/blog`, `/about` folders
 
 **Forms:**
+
 - **Contact Form:** Next.js API route → Email via gog (Gmail)
 - **Spam Protection:** Turnstile (Cloudflare) or reCAPTCHA
 
 **Hosting:**
+
 - **Primary:** Vercel (automatic deployments from GitHub)
 - **Domain:** Custom domain via Zavala TechLabs
 - **Analytics:** Vercel Analytics (privacy-friendly)
 
 **Development Tools:**
+
 - **Version Control:** Git + GitHub
 - **Package Manager:** pnpm (faster than npm)
 - **Linting:** ESLint + Prettier
 - **Pre-commit Hooks:** Husky + lint-staged
 
 **CI/CD:**
+
 - **Auto-deploy:** GitHub → Vercel (on push to `main`)
 - **Preview branches:** Automatic preview URLs for PRs
 
@@ -515,12 +571,14 @@ Based on:
 ## ALTERNATIVE STACK (Lightweight Option):
 
 **Frontend:**
+
 - **Framework:** Astro
 - **Styling:** Tailwind CSS
 - **Hosting:** Netlify
 - **Content:** Markdown
 
 **Trade-offs:**
+
 - ⬆️ **Performance:** Even faster than Next.js
 - ⬇️ **Flexibility:** Less dynamic features
 - ⬇️ **Learning:** Less transferable to other projects

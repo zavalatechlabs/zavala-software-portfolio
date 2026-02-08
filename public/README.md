@@ -25,7 +25,7 @@ public/
 ```tsx
 import Image from 'next/image'
 
-<Image
+;<Image
   src="/images/projects/project-screenshot.jpg"
   alt="Project screenshot"
   width={800}
@@ -34,6 +34,7 @@ import Image from 'next/image'
 ```
 
 Or for simple assets:
+
 ```html
 <a href="/resume.pdf" download>Download Resume</a>
 ```

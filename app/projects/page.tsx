@@ -14,17 +14,13 @@ export default function ProjectsPage() {
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
         <p className="text-xl text-gray-600">
-          A collection of projects I've built using modern web technologies.
+          A collection of projects I&apos;ve built using modern web technologies.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project) => (
-          <Link
-            key={project.slug}
-            href={`/projects/${project.slug}`}
-            className="group"
-          >
+          <Link key={project.slug} href={`/projects/${project.slug}`} className="group">
             <article className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
               {/* Placeholder Image */}
               <div className="bg-gradient-to-br from-primary-400 to-primary-600 h-48 flex items-center justify-center">
@@ -59,9 +55,7 @@ export default function ProjectsPage() {
       {/* Empty State (hidden when projects exist) */}
       {projects.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-xl text-gray-500">
-            No projects yet. Check back soon!
-          </p>
+          <p className="text-xl text-gray-500">No projects yet. Check back soon!</p>
         </div>
       )}
     </div>

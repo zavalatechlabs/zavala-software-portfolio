@@ -77,12 +77,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: baseUrl,
   },
-  other: {
-    'theme-color': [
-      { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-      { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
-    ],
-  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -121,6 +115,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+      </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
         <script
           type="application/ld+json"

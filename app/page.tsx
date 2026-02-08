@@ -22,6 +22,12 @@ export default function Home() {
       <section className="py-16 md:py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <FadeInView>
+            <h2 className="text-3xl md:text-5xl font-bold mb-8 text-center">
+              <DecipherText text="About Me" />
+            </h2>
+          </FadeInView>
+
+          <FadeInView delay={0.1}>
             <div className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-lg md:text-xl text-zavala-text-primary leading-relaxed mb-6">
                 I&apos;m a software engineer passionate about building intelligent systems and exploring 

@@ -10,8 +10,8 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="max-w-4xl mx-auto px-6 py-16 md:py-24">
-        <div className="mb-12">
+      <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
+        <div className="mb-6">
           {/* Name & Tagline */}
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-zavala-text-primary">
             Maximiliano Zavala

@@ -77,6 +77,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: baseUrl,
   },
+  other: {
+    'theme-color': [
+      { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+      { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+    ],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

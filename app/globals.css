@@ -62,6 +62,10 @@
     --footer-border: #374151;
   }
 
+  html {
+    @apply bg-zavala-bg-primary;
+  }
+
   body {
     @apply bg-zavala-bg-primary text-zavala-text-primary;
     @apply transition-colors duration-200;

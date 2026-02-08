@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Modern developer portfolio showcasing projects, skills, and experience in software development',
     start_url: '/',
     display: 'standalone',
-    background_color: '#000000',
-    theme_color: '#6366f1',
+    background_color: '#0a0a0a',
+    theme_color: '#0a0a0a',
     icons: [
       {
         src: '/icon-192.png',

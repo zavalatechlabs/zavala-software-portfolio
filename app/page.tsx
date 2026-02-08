@@ -99,7 +99,7 @@ export default function Home() {
             <div className="text-center">
               <Link href="/about">
                 <Button variant="secondary" size="lg">
-                  Learn More About Me
+                  View My Resume
                 </Button>
               </Link>
             </div>

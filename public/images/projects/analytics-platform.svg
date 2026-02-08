@@ -6,5 +6,5 @@
     </linearGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#grad4)"/>
-  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">📊 Real-time Analytics Platform</text>
+  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="56" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">📊 Real-time Analytics Platform</text>
 </svg>

@@ -356,10 +356,19 @@ If portfolio evolves into a blog/business site:
 - `resend` - Email API client
 - `@react-email/components` - Email templates
 
+### Testing
+- `jest` - Test framework
+- `@testing-library/react` - React component testing
+- `@testing-library/jest-dom` - Custom Jest matchers for DOM
+- `@testing-library/user-event` - Simulate user interactions
+- `@playwright/test` - End-to-end testing framework
+- `jest-environment-jsdom` - DOM environment for Jest
+
 ### Dev Tools
 - `eslint` - Linting
 - `prettier` - Code formatting
 - `@types/*` - TypeScript definitions
+- `@next/bundle-analyzer` - Bundle size analysis
 
 ---
 
@@ -389,17 +398,110 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ## Testing Strategy
 
+### Automated Testing
+
+**Unit & Component Testing**
+- **Framework:** Jest + React Testing Library
+- **Why:** Industry standard for React, built into Next.js, accessibility-focused testing
+- **Coverage Target:** 80%+ for critical paths (components, utilities, business logic)
+- **What to Test:**
+  - Component rendering and behavior
+  - User interactions (clicks, form inputs)
+  - Edge cases and error states
+  - Utility functions
+
+**Example:**
+```typescript
+// components/__tests__/ProjectCard.test.tsx
+import { render, screen } from '@testing-library/react';
+import ProjectCard from '../ProjectCard';
+
+describe('ProjectCard', () => {
+  it('renders project title and description', () => {
+    render(
+      <ProjectCard
+        title="Test Project"
+        description="Test description"
+        image="/test.jpg"
+        tags={['Next.js', 'TypeScript']}
+      />
+    );
+    
+    expect(screen.getByText('Test Project')).toBeInTheDocument();
+    expect(screen.getByText('Test description')).toBeInTheDocument();
+  });
+});
+```
+
+**End-to-End (E2E) Testing**
+- **Framework:** Playwright
+- **Why:** Modern, fast, multi-browser support, excellent TypeScript integration, trace viewer for debugging
+- **Alternative:** Cypress (more visual debugging UI, larger community)
+- **What to Test:**
+  - Critical user flows (homepage → projects → contact form)
+  - Navigation between pages
+  - Form submissions
+  - Responsive behavior
+  - Accessibility (keyboard navigation, screen readers)
+
+**Example:**
+```typescript
+// e2e/contact.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('contact form submission', async ({ page }) => {
+  await page.goto('/contact');
+  
+  await page.fill('[name="name"]', 'John Doe');
+  await page.fill('[name="email"]', 'john@example.com');
+  await page.fill('[name="message"]', 'Test message');
+  
+  await page.click('button[type="submit"]');
+  
+  await expect(page.locator('.success-message')).toBeVisible();
+});
+```
+
+**Test Scripts:**
+```json
+// package.json
+{
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
+  }
+}
+```
+
+**CI/CD Integration:**
+- Run tests on every PR
+- Block merges if tests fail
+- Generate coverage reports
+- Run E2E tests on preview deployments
+
+### Additional Testing Tools
+- **Type Checking:** TypeScript compiler (`tsc --noEmit`)
+- **Linting:** ESLint (code quality)
+- **Formatting:** Prettier (code style)
+- **Visual Regression (Future):** Percy or Chromatic for screenshot diffs
+
 ### Manual Testing
 - Cross-browser testing (Chrome, Firefox, Safari)
 - Mobile responsive testing (iOS, Android)
 - Accessibility testing (screen readers, keyboard navigation)
 - Performance testing (Lighthouse scores)
 
-### Automated Testing (Optional for Future)
-- **Unit Tests:** Jest + React Testing Library
-- **E2E Tests:** Playwright or Cypress
-- **Type Checking:** TypeScript compiler (`tsc --noEmit`)
-- **Linting:** ESLint
+### Testing Workflow
+1. Write test before or alongside feature (TDD/BDD approach)
+2. Run tests locally: `npm test`
+3. Ensure coverage meets threshold
+4. Push code → GitHub Actions runs tests automatically
+5. Review test results in PR
+6. Merge only if all tests pass
 
 ---
 

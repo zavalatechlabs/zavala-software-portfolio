@@ -919,15 +919,25 @@ Description: Real-time collaborative task tracking application
 
 ---
 
-## Questions for Max (To Be Answered in Phase 3)
+## Design Decisions (Answered by Max - 2026-02-08)
 
-1. **AI Chat Widget:** Do you want full conversational AI on launch, or start with quick action buttons?
-2. **Terminal Code Window:** Where should this live? (About page, Footer, or skip for MVP?)
-3. **Light Mode:** Dark theme only, or also build light mode?
-4. **Projects:** How many projects to showcase? (Need real project data)
-5. **Bio Content:** Need your actual professional story and background
-6. **Resume:** Do you have a current PDF resume, or do we need to create one?
-7. **Social Links:** Which platforms? (GitHub, LinkedIn, Twitter, etc.)
+1. **AI Chat Widget:** ✅ Placeholder/fake for v1 (visual only, no functionality). Will add real AI in later phase.
+
+2. **Terminal Code Window:** ✅ Footer area - place where it adds value and doesn't distract from main content.
+
+3. **Light/Dark Mode:** ✅ Build both modes with dark as default. Easy toggle switch in navbar.
+
+4. **Projects:** ✅ 5 mocked projects for initial implementation.
+
+5. **Split Identity:** ✅ "Software Engineer | AI Enthusiast"
+
+6. **Social Links:** ✅ GitHub and LinkedIn only.
+
+7. **Resume:** ✅ Mock resume info following aakashrajbanshi.com.np pattern:
+   - Dedicated resume page/section
+   - Work experience, education, skills
+   - Download button at bottom (similar to inspiration site)
+   - PDF download functionality
 
 ---
 

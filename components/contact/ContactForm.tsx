@@ -7,6 +7,7 @@ interface FormData {
   name: string
   email: string
   message: string
+  website: string // Honeypot field - should remain empty
 }
 
 interface FormErrors {
@@ -20,6 +21,7 @@ export function ContactForm() {
     name: '',
     email: '',
     message: '',
+    website: '', // Honeypot field
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -72,7 +74,7 @@ export function ContactForm() {
 
       if (response.ok) {
         setSubmitStatus('success')
-        setFormData({ name: '', email: '', message: '' })
+        setFormData({ name: '', email: '', message: '', website: '' })
         setErrors({})
       } else {
         setSubmitStatus('error')
@@ -177,6 +179,22 @@ export function ContactForm() {
             {errors.message}
           </motion.p>
         )}
+      </div>
+
+      {/* Honeypot field - hidden from users, visible to bots */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="website">
+          Website (leave blank)
+        </label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          value={formData.website}
+          onChange={handleChange}
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       <button

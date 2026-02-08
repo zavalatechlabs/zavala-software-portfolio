@@ -80,7 +80,7 @@ export default function ContactPage() {
       </form>
 
       <div className="mt-12 pt-8 border-t border-gray-200">
-        <h2 className="text-2xl font-semibold mb-4">Other Ways to Connect</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-zavala-text-primary">Other Ways to Connect</h2>
         <div className="space-y-3">
           <a
             href="mailto:zavala.techlabs@gmail.com"

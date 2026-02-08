@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Download } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'About | Max Zavala',
-  description: 'Learn more about Max Zavala - Software Engineer | AI Enthusiast',
+  title: 'Resume | Maximiliano Zavala',
+  description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
 }
 
 export default function AboutPage() {
@@ -11,23 +11,14 @@ export default function AboutPage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="max-w-4xl mx-auto px-6 py-16 md:py-24">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-12 mb-16">
-          {/* Professional Photo Placeholder */}
-          <div className="flex-shrink-0">
-            <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl bg-zavala-bg-surface border-2 border-zavala-border flex items-center justify-center">
-              <div className="text-6xl font-bold text-zavala-text-tertiary">MZ</div>
-            </div>
-          </div>
-
+        <div className="mb-16">
           {/* Name & Tagline */}
-          <div className="flex-1">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-zavala-text-primary">
-              Max Zavala
-            </h1>
-            <p className="text-xl text-zavala-accent-primary font-medium mb-8">
-              Software Engineer | AI Enthusiast
-            </p>
-          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-zavala-text-primary">
+            Maximiliano Zavala
+          </h1>
+          <p className="text-xl text-zavala-accent-primary font-medium mb-8">
+            Software Engineer | AI Enthusiast
+          </p>
         </div>
       </section>
 

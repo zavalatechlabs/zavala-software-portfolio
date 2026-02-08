@@ -1,8 +1,13 @@
+'use client'
+
 import Link from 'next/link'
 import { FileQuestion, Home, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { useRouter } from 'next/navigation'
 
 export default function NotFound() {
+  const router = useRouter()
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-24">
       <div className="max-w-2xl w-full text-center">
@@ -41,19 +46,15 @@ export default function NotFound() {
               Go Home
             </Button>
           </Link>
-          <button
-            onClick={() => window.history.back()}
+          <Button
+            variant="secondary"
+            size="md"
             className="w-full sm:w-auto"
+            onClick={() => router.back()}
           >
-            <Button
-              variant="secondary"
-              size="md"
-              className="w-full"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Go Back
-            </Button>
-          </button>
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Go Back
+          </Button>
         </div>
 
         {/* Quick Links */}

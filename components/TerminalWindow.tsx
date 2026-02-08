@@ -66,7 +66,7 @@ export default function TerminalWindow() {
       // Add plain text before match
       if (match.start > lastIndex) {
         tokens.push(
-          <span key={key++} className="text-gray-300">
+          <span key={key++} className="text-zavala-terminal-text">
             {line.substring(lastIndex, match.start)}
           </span>
         )
@@ -83,22 +83,22 @@ export default function TerminalWindow() {
     // Add remaining plain text
     if (lastIndex < line.length) {
       tokens.push(
-        <span key={key++} className="text-gray-300">
+        <span key={key++} className="text-zavala-terminal-text">
           {line.substring(lastIndex)}
         </span>
       )
     }
 
     // If no tokens, return empty line with default color
-    return tokens.length > 0 ? tokens : <span className="text-gray-300">{line || '\u00A0'}</span>
+    return tokens.length > 0 ? tokens : <span className="text-zavala-terminal-text">{line || '\u00A0'}</span>
   }
 
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Terminal Window */}
-      <div className="bg-[#1e1e1e] rounded-lg shadow-2xl overflow-hidden border border-gray-800">
+      <div className="bg-zavala-terminal-bg rounded-lg shadow-2xl overflow-hidden border border-zavala-terminal-border">
         {/* Window Header */}
-        <div className="bg-[#323233] px-4 py-2 flex items-center justify-between">
+        <div className="bg-zavala-terminal-header px-4 py-2 flex items-center justify-between">
           {/* Window Controls - Left */}
           <div className="flex items-center gap-2">
             <button
@@ -123,9 +123,9 @@ export default function TerminalWindow() {
           <div className="flex-1"></div>
 
           {/* File Tab - Right aligned */}
-          <div className="bg-[#1e1e1e] px-4 py-1 rounded-t-md flex items-center gap-2 -mb-2">
+          <div className="bg-zavala-terminal-bg px-4 py-1 rounded-t-md flex items-center gap-2 -mb-2">
             <span className="text-[#3b82f6] text-xs">📄</span>
-            <span className="text-gray-300 text-xs font-mono">Developer Info.ts</span>
+            <span className="text-zavala-terminal-text text-xs font-mono">Developer Info.ts</span>
           </div>
         </div>
 
@@ -141,7 +141,7 @@ export default function TerminalWindow() {
                 {code.split('\n').map((line, index) => (
                   <div key={index} className="table-row">
                     {/* Line number */}
-                    <span className="table-cell text-right pr-4 text-gray-600 select-none w-8">
+                    <span className="table-cell text-right pr-4 text-zavala-terminal-line-number select-none w-8">
                       {index + 1}
                     </span>
                     {/* Code line with syntax highlighting */}

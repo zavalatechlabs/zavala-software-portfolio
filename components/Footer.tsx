@@ -18,9 +18,9 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-zavala-footer-bg text-zavala-footer-text">
       {/* Terminal Window Section */}
-      <div className="bg-[#0a0a0a] py-16 px-4 sm:px-6 lg:px-8">
+      <div className="bg-zavala-footer-terminal-section py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <TerminalWindow />
         </div>
@@ -30,23 +30,23 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">
+            <h3 className="text-zavala-footer-heading text-lg font-bold mb-4">
               Maximiliano Zavala
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-zavala-footer-text-muted">
               Building modern web applications with cutting-edge technologies.
             </p>
           </div>
 
           {/* Navigation Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Navigation</h4>
+            <h4 className="text-zavala-footer-heading font-semibold mb-4">Navigation</h4>
             <ul className="space-y-2">
               {footerLinks.navigation.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm hover:text-primary-500 transition-colors duration-200"
+                    className="text-sm hover:text-zavala-accent-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -57,7 +57,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Connect</h4>
+            <h4 className="text-zavala-footer-heading font-semibold mb-4">Connect</h4>
             <ul className="space-y-2">
               {footerLinks.social.map((link) => (
                 <li key={link.name}>
@@ -65,7 +65,7 @@ export default function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm hover:text-primary-500 transition-colors duration-200"
+                    className="text-sm hover:text-zavala-accent-primary transition-colors duration-200"
                   >
                     {link.name}
                   </a>
@@ -76,8 +76,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-gray-800">
-          <p className="text-center text-sm text-gray-400">
+        <div className="mt-8 pt-8 border-t border-zavala-footer-border">
+          <p className="text-center text-sm text-zavala-footer-text-muted">
             &copy; {currentYear} Maximiliano Zavala. All rights reserved.
           </p>
         </div>

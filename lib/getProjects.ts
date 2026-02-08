@@ -30,7 +30,7 @@ export function getAllProjectSlugs(): string[] {
     return fileNames
       .filter((fileName) => fileName.endsWith('.mdx'))
       .map((fileName) => fileName.replace(/\.mdx$/, ''))
-  } catch (_error) {
+  } catch {
     // If directory doesn't exist or is empty, return empty array
     return []
   }
@@ -50,7 +50,7 @@ export function getProjectBySlug(slug: string): Project | null {
       metadata: data as ProjectMetadata,
       content,
     }
-  } catch (_error) {
+  } catch {
     return null
   }
 }

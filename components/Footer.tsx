@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import TerminalWindow from './TerminalWindow'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -19,6 +20,16 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-900 text-gray-300">
+      {/* Terminal Window Section */}
+      <div className="bg-[#0a0a0a] py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-8">
+            Developer Info<span className="text-[#3b82f6]">.</span>ts
+          </h2>
+          <TerminalWindow />
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}

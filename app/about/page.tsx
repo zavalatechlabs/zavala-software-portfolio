@@ -3,7 +3,7 @@ import { Download } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Resume | Maximiliano Zavala',
-  description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
+  description: 'Resume and professional experience of Maximiliano Zavala - Software Engineer | AI Enthusiast',
 }
 
 export default function AboutPage() {

@@ -14,7 +14,7 @@ export default function ProjectsPage() {
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
         <p className="text-xl text-gray-600">
-          A collection of projects I&apos;ve built using modern web technologies.
+          A collection of projects that reflect my approach to designing, building, and operating production systems.
         </p>
       </div>
 

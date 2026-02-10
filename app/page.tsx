@@ -67,10 +67,10 @@ export default function Home() {
                   <span className="text-2xl">🤖</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
-                  Artificial Intelligence Engineering
+                  Artificial Intelligence
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  AI-powered systems and agents, from custom MCP servers to multi-agent workflows that tackle real operational problems.
+                  Engineering AI-powered systems and agents, from custom MCP servers to multi-agent workflows that tackle real operational problems.
                 </p>
               </Card>
             </FadeInView>

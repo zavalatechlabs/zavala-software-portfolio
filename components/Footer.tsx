@@ -34,7 +34,7 @@ export default function Footer() {
               Maximiliano Zavala
             </h3>
             <p className="text-sm text-zavala-footer-text-muted">
-              Building modern web applications with cutting-edge technologies.
+              Software engineer focused on building intelligent, reliable systems.
             </p>
           </div>
 

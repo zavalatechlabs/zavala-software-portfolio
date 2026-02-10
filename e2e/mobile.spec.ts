@@ -24,7 +24,7 @@ test.describe('Mobile Responsiveness', () => {
     await page.waitForTimeout(300)
 
     // Menu should be visible now (check for navigation links)
-    const mobileNav = page.locator('nav a:has-text("About"), nav button:has-text("About")')
+    const mobileNav = page.locator('nav a:has-text("Resume"), nav button:has-text("Resume")')
     await expect(mobileNav.first()).toBeVisible()
 
     // Close menu by clicking button again or clicking a link
@@ -50,8 +50,8 @@ test.describe('Mobile Responsiveness', () => {
     expect(hasHorizontalScroll).toBeFalsy()
   })
 
-  test('about page renders correctly on mobile', async ({ page }) => {
-    await page.goto('/about')
+  test('resume page renders correctly on mobile', async ({ page }) => {
+    await page.goto('/resume')
 
     // Wait for content to load
     await page.waitForLoadState('networkidle')
@@ -148,12 +148,12 @@ test.describe('Mobile Responsiveness', () => {
     await menuButton.click()
     await page.waitForTimeout(300)
 
-    // Click on About link
-    await page.click('text=About')
+    // Click on Resume link
+    await page.click('text=Resume')
 
-    // Should navigate to About page
-    await expect(page).toHaveURL('/about')
-    await expect(page.locator('h1')).toContainText('About')
+    // Should navigate to Resume page
+    await expect(page).toHaveURL('/resume')
+    await expect(page.locator('h1')).toContainText('Maximiliano Zavala')
   })
 
   test('mobile navigation to all pages', async ({ page }) => {
@@ -295,7 +295,7 @@ test.describe('Mobile Responsiveness', () => {
   })
 
   test('mobile viewport does not break layout', async ({ page }) => {
-    const pages = ['/', '/about', '/projects', '/contact']
+    const pages = ['/', '/resume', '/projects', '/contact']
 
     for (const path of pages) {
       await page.goto(path)

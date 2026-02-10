@@ -12,7 +12,7 @@ describe('Navbar', () => {
     render(<Navbar />)
     
     expect(screen.getByText('Home')).toBeInTheDocument()
-    expect(screen.getByText('About')).toBeInTheDocument()
+    expect(screen.getByText('Resume')).toBeInTheDocument()
     expect(screen.getByText('Projects')).toBeInTheDocument()
     expect(screen.getByText('Contact')).toBeInTheDocument()
   })
@@ -21,12 +21,12 @@ describe('Navbar', () => {
     render(<Navbar />)
     
     const homeLink = screen.getByText('Home').closest('a')
-    const aboutLink = screen.getByText('About').closest('a')
+    const resumeLink = screen.getByText('Resume').closest('a')
     const projectsLink = screen.getByText('Projects').closest('a')
     const contactLink = screen.getByText('Contact').closest('a')
 
     expect(homeLink).toHaveAttribute('href', '/')
-    expect(aboutLink).toHaveAttribute('href', '/about')
+    expect(resumeLink).toHaveAttribute('href', '/resume')
     expect(projectsLink).toHaveAttribute('href', '/projects')
     expect(contactLink).toHaveAttribute('href', '/contact')
   })

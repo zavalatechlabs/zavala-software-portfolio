@@ -75,8 +75,8 @@ test.describe('Theme Toggle', () => {
     await expect(page.locator('html')).toHaveClass(/light/)
 
     // Navigate to another page
-    await page.click('text=About')
-    await expect(page).toHaveURL('/about')
+    await page.click('text=Resume')
+    await expect(page).toHaveURL('/resume')
 
     // Theme should still be light
     await expect(page.locator('html')).toHaveClass(/light/)
@@ -179,7 +179,7 @@ test.describe('Theme Toggle', () => {
   })
 
   test('theme toggle works on all pages', async ({ page }) => {
-    const pages = ['/', '/about', '/projects', '/contact']
+    const pages = ['/', '/resume', '/projects', '/contact']
 
     for (const path of pages) {
       await page.goto(path)

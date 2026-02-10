@@ -92,7 +92,7 @@ export default function Home() {
           {/* Learn More CTA */}
           <FadeInView delay={0.4}>
             <div className="text-center">
-              <Link href="/about">
+              <Link href="/resume">
                 <Button variant="secondary" size="lg">
                   View My Resume
                 </Button>

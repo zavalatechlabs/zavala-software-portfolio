@@ -8,12 +8,12 @@ test.describe('Navigation', () => {
     await expect(page.locator('h1')).toContainText('Zavala Software Portfolio')
   })
 
-  test('navigates to About page', async ({ page }) => {
+  test('navigates to Resume page', async ({ page }) => {
     await page.goto('/')
     
-    await page.click('text=About')
-    await expect(page).toHaveURL('/about')
-    await expect(page.locator('h1')).toContainText('About')
+    await page.click('text=Resume')
+    await expect(page).toHaveURL('/resume')
+    await expect(page.locator('h1')).toContainText('Maximiliano Zavala')
   })
 
   test('navigates to Projects page', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Navigation', () => {
 
 test.describe('Navbar', () => {
   test('navbar is visible on all pages', async ({ page }) => {
-    const pages = ['/', '/about', '/projects', '/contact']
+    const pages = ['/', '/resume', '/projects', '/contact']
     
     for (const path of pages) {
       await page.goto(path)
@@ -59,7 +59,7 @@ test.describe('Navbar', () => {
   })
 
   test('brand link returns to homepage', async ({ page }) => {
-    await page.goto('/about')
+    await page.goto('/resume')
     
     await page.click('nav >> text=Zavala')
     await expect(page).toHaveURL('/')

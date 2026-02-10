@@ -31,12 +31,11 @@ export default function Home() {
             <div className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-lg md:text-xl text-zavala-text-primary leading-relaxed mb-6">
                 I&apos;m a software engineer passionate about building intelligent systems and exploring 
-                the intersection of full-stack development and AI. I specialize in creating scalable 
-                web applications and experimenting with cutting-edge technologies.
+                the intersection of full-stack development and AI. I focus on designing cloud-native 
+                applications, AI-powered tools, and the platforms that keep them reliable in production.
               </p>
               <p className="text-base md:text-lg text-zavala-text-secondary leading-relaxed">
-                From e-commerce platforms to AI-powered assistants, I love turning complex problems 
-                into elegant solutions.
+                I love turning complex systems and ambiguous problems into clear, practical solutions.
               </p>
             </div>
           </FadeInView>

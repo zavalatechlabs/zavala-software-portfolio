@@ -114,7 +114,7 @@ export default function Home() {
 
           <FadeInView delay={0.1}>
             <p className="text-center text-zavala-text-secondary text-lg mb-12 max-w-2xl mx-auto">
-              A collection of projects that reflect my approach to designing, building, and operating production systems.
+              A selection of projects that reflect how I approach building and evolving production systems across AI, cloud, and modern software platforms.
             </p>
           </FadeInView>
 
@@ -169,8 +169,7 @@ export default function Home() {
 
           <FadeInView delay={0.2}>
             <p className="text-lg md:text-xl text-zavala-text-secondary mb-8 leading-relaxed">
-              Have an interesting project in mind? Whether it&apos;s a web application, AI integration, 
-              or cloud infrastructure challenge, I&apos;d love to hear about it.
+              I enjoy working on meaningful problems with thoughtful people. If you&apos;re interested in the kind of systems I build or how I approach engineering challenges, feel free to reach out.
             </p>
           </FadeInView>
 

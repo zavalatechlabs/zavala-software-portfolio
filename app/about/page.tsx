@@ -10,7 +10,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
+      <section className="max-w-4xl mx-auto px-6 pt-12 md:pt-16 pb-6 md:pb-8">
         <div className="mb-6">
           {/* Name & Tagline */}
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-zavala-text-primary">
@@ -23,7 +23,7 @@ export default function AboutPage() {
       </section>
 
       {/* Resume Section */}
-      <section className="bg-zavala-bg-surface border-t border-b border-zavala-border py-12 md:py-16">
+      <section className="bg-zavala-bg-surface border-t border-b border-zavala-border pt-8 md:pt-10 pb-12 md:pb-16">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold mb-10 text-zavala-text-primary">
             Resume

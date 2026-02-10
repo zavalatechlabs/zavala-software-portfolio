@@ -114,8 +114,7 @@ export default function Home() {
 
           <FadeInView delay={0.1}>
             <p className="text-center text-zavala-text-secondary text-lg mb-12 max-w-2xl mx-auto">
-              A selection of recent projects showcasing full-stack development, AI integration, 
-              and cloud infrastructure.
+              A collection of projects that reflect my approach to designing, building, and operating production systems.
             </p>
           </FadeInView>
 

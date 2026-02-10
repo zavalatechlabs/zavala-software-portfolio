@@ -20,7 +20,7 @@ export default function Footer() {
   return (
     <footer className="bg-zavala-footer-bg text-zavala-footer-text">
       {/* Terminal Window Section */}
-      <div className="bg-zavala-footer-terminal-section py-16 px-4 sm:px-6 lg:px-8">
+      <div className="bg-zavala-footer-terminal-section py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <TerminalWindow />
         </div>

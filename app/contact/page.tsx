@@ -10,8 +10,7 @@ export default function ContactPage() {
     <div className="max-w-2xl mx-auto px-4 py-16">
       <h1 className="text-4xl md:text-5xl font-bold mb-6">Get in Touch</h1>
       <p className="text-xl text-gray-600 mb-12">
-        Have a project in mind? Want to collaborate? Or just want to say hello? I&apos;d love to
-        hear from you!
+        If you&apos;d like to talk about the systems I build or how I approach engineering problems, feel free to reach out.
       </p>
 
       {/* Contact Form (placeholder - will be made functional later) */}

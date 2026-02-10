@@ -53,11 +53,10 @@ export default function Home() {
                   <span className="text-2xl">💻</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
-                  Full-Stack Development
+                  Full-Stack & Platform Engineering
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Building scalable web applications with modern frameworks and best practices. 
-                  From database design to responsive UIs, I handle the entire stack.
+                  Building end-to-end systems across frontends, APIs, and backend services, with a focus on clean architecture, maintainability, and reliability.
                 </p>
               </Card>
             </FadeInView>
@@ -68,11 +67,10 @@ export default function Home() {
                   <span className="text-2xl">🤖</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
-                  AI & Automation
+                  Artificial Intelligence Engineering
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Exploring intelligent systems and conversational AI to solve real problems. 
-                  Building tools that leverage language models and machine learning.
+                  AI-powered systems and agents, from custom MCP servers to multi-agent workflows that tackle real operational problems.
                 </p>
               </Card>
             </FadeInView>
@@ -83,11 +81,10 @@ export default function Home() {
                   <span className="text-2xl">☁️</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
-                  Cloud Infrastructure
+                  Cloud Infrastructure & Security
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Designing and deploying reliable, scalable systems on modern cloud platforms. 
-                  Infrastructure as code, monitoring, and DevOps best practices.
+                  Designing and operating secure cloud-native systems with an emphasis on reliability, security, and infrastructure as code.
                 </p>
               </Card>
             </FadeInView>

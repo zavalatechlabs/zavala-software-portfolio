@@ -9,14 +9,14 @@ export default function TerminalWindow() {
   name: "Maximiliano Zavala",
   role: "Software Engineer",
   focus: [
-    "Full-Stack Development",
-    "AI & Machine Learning",
-    "Cloud Infrastructure"
+    "Full-Stack & Platform Engineering",
+    "Artificial Intelligence",
+    "Cloud Infrastructure & Security"
   ],
   passion: true,
   location: "Seattle, WA",
   contact: {
-    email: "contact@zavalatechlabs.com"
+    email: "zavala.techlabs@gmail.com"
   }
 };`
 

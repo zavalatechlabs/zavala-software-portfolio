@@ -294,12 +294,6 @@ export default function AboutPage() {
 
           {/* Download Resume Button */}
           <div className="text-center pt-8 border-t border-zavala-border">
-            <h3 className="text-xl font-semibold mb-4 text-zavala-text-primary">
-              Want the Full Details?
-            </h3>
-            <p className="text-zavala-text-secondary mb-6">
-              Download my complete resume for detailed experience, education, and certifications.
-            </p>
             <a
               href="/resume.pdf"
               download="Max_Zavala_Resume.pdf"

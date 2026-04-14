@@ -27,16 +27,16 @@ describe('ThemeToggle', () => {
   describe('Initial Render and Hydration', () => {
     it('renders placeholder button before mounting (hydration safety)', () => {
       // Before mounting, component returns a placeholder
-      const { container } = render(<ThemeToggle />)
+      render(<ThemeToggle />)
       const button = screen.getByLabelText('Toggle theme')
-      
+
       expect(button).toBeInTheDocument()
       expect(button).toHaveClass('p-2', 'rounded-lg', 'bg-zavala-bg-surface')
     })
 
     it('renders actual theme toggle after mounting', async () => {
       render(<ThemeToggle />)
-      
+
       await waitFor(() => {
         const button = screen.getByLabelText('Toggle theme')
         expect(button).toBeInTheDocument()
@@ -131,7 +131,7 @@ describe('ThemeToggle', () => {
   describe('Keyboard Navigation', () => {
     it('can be focused with tab key', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <div>
           <button>Previous</button>
@@ -152,7 +152,7 @@ describe('ThemeToggle', () => {
 
     it('responds to Enter key press', async () => {
       const user = userEvent.setup()
-      
+
       mockUseTheme.mockReturnValue({
         theme: 'dark',
         setTheme: mockSetTheme,
@@ -177,7 +177,7 @@ describe('ThemeToggle', () => {
 
     it('responds to Space key press', async () => {
       const user = userEvent.setup()
-      
+
       mockUseTheme.mockReturnValue({
         theme: 'light',
         setTheme: mockSetTheme,
@@ -300,7 +300,7 @@ describe('ThemeToggle', () => {
       })
 
       const button = screen.getByLabelText('Toggle theme')
-      
+
       // Rapid clicks
       fireEvent.click(button)
       fireEvent.click(button)
@@ -377,7 +377,7 @@ describe('ThemeToggle', () => {
         const button = screen.getByLabelText('Toggle theme')
         button.focus()
         expect(button).toHaveFocus()
-        
+
         fireEvent.click(button)
         expect(button).toHaveFocus()
       })

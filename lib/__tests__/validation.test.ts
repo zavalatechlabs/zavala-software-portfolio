@@ -1,5 +1,10 @@
 import { describe, it, expect } from '@jest/globals'
-import { contactFormSchema, isHoneypotTriggered, sanitizeHtml } from '../validation'
+import {
+  contactFormSchema,
+  isHoneypotTriggered,
+  sanitizeHtml,
+  validateContactField,
+} from '../validation'
 
 describe('contactFormSchema', () => {
   it('should validate valid contact form data', () => {
@@ -7,9 +12,9 @@ describe('contactFormSchema', () => {
       name: 'John Doe',
       email: 'john@example.com',
       message: 'This is a valid message with enough characters.',
-      website: ''
+      website: '',
     }
-    
+
     const result = contactFormSchema.parse(validData)
     expect(result).toBeDefined()
     expect(result.name).toBe('John Doe')
@@ -22,7 +27,7 @@ describe('contactFormSchema', () => {
       email: '  JOHN@EXAMPLE.COM  ',
       message: 'Valid message here',
     }
-    
+
     const result = contactFormSchema.parse(data)
     expect(result.email).toBe('john@example.com')
   })
@@ -33,7 +38,7 @@ describe('contactFormSchema', () => {
       email: 'john@example.com',
       message: 'Valid message',
     }
-    
+
     expect(() => contactFormSchema.parse(invalidData)).toThrow()
   })
 
@@ -43,7 +48,7 @@ describe('contactFormSchema', () => {
       email: 'not-an-email',
       message: 'Valid message',
     }
-    
+
     expect(() => contactFormSchema.parse(invalidData)).toThrow()
   })
 
@@ -53,7 +58,7 @@ describe('contactFormSchema', () => {
       email: 'john@example.com',
       message: 'Short',
     }
-    
+
     expect(() => contactFormSchema.parse(invalidData)).toThrow()
   })
 
@@ -63,7 +68,7 @@ describe('contactFormSchema', () => {
       email: 'john@example.com',
       message: 'Valid message here',
     }
-    
+
     expect(() => contactFormSchema.parse(invalidData)).toThrow()
   })
 
@@ -73,7 +78,7 @@ describe('contactFormSchema', () => {
       email: 'john@example.com',
       message: 'A'.repeat(5001),
     }
-    
+
     expect(() => contactFormSchema.parse(invalidData)).toThrow()
   })
 
@@ -83,9 +88,71 @@ describe('contactFormSchema', () => {
       email: 'john@example.com',
       message: 'Valid message',
     }
-    
+
     const result = contactFormSchema.parse(data)
     expect(result.website).toBeUndefined()
+  })
+
+  it('should reject name with CRLF characters', () => {
+    const data = {
+      name: 'John\r\nBcc: evil@attacker.com',
+      email: 'john@example.com',
+      message: 'Valid message here',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
+  })
+
+  it('should reject email with CRLF injection', () => {
+    const data = {
+      name: 'John Doe',
+      email: 'john@example.com\r\nBcc: evil@attacker.com',
+      message: 'Valid message here',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
+  })
+
+  it('should reject name with unicode line separators', () => {
+    const data = {
+      name: 'John\u2028Doe',
+      email: 'john@example.com',
+      message: 'Valid message here',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
+  })
+
+  it('should reject email with null byte', () => {
+    const data = {
+      name: 'John Doe',
+      email: 'john@example.com\0',
+      message: 'Valid message here',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
+  })
+})
+
+describe('validateContactField', () => {
+  it('returns null for valid name', () => {
+    expect(validateContactField('name', 'John Doe')).toBeNull()
+  })
+
+  it('returns error for empty name', () => {
+    expect(validateContactField('name', '')).toBeTruthy()
+  })
+
+  it('returns null for valid email', () => {
+    expect(validateContactField('email', 'john@example.com')).toBeNull()
+  })
+
+  it('returns error for invalid email', () => {
+    expect(validateContactField('email', 'not-an-email')).toBeTruthy()
+  })
+
+  it('returns error for short message', () => {
+    expect(validateContactField('message', 'Short')).toBeTruthy()
+  })
+
+  it('returns null for valid message', () => {
+    expect(validateContactField('message', 'This is a valid message.')).toBeNull()
   })
 })
 
@@ -95,9 +162,9 @@ describe('isHoneypotTriggered', () => {
       name: 'John Doe',
       email: 'john@example.com',
       message: 'Valid message',
-      website: ''
+      website: '',
     }
-    
+
     expect(isHoneypotTriggered(data)).toBe(false)
   })
 
@@ -107,7 +174,7 @@ describe('isHoneypotTriggered', () => {
       email: 'john@example.com',
       message: 'Valid message',
     }
-    
+
     expect(isHoneypotTriggered(data)).toBe(false)
   })
 
@@ -116,9 +183,9 @@ describe('isHoneypotTriggered', () => {
       name: 'John Doe',
       email: 'john@example.com',
       message: 'Valid message',
-      website: 'https://spam.com'
+      website: 'https://spam.com',
     }
-    
+
     expect(isHoneypotTriggered(data)).toBe(true)
   })
 
@@ -127,9 +194,9 @@ describe('isHoneypotTriggered', () => {
       name: 'John Doe',
       email: 'john@example.com',
       message: 'Valid message',
-      website: '   '
+      website: '   ',
     }
-    
+
     expect(isHoneypotTriggered(data)).toBe(false)
   })
 })

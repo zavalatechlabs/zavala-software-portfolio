@@ -26,7 +26,7 @@ export function Button({
   const variantStyles = {
     primary: `
       bg-zavala-accent-primary text-white
-      hover:bg-blue-600 hover:shadow-lg hover:shadow-zavala-accent-primary/20
+      hover:bg-zavala-accent-primary/90 hover:shadow-lg hover:shadow-zavala-accent-primary/20
       hover:-translate-y-0.5 active:translate-y-0
       focus:ring-zavala-accent-primary
     `,
@@ -53,12 +53,7 @@ export function Button({
 
   return (
     <button
-      className={clsx(
-        baseStyles,
-        variantStyles[variant],
-        sizeStyles[size],
-        className
-      )}
+      className={clsx(baseStyles, variantStyles[variant], sizeStyles[size], className)}
       disabled={disabled}
       {...props}
     >

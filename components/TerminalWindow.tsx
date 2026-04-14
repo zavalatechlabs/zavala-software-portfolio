@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 export default function TerminalWindow() {
   const [isMinimized, setIsMinimized] = useState(false)
@@ -22,15 +22,23 @@ export default function TerminalWindow() {
 
   // Tokenize and highlight a line of code
   const highlightLine = (line: string) => {
-    const tokens: JSX.Element[] = []
+    const tokens: React.JSX.Element[] = []
     let key = 0
 
     // Token patterns in order of precedence
+    // VS Code Dark+ theme colors — intentionally hardcoded, not theme-responsive
     const patterns = [
       { regex: /"[^"]*"/g, className: 'text-[#ce9178]' }, // Strings
-      { regex: /\b(const|let|var|function|return|if|else|for|while|class|new|this|import|export|from|default)\b/g, className: 'text-[#569cd6]' }, // Keywords
+      {
+        regex:
+          /\b(const|let|var|function|return|if|else|for|while|class|new|this|import|export|from|default)\b/g,
+        className: 'text-[#569cd6]',
+      }, // Keywords
       { regex: /\b(true|false|null|undefined)\b/g, className: 'text-[#569cd6]' }, // Booleans/null
-      { regex: /\b(name|role|focus|passion|location|contact|email|Developer)(?=\s*:)/g, className: 'text-[#9cdcfe]' }, // Property names
+      {
+        regex: /\b(name|role|focus|passion|location|contact|email|Developer)(?=\s*:)/g,
+        className: 'text-[#9cdcfe]',
+      }, // Property names
     ]
 
     const matches: Array<{ start: number; end: number; text: string; className: string }> = []
@@ -44,7 +52,7 @@ export default function TerminalWindow() {
           start: match.index,
           end: match.index + match[0].length,
           text: match[0],
-          className
+          className,
         })
       }
     })
@@ -53,7 +61,7 @@ export default function TerminalWindow() {
     matches.sort((a, b) => a.start - b.start)
     const validMatches: typeof matches = []
     let lastEnd = 0
-    matches.forEach(match => {
+    matches.forEach((match) => {
       if (match.start >= lastEnd) {
         validMatches.push(match)
         lastEnd = match.end
@@ -62,7 +70,7 @@ export default function TerminalWindow() {
 
     // Build token list
     let lastIndex = 0
-    validMatches.forEach(match => {
+    validMatches.forEach((match) => {
       // Add plain text before match
       if (match.start > lastIndex) {
         tokens.push(
@@ -90,7 +98,11 @@ export default function TerminalWindow() {
     }
 
     // If no tokens, return empty line with default color
-    return tokens.length > 0 ? tokens : <span className="text-zavala-terminal-text">{line || '\u00A0'}</span>
+    return tokens.length > 0 ? (
+      tokens
+    ) : (
+      <span className="text-zavala-terminal-text">{line || '\u00A0'}</span>
+    )
   }
 
   return (
@@ -109,8 +121,8 @@ export default function TerminalWindow() {
             <button
               onClick={() => setIsMinimized(!isMinimized)}
               className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffab00] transition-colors"
-              aria-label={isMinimized ? "Maximize" : "Minimize"}
-              title={isMinimized ? "Maximize" : "Minimize"}
+              aria-label={isMinimized ? 'Maximize' : 'Minimize'}
+              title={isMinimized ? 'Maximize' : 'Minimize'}
             />
             <button
               className="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#1fb32f] transition-colors"
@@ -145,9 +157,7 @@ export default function TerminalWindow() {
                       {index + 1}
                     </span>
                     {/* Code line with syntax highlighting */}
-                    <span className="table-cell">
-                      {highlightLine(line)}
-                    </span>
+                    <span className="table-cell">{highlightLine(line)}</span>
                   </div>
                 ))}
               </code>

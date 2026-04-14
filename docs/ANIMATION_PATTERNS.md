@@ -22,11 +22,13 @@ This document defines all animation patterns, timing specifications, and interac
 ### Framer Motion Setup
 
 **Installation:**
+
 ```bash
 npm install framer-motion
 ```
 
 **Configuration:**
+
 ```tsx
 // app/layout.tsx
 import { LazyMotion, domAnimation } from 'framer-motion'
@@ -45,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 **Why Framer Motion:**
+
 - Declarative animation API
 - Excellent TypeScript support
 - Built-in gesture handlers
@@ -64,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 **Trigger:** Page load (homepage hero section)  
 **Duration:** 2.5 seconds total  
 **Effect:** Letters appear sequentially with staggered timing  
-**Easing:** Custom ease-out curve  
+**Easing:** Custom ease-out curve
 
 #### Animation Breakdown
 
@@ -127,7 +130,7 @@ const taglineVariants = {
 
 export function HeroNameReveal() {
   const name = 'Max Zavala'
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
@@ -149,7 +152,7 @@ export function HeroNameReveal() {
             </motion.span>
           ))}
         </motion.h1>
-        
+
         {/* Tagline fades in after name */}
         <motion.p
           variants={taglineVariants}
@@ -167,66 +170,9 @@ export function HeroNameReveal() {
 
 #### Mobile Optimization
 
-Mobile devices get a slightly faster, simpler animation:
-
-```tsx
-// hooks/useIsMobile.ts
-import { useState, useEffect } from 'react'
-
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false)
-  
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-  
-  return isMobile
-}
-```
-
-```tsx
-// Mobile-optimized variant
-const mobileLetterVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-    },
-  },
-}
-
-export function HeroNameReveal() {
-  const isMobile = useIsMobile()
-  const name = 'Max Zavala'
-  
-  const variants = isMobile ? mobileLetterVariants : letterVariants
-  const staggerDelay = isMobile ? 0.05 : 0.08
-  
-  return (
-    <motion.h1
-      variants={{
-        visible: {
-          transition: { staggerChildren: staggerDelay }
-        }
-      }}
-      initial="hidden"
-      animate="visible"
-    >
-      {name.split('').map((char, i) => (
-        <motion.span key={i} variants={variants}>
-          {char}
-        </motion.span>
-      ))}
-    </motion.h1>
-  )
-}
-```
+Mobile devices benefit from reduced-motion preferences. Use the `useReducedMotion` hook
+(see `hooks/useReducedMotion.ts`) to simplify or disable animations on devices that
+request it, rather than viewport-width detection.
 
 #### Alternative: Glitch/Matrix Effect
 
@@ -241,12 +187,12 @@ export function HeroNameGlitch() {
   const finalText = 'Max Zavala'
   const [displayText, setDisplayText] = useState('')
   const [isComplete, setIsComplete] = useState(false)
-  
+
   useEffect(() => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
     let iterations = 0
     const maxIterations = finalText.length
-    
+
     const interval = setInterval(() => {
       setDisplayText(
         finalText
@@ -258,19 +204,19 @@ export function HeroNameGlitch() {
           })
           .join('')
       )
-      
+
       iterations += 1 / 3
-      
+
       if (iterations >= maxIterations) {
         clearInterval(interval)
         setDisplayText(finalText)
         setIsComplete(true)
       }
     }, 30)
-    
+
     return () => clearInterval(interval)
   }, [])
-  
+
   return (
     <h1 className="text-6xl md:text-8xl font-bold font-mono tracking-tight text-zavala-text-primary">
       {displayText}
@@ -290,7 +236,7 @@ export function HeroNameGlitch() {
 **Trigger:** Intersection Observer (element enters viewport)  
 **Duration:** 0.8-1.2 seconds  
 **Effect:** Scrambled characters resolve to real text  
-**Elements:** Section headings, project titles  
+**Elements:** Section headings, project titles
 
 #### Implementation
 
@@ -307,24 +253,20 @@ interface DecipherTextProps {
   duration?: number // milliseconds
 }
 
-export function DecipherText({ 
-  text, 
-  className = '', 
-  duration = 1000 
-}: DecipherTextProps) {
+export function DecipherText({ text, className = '', duration = 1000 }: DecipherTextProps) {
   const [displayText, setDisplayText] = useState(text)
   const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
-  
+
   useEffect(() => {
     if (!isInView || hasAnimated) return
-    
+
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
     let iterations = 0
     const totalIterations = text.length
     const iterationsPerFrame = totalIterations / (duration / 30) // 30ms per frame
-    
+
     const interval = setInterval(() => {
       setDisplayText(
         text
@@ -332,28 +274,28 @@ export function DecipherText({
           .map((char, index) => {
             // Preserve spaces
             if (char === ' ') return ' '
-            
+
             // If we've reached this character, show the real character
             if (index < iterations) return text[index]
-            
+
             // Otherwise, show random character
             return chars[Math.floor(Math.random() * chars.length)]
           })
           .join('')
       )
-      
+
       iterations += iterationsPerFrame
-      
+
       if (iterations >= totalIterations) {
         clearInterval(interval)
         setDisplayText(text)
         setHasAnimated(true)
       }
     }, 30)
-    
+
     return () => clearInterval(interval)
   }, [isInView, text, duration, hasAnimated])
-  
+
   return (
     <span ref={ref} className={className}>
       {displayText}
@@ -383,7 +325,7 @@ Using `react-text-scramble`:
 ```tsx
 import { TextScramble } from 'react-text-scramble'
 
-<TextScramble 
+;<TextScramble
   text="Selected Projects"
   className="text-3xl md:text-5xl font-bold"
   scramble={6}
@@ -403,7 +345,7 @@ const DecipherText = ({ text, staggerDelay = 0 }) => {
     const timeout = setTimeout(() => {
       // Start animation
     }, staggerDelay)
-    
+
     return () => clearTimeout(timeout)
   }, [staggerDelay])
 }
@@ -425,7 +367,7 @@ const DecipherText = ({ text, staggerDelay = 0 }) => {
 **Trigger:** Mouse hover  
 **Duration:** 200-300ms  
 **Effects:** Lift, shadow increase, border glow  
-**Easing:** Ease-out  
+**Easing:** Ease-out
 
 #### Implementation
 
@@ -443,13 +385,7 @@ interface ProjectCardProps {
   href: string
 }
 
-export function ProjectCard({ 
-  title, 
-  description, 
-  image, 
-  tags, 
-  href 
-}: ProjectCardProps) {
+export function ProjectCard({ title, description, image, tags, href }: ProjectCardProps) {
   return (
     <motion.article
       whileHover={{
@@ -459,7 +395,8 @@ export function ProjectCard({
       className="group"
     >
       <a href={href} className="block">
-        <div className="
+        <div
+          className="
           bg-zavala-bg-surface 
           border border-zavala-border 
           rounded-lg 
@@ -467,17 +404,18 @@ export function ProjectCard({
           transition-all duration-200
           group-hover:border-zavala-accent-primary/50
           group-hover:shadow-xl group-hover:shadow-black/30
-        ">
+        "
+        >
           {/* Image */}
           <div className="relative aspect-video overflow-hidden bg-zavala-bg-elevated">
-            <motion.img 
-              src={image} 
+            <motion.img
+              src={image}
               alt={title}
               className="w-full h-full object-cover"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             />
-            
+
             {/* Overlay that appears on hover */}
             <motion.div
               className="absolute inset-0 bg-zavala-accent-primary/10"
@@ -486,20 +424,18 @@ export function ProjectCard({
               transition={{ duration: 0.2 }}
             />
           </div>
-          
+
           {/* Content */}
           <div className="p-6">
             <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary group-hover:text-zavala-accent-primary transition-colors">
               {title}
             </h3>
-            <p className="text-zavala-text-secondary text-sm mb-4 line-clamp-2">
-              {description}
-            </p>
-            
+            <p className="text-zavala-text-secondary text-sm mb-4 line-clamp-2">{description}</p>
+
             {/* Tech stack tags */}
             <div className="flex flex-wrap gap-2 mb-4">
               {tags.map((tag) => (
-                <span 
+                <span
                   key={tag}
                   className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border rounded-full group-hover:border-zavala-accent-primary/30 transition-colors"
                 >
@@ -507,14 +443,14 @@ export function ProjectCard({
                 </span>
               ))}
             </div>
-            
+
             {/* CTA */}
             <span className="text-zavala-accent-primary font-medium text-sm inline-flex items-center gap-2">
-              View Project 
+              View Project
               <motion.span
                 animate={{ x: [0, 4, 0] }}
-                transition={{ 
-                  repeat: Infinity, 
+                transition={{
+                  repeat: Infinity,
                   duration: 1.5,
                   ease: 'easeInOut',
                 }}
@@ -588,11 +524,13 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
 #### Specifications
 
 **Floating Button:**
+
 - Pulse animation (idle state)
 - Scale up on hover
 - Bounce on click
 
 **Chat Window:**
+
 - Slide up from bottom
 - Backdrop blur fade-in
 - Smooth entrance/exit
@@ -622,13 +560,13 @@ export function FloatingButton({ onClick }: FloatingButtonProps) {
         flex items-center justify-center
         shadow-lg shadow-zavala-accent-primary/30
       "
-      whileHover={{ 
+      whileHover={{
         scale: 1.1,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2 },
       }}
-      whileTap={{ 
+      whileTap={{
         scale: 0.95,
-        transition: { duration: 0.1 }
+        transition: { duration: 0.1 },
       }}
       animate={{
         boxShadow: [
@@ -676,7 +614,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
             transition={{ duration: 0.2 }}
             onClick={onClose}
           />
-          
+
           {/* Chat Window */}
           <motion.div
             className="
@@ -690,22 +628,22 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
               flex flex-col
               overflow-hidden
             "
-            initial={{ 
-              y: 100, 
+            initial={{
+              y: 100,
               opacity: 0,
               scale: 0.9,
             }}
-            animate={{ 
-              y: 0, 
+            animate={{
+              y: 0,
               opacity: 1,
               scale: 1,
             }}
-            exit={{ 
-              y: 100, 
+            exit={{
+              y: 100,
               opacity: 0,
               scale: 0.9,
             }}
-            transition={{ 
+            transition={{
               type: 'spring',
               damping: 25,
               stiffness: 300,
@@ -729,7 +667,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
                 <X className="w-5 h-5 text-zavala-text-secondary" />
               </button>
             </div>
-            
+
             {/* Quick Actions (v1 - placeholder) */}
             <div className="flex-1 p-4 space-y-3 overflow-y-auto">
               <motion.button
@@ -742,7 +680,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
                   Browse all projects and case studies
                 </p>
               </motion.button>
-              
+
               <motion.button
                 className="w-full p-4 bg-zavala-bg-elevated hover:bg-zavala-bg-primary border border-zavala-border rounded-lg text-left transition-colors"
                 whileHover={{ x: 4 }}
@@ -753,7 +691,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
                   Get PDF version of full resume
                 </p>
               </motion.button>
-              
+
               <motion.button
                 className="w-full p-4 bg-zavala-bg-elevated hover:bg-zavala-bg-primary border border-zavala-border rounded-lg text-left transition-colors"
                 whileHover={{ x: 4 }}
@@ -765,7 +703,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
                 </p>
               </motion.button>
             </div>
-            
+
             {/* Footer note */}
             <div className="p-4 border-t border-zavala-border">
               <p className="text-xs text-zavala-text-tertiary text-center">
@@ -790,7 +728,7 @@ import { ChatWindow } from './ChatWindow'
 
 export function AIChat() {
   const [isOpen, setIsOpen] = useState(false)
-  
+
   return (
     <>
       <FloatingButton onClick={() => setIsOpen(true)} />
@@ -811,7 +749,7 @@ export function AIChat() {
 **Trigger:** Element enters viewport (50% visible)  
 **Duration:** 600-800ms  
 **Effect:** Fade in + slide up  
-**Easing:** Ease-out  
+**Easing:** Ease-out
 
 #### Reusable Component
 
@@ -830,8 +768,8 @@ interface FadeInViewProps {
   once?: boolean
 }
 
-export function FadeInView({ 
-  children, 
+export function FadeInView({
+  children,
   className = '',
   delay = 0,
   direction = 'up',
@@ -843,14 +781,14 @@ export function FadeInView({
     left: { x: 50 },
     right: { x: -50 },
   }
-  
+
   return (
     <motion.div
-      initial={{ 
+      initial={{
         opacity: 0,
         ...directions[direction],
       }}
-      whileInView={{ 
+      whileInView={{
         opacity: 1,
         x: 0,
         y: 0,
@@ -917,17 +855,17 @@ import { useEffect, useState } from 'react'
 
 export function useReducedMotion() {
   const [reducedMotion, setReducedMotion] = useState(false)
-  
+
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setReducedMotion(mediaQuery.matches)
-    
+
     const handleChange = () => setReducedMotion(mediaQuery.matches)
     mediaQuery.addEventListener('change', handleChange)
-    
+
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
-  
+
   return reducedMotion
 }
 ```
@@ -943,13 +881,13 @@ import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 export function AnimatedComponent() {
   const reducedMotion = useReducedMotion()
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: reducedMotion ? 0 : 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: reducedMotion ? 0 : 0.5 
+      transition={{
+        duration: reducedMotion ? 0 : 0.5,
       }}
     >
       Content
@@ -999,18 +937,15 @@ Provide a way to skip long animations:
 ```tsx
 export function HeroNameReveal() {
   const [skipAnimation, setSkipAnimation] = useState(false)
-  
+
   if (skipAnimation) {
     return <h1>Max Zavala</h1>
   }
-  
+
   return (
     <>
       <AnimatedName onComplete={() => {}} />
-      <button 
-        onClick={() => setSkipAnimation(true)}
-        className="absolute bottom-4 right-4 text-sm"
-      >
+      <button onClick={() => setSkipAnimation(true)} className="absolute bottom-4 right-4 text-sm">
         Skip animation
       </button>
     </>
@@ -1028,10 +963,7 @@ Only load animation libraries when needed:
 
 ```tsx
 // Lazy load Framer Motion for non-critical animations
-const LazyMotionComponent = dynamic(
-  () => import('./MotionComponent'),
-  { ssr: false }
-)
+const LazyMotionComponent = dynamic(() => import('./MotionComponent'), { ssr: false })
 ```
 
 ### GPU Acceleration
@@ -1055,11 +987,11 @@ Use transform properties for best performance:
 ```typescript
 // Animation duration guidelines
 const ANIMATION_DURATIONS = {
-  instant: 0,           // Immediate state changes
-  fast: 150,            // Micro-interactions (hover, toggle)
-  normal: 300,          // Standard animations (modals, drawers)
-  slow: 500,            // Emphasis animations (page transitions)
-  emphasis: 1000,       // Hero animations (name reveal)
+  instant: 0, // Immediate state changes
+  fast: 150, // Micro-interactions (hover, toggle)
+  normal: 300, // Standard animations (modals, drawers)
+  slow: 500, // Emphasis animations (page transitions)
+  emphasis: 1000, // Hero animations (name reveal)
 } as const
 ```
 
@@ -1069,17 +1001,17 @@ const ANIMATION_DURATIONS = {
 
 ### Quick Reference Table
 
-| Animation | Trigger | Duration | Easing | Priority |
-|-----------|---------|----------|--------|----------|
-| Name Reveal | Page load | 2.5s | Custom ease-out | CRITICAL |
-| Text Decipher | Scroll in view | 1.0s | Linear | CRITICAL |
-| Card Hover | Mouse hover | 0.2s | Ease-out | High |
-| Card Grid Stagger | Scroll in view | 0.5s per item | Ease-out | High |
-| Button Hover | Mouse hover | 0.15s | Ease-out | Medium |
-| Fade In View | Scroll in view | 0.6s | Ease-out | Medium |
-| AI Chat Open | Click | 0.3s | Spring | Medium |
-| AI Pulse | Continuous | 2.0s | Ease-in-out | Low |
-| Page Transition | Navigation | 0.4s | Ease-in-out | Nice-to-have |
+| Animation         | Trigger        | Duration      | Easing          | Priority     |
+| ----------------- | -------------- | ------------- | --------------- | ------------ |
+| Name Reveal       | Page load      | 2.5s          | Custom ease-out | CRITICAL     |
+| Text Decipher     | Scroll in view | 1.0s          | Linear          | CRITICAL     |
+| Card Hover        | Mouse hover    | 0.2s          | Ease-out        | High         |
+| Card Grid Stagger | Scroll in view | 0.5s per item | Ease-out        | High         |
+| Button Hover      | Mouse hover    | 0.15s         | Ease-out        | Medium       |
+| Fade In View      | Scroll in view | 0.6s          | Ease-out        | Medium       |
+| AI Chat Open      | Click          | 0.3s          | Spring          | Medium       |
+| AI Pulse          | Continuous     | 2.0s          | Ease-in-out     | Low          |
+| Page Transition   | Navigation     | 0.4s          | Ease-in-out     | Nice-to-have |
 
 ---
 
@@ -1131,13 +1063,9 @@ const ANIMATION_DURATIONS = {
 ```tsx
 import { AnimatePresence } from 'framer-motion'
 
-<AnimatePresence mode="wait">
+;<AnimatePresence mode="wait">
   {isVisible && (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       Content
     </motion.div>
   )}
@@ -1169,9 +1097,9 @@ const AnimationPerformance = () => {
         console.log('Animation frame:', entry.duration)
       }
     })
-    
+
     observer.observe({ entryTypes: ['measure'] })
-    
+
     return () => observer.disconnect()
   }, [])
 }

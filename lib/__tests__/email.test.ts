@@ -1,12 +1,10 @@
-import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals'
-
 // Mock Resend before importing email module
 jest.mock('resend', () => ({
   Resend: jest.fn().mockImplementation(() => ({
     emails: {
-      send: jest.fn().mockResolvedValue({ data: { id: 'test-id' } })
-    }
-  }))
+      send: jest.fn().mockResolvedValue({ data: { id: 'test-id' } }),
+    },
+  })),
 }))
 
 import { sendContactEmail } from '../email'
@@ -22,44 +20,27 @@ describe('sendContactEmail', () => {
   const mockConfig = {
     from: 'Test <test@example.com>',
     to: 'recipient@example.com',
-    clientIp: '192.168.1.1'
+    clientIp: '192.168.1.1',
   }
 
-  let originalApiKey: string | undefined
+  // RESEND_API_KEY is validated lazily via getEnv() and injected by
+  // jest.setup.js as a dummy test key.
 
-  beforeEach(() => {
-    originalApiKey = process.env.RESEND_API_KEY
-  })
-
-  afterEach(() => {
-    if (originalApiKey) {
-      process.env.RESEND_API_KEY = originalApiKey
-    } else {
-      delete process.env.RESEND_API_KEY
-    }
-  })
-
-  it('should return error when RESEND_API_KEY is not set', async () => {
-    delete process.env.RESEND_API_KEY
-    
+  it('should succeed with a validated test API key', async () => {
     const result = await sendContactEmail(mockContactData, mockConfig)
-    
-    expect(result.success).toBe(false)
-    expect(result.error).toBe('Email service not configured')
+
+    expect(result.success).toBe(true)
   })
 
   it('should handle config without clientIp', async () => {
-    delete process.env.RESEND_API_KEY
-    
     const configWithoutIp = {
       from: 'Test <test@example.com>',
       to: 'recipient@example.com',
     }
-    
+
     const result = await sendContactEmail(mockContactData, configWithoutIp)
-    
-    expect(result.success).toBe(false)
-    expect(result.error).toBe('Email service not configured')
+
+    expect(result.success).toBe(true)
   })
 
   it('should have correct function signature', () => {
@@ -72,7 +53,7 @@ describe('sendContactEmail', () => {
       email: 'test@example.com',
       message: 'Test message content',
     }
-    
+
     expect(validData.name).toBe('Test User')
     expect(validData.email).toBe('test@example.com')
   })

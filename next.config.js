@@ -1,11 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
 
   // Security headers
   async headers() {
     return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, max-age=0' },
+        ],
+      },
       {
         // Apply headers to all routes
         source: '/:path*',
@@ -42,7 +47,15 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              // TODO(task #2): Replace 'unsafe-inline' on script-src with a
+              // nonce-based CSP via middleware. 'unsafe-inline' is retained for
+              // now because Next.js emits inline bootstrap/runtime scripts and
+              // next-themes injects a pre-hydration inline script to prevent
+              // FOUC. 'unsafe-eval' has been removed as it has no legitimate
+              // use in this portfolio.
+              "script-src 'self' 'unsafe-inline'",
+              // Tailwind JIT and next-themes rely on inline styles; switching
+              // style-src to a nonce/hash approach is a separate follow-up.
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' data:",
@@ -50,6 +63,7 @@ const nextConfig = {
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
+              "object-src 'none'",
             ].join('; '),
           },
         ],

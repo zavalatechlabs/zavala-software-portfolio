@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import Link from 'next/link'
 import { AlertTriangle, Home, RefreshCcw } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { logger } from '@/lib/logger'
 
 export default function Error({
   error,
@@ -13,12 +14,10 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log error to console (ready for Sentry integration later)
-    console.error('Root error boundary caught:', {
+    logger.error('Root error boundary caught', {
       message: error.message,
       digest: error.digest,
       stack: error.stack,
-      timestamp: new Date().toISOString(),
     })
   }, [error])
 
@@ -61,21 +60,12 @@ export default function Error({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            variant="primary"
-            size="md"
-            onClick={reset}
-            className="w-full sm:w-auto"
-          >
+          <Button variant="primary" size="md" onClick={reset} className="w-full sm:w-auto">
             <RefreshCcw className="w-5 h-5 mr-2" />
             Try Again
           </Button>
           <Link href="/" className="w-full sm:w-auto">
-            <Button
-              variant="secondary"
-              size="md"
-              className="w-full"
-            >
+            <Button variant="secondary" size="md" className="w-full">
               <Home className="w-5 h-5 mr-2" />
               Go Home
             </Button>
@@ -85,10 +75,7 @@ export default function Error({
         {/* Additional Help Text */}
         <p className="text-sm text-zavala-text-tertiary mt-8">
           If this problem persists, please{' '}
-          <Link 
-            href="/contact" 
-            className="text-zavala-accent-primary hover:underline"
-          >
+          <Link href="/contact" className="text-zavala-accent-primary hover:underline">
             contact me
           </Link>
           .

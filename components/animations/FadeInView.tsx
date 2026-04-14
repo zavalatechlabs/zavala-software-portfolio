@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { ReactNode } from 'react'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface FadeInViewProps {
   children: ReactNode
@@ -11,37 +12,45 @@ interface FadeInViewProps {
   once?: boolean
 }
 
-export function FadeInView({ 
-  children, 
+export function FadeInView({
+  children,
   className = '',
   delay = 0,
   direction = 'up',
   once = true,
 }: FadeInViewProps) {
+  const prefersReducedMotion = useReducedMotion()
+
   const directions = {
     up: { y: 50 },
     down: { y: -50 },
     left: { x: 50 },
     right: { x: -50 },
   }
-  
+
+  const staticState = { opacity: 1, x: 0, y: 0 }
+
   return (
     <motion.div
-      initial={{ 
-        opacity: 0,
-        ...directions[direction],
-      }}
-      whileInView={{ 
-        opacity: 1,
-        x: 0,
-        y: 0,
-      }}
+      initial={
+        prefersReducedMotion
+          ? staticState
+          : {
+              opacity: 0,
+              ...directions[direction],
+            }
+      }
+      whileInView={staticState}
       viewport={{ once, amount: 0.3 }}
-      transition={{
-        duration: 0.6,
-        delay,
-        ease: 'easeOut',
-      }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : {
+              duration: 0.6,
+              delay,
+              ease: 'easeOut',
+            }
+      }
       className={className}
     >
       {children}

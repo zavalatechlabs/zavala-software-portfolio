@@ -4,8 +4,9 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { getPersonSchema, getWebSiteSchema } from '@/lib/schema'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-inter',
@@ -25,7 +26,8 @@ export const metadata: Metadata = {
     default: 'Maximiliano Zavala - Full-Stack Developer & Software Engineer',
     template: '%s | Maximiliano Zavala',
   },
-  description: 'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
+  description:
+    'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
   keywords: [
     'Maximiliano Zavala',
     'full-stack developer',
@@ -57,7 +59,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: baseUrl,
     title: 'Maximiliano Zavala - Full-Stack Developer & Software Engineer',
-    description: 'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
+    description:
+      'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
     siteName: 'Maximiliano Zavala',
     images: [
       {
@@ -71,7 +74,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Maximiliano Zavala - Full-Stack Developer & Software Engineer',
-    description: 'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
+    description:
+      'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
     images: ['/opengraph-image.png'],
   },
   alternates: {
@@ -80,38 +84,8 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Maximiliano Zavala',
-    url: baseUrl,
-    jobTitle: 'Full-Stack Developer',
-    description: 'Full-stack developer specializing in Next.js, TypeScript, and React',
-    sameAs: [
-      // Add social media URLs here when available
-    ],
-    knowsAbout: [
-      'JavaScript',
-      'TypeScript',
-      'React',
-      'Next.js',
-      'Node.js',
-      'Web Development',
-      'Software Engineering',
-    ],
-  }
-
-  const websiteJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Maximiliano Zavala - Portfolio',
-    url: baseUrl,
-    description: 'Full-stack developer specializing in Next.js, TypeScript, and React',
-    author: {
-      '@type': 'Person',
-      name: 'Maximiliano Zavala',
-    },
-  }
+  const jsonLd = getPersonSchema(baseUrl)
+  const websiteJsonLd = getWebSiteSchema(baseUrl)
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -120,6 +94,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-zavala-bg-primary focus:text-zavala-text-primary focus:rounded"
+        >
+          Skip to main content
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -130,7 +110,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <ThemeProvider>
           <Navbar />
-          <main className="min-h-screen pt-16">{children}</main>
+          <main id="main-content" className="min-h-screen pt-16">
+            {children}
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

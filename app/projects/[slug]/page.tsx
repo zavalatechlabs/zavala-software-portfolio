@@ -3,16 +3,19 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import { getProjectBySlug, getAllProjectSlugs } from '@/lib/getProjects'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { getProjectBySlug, getAllProjectSlugs } from '@/lib/projects'
+import { getBreadcrumbSchema } from '@/lib/schema'
 
 type ProjectPageProps = {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const project = getProjectBySlug(params.slug)
+  const { slug } = await params
+  const project = getProjectBySlug(slug)
 
   if (!project) {
     return {
@@ -20,21 +23,54 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     }
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
+
   return {
-    title: `${project.metadata.title} | Projects`,
-    description: project.metadata.description,
+    title: project.title,
+    description: project.description,
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      url: `${baseUrl}/projects/${slug}`,
+      type: 'article',
+      images: project.image
+        ? [{ url: project.image, width: 1200, height: 630, alt: project.title }]
+        : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.title,
+      description: project.description,
+      images: project.image ? [project.image] : undefined,
+    },
+    alternates: {
+      canonical: `${baseUrl}/projects/${slug}`,
+    },
   }
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
-  const project = getProjectBySlug(params.slug)
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { slug } = await params
+  const project = getProjectBySlug(slug)
 
   if (!project) {
     notFound()
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
+
+  const breadcrumbJsonLd = getBreadcrumbSchema([
+    { name: 'Home', url: baseUrl },
+    { name: 'Projects', url: `${baseUrl}/projects` },
+    { name: project.title, url: `${baseUrl}/projects/${slug}` },
+  ])
+
   return (
     <div className="min-h-screen bg-zavala-bg-primary">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
         {/* Back Link */}
         <Link
@@ -48,25 +84,21 @@ export default function ProjectPage({ params }: ProjectPageProps) {
             group
           "
         >
-          <svg
+          <ArrowLeft
             className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+            aria-hidden="true"
+          />
           Back to Projects
         </Link>
 
         {/* Project Hero */}
         <header className="mb-12">
           {/* Project Image */}
-          {project.metadata.image && (
+          {project.image && (
             <div className="relative aspect-video mb-8 rounded-lg overflow-hidden border border-zavala-border">
               <Image
-                src={project.metadata.image}
-                alt={project.metadata.title}
+                src={project.image}
+                alt={project.title}
                 fill
                 className="object-cover"
                 priority
@@ -76,15 +108,15 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
           {/* Title & Description */}
           <h1 className="text-3xl md:text-5xl font-bold mb-4 text-zavala-text-primary leading-tight">
-            {project.metadata.title}
+            {project.title}
           </h1>
           <p className="text-lg md:text-xl text-zavala-text-secondary mb-6 leading-relaxed">
-            {project.metadata.description}
+            {project.description}
           </p>
 
           {/* Tech Stack Tags */}
           <div className="flex flex-wrap gap-2 mb-8">
-            {project.metadata.tags.map((tag) => (
+            {project.tags.map((tag) => (
               <span
                 key={tag}
                 className="
@@ -103,9 +135,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4">
-            {project.metadata.github && (
+            {project.github && (
               <a
-                href={project.metadata.github}
+                href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
@@ -123,7 +155,14 @@ export default function ProjectPage({ params }: ProjectPageProps) {
                   active:translate-y-0
                 "
               >
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                {/* Inline SVG kept: lucide-react's Github icon is a simplified outline,
+                    not the official filled GitHub logo (octocat silhouette). */}
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -133,9 +172,9 @@ export default function ProjectPage({ params }: ProjectPageProps) {
                 View on GitHub
               </a>
             )}
-            {project.metadata.demo && (
+            {project.demo && (
               <a
-                href={project.metadata.demo}
+                href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
@@ -146,20 +185,13 @@ export default function ProjectPage({ params }: ProjectPageProps) {
                   font-semibold 
                   rounded-lg 
                   transition-all duration-200
-                  hover:bg-blue-600 
+                  hover:bg-zavala-accent-primary/90
                   hover:shadow-lg hover:shadow-zavala-accent-primary/20
                   hover:-translate-y-0.5
                   active:translate-y-0
                 "
               >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
+                <ExternalLink className="w-5 h-5 mr-2" aria-hidden="true" />
                 Live Demo
               </a>
             )}
@@ -167,7 +199,8 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         </header>
 
         {/* Project Content from MDX */}
-        <article className="
+        <article
+          className="
           prose prose-lg 
           prose-invert
           max-w-none
@@ -186,7 +219,8 @@ export default function ProjectPage({ params }: ProjectPageProps) {
           prose-li:marker:text-zavala-accent-secondary
           prose-blockquote:border-l-zavala-accent-primary prose-blockquote:text-zavala-text-secondary prose-blockquote:italic
           prose-hr:border-zavala-border
-        ">
+        "
+        >
           <MDXRemote source={project.content} />
         </article>
 
@@ -203,14 +237,10 @@ export default function ProjectPage({ params }: ProjectPageProps) {
               group
             "
           >
-            <svg
+            <ArrowLeft
               className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+              aria-hidden="true"
+            />
             Back to All Projects
           </Link>
         </div>

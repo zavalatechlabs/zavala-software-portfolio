@@ -15,7 +15,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors"
+        className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:outline-none"
         aria-label="Toggle theme"
       >
         <div className="w-5 h-5" />
@@ -26,7 +26,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors"
+      className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:outline-none"
       aria-label="Toggle theme"
     >
       {theme === 'dark' ? (
@@ -35,6 +35,7 @@ export function ThemeToggle() {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -49,6 +50,7 @@ export function ThemeToggle() {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"

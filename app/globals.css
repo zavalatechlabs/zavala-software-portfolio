@@ -15,7 +15,7 @@
     --text-secondary: #525252;
     --text-tertiary: #737373;
     --text-inverse: #ffffff;
-    
+
     /* Terminal colors - Light mode */
     --terminal-bg: #ffffff;
     --terminal-header: #f5f5f5;
@@ -23,7 +23,7 @@
     --terminal-text: #0a0a0a;
     --terminal-text-muted: #525252;
     --terminal-line-number: #a3a3a3;
-    
+
     /* Footer colors - Light mode */
     --footer-bg: #f8fafc;
     --footer-terminal-section: #f1f5f9;
@@ -44,7 +44,7 @@
     --text-secondary: #a3a3a3;
     --text-tertiary: #737373;
     --text-inverse: #0a0a0a;
-    
+
     /* Terminal colors - Dark mode */
     --terminal-bg: #1e1e1e;
     --terminal-header: #323233;
@@ -52,7 +52,7 @@
     --terminal-text: #d4d4d4;
     --terminal-text-muted: #9ca3af;
     --terminal-line-number: #6b7280;
-    
+
     /* Footer colors - Dark mode */
     --footer-bg: #111827;
     --footer-terminal-section: #0a0a0a;
@@ -72,7 +72,12 @@
   }
 
   /* Typography styles */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply text-zavala-text-primary font-bold tracking-tight;
   }
 
@@ -148,5 +153,26 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print stylesheet */
+@media print {
+  nav,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  a {
+    color: black !important;
+    text-decoration: underline !important;
+  }
+  .dark {
+    background: white !important;
+    color: black !important;
   }
 }

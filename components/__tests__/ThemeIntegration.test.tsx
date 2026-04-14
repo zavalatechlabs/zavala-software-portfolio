@@ -3,12 +3,20 @@ import { ThemeProvider } from '../ThemeProvider'
 import { ThemeToggle } from '../ThemeToggle'
 import { useTheme } from 'next-themes'
 
+type SetTheme = ReturnType<typeof useTheme>['setTheme']
+
 // Mock next-themes with localStorage support
 jest.mock('next-themes', () => {
   let currentTheme = 'dark'
-  
+
   return {
-    ThemeProvider: ({ children, storageKey }: { children: React.ReactNode; storageKey: string }) => {
+    ThemeProvider: ({
+      children,
+      storageKey,
+    }: {
+      children: React.ReactNode
+      storageKey: string
+    }) => {
       // Simulate reading from localStorage
       const stored = window.localStorage.getItem(storageKey)
       if (stored) {
@@ -37,7 +45,7 @@ describe('Theme Integration - localStorage Persistence', () => {
   beforeEach(() => {
     // Reset localStorage mock
     mockLocalStorage = {}
-    
+
     // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
@@ -67,7 +75,7 @@ describe('Theme Integration - localStorage Persistence', () => {
   it('persists theme selection to localStorage', async () => {
     const mockSetTheme = jest.fn((newTheme: string) => {
       window.localStorage.setItem('zavala-theme', newTheme)
-    })
+    }) as unknown as jest.Mock & SetTheme
 
     const mockUseTheme = useTheme as jest.MockedFunction<typeof useTheme>
     mockUseTheme.mockReturnValue({
@@ -104,7 +112,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     const mockUseTheme = useTheme as jest.MockedFunction<typeof useTheme>
     mockUseTheme.mockReturnValue({
       theme: 'light',
-      setTheme: jest.fn(),
+      setTheme: jest.fn() as unknown as SetTheme,
       systemTheme: 'light',
       themes: ['light', 'dark'],
       resolvedTheme: 'light',
@@ -130,7 +138,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     const mockSetTheme1 = jest.fn((newTheme: string) => {
       mockLocalStorage['zavala-theme'] = newTheme
       window.localStorage.setItem('zavala-theme', newTheme)
-    })
+    }) as unknown as jest.Mock & SetTheme
 
     const mockUseTheme = useTheme as jest.MockedFunction<typeof useTheme>
     mockUseTheme.mockReturnValue({
@@ -164,7 +172,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     // Simulate page reload - second render
     mockUseTheme.mockReturnValue({
       theme: mockLocalStorage['zavala-theme'] || 'dark',
-      setTheme: jest.fn(),
+      setTheme: jest.fn() as unknown as SetTheme,
       systemTheme: 'light',
       themes: ['light', 'dark'],
       resolvedTheme: mockLocalStorage['zavala-theme'] || 'dark',
@@ -189,10 +197,10 @@ describe('Theme Integration - localStorage Persistence', () => {
     const mockSetTheme = jest.fn((newTheme: string) => {
       mockLocalStorage['zavala-theme'] = newTheme
       window.localStorage.setItem('zavala-theme', newTheme)
-    })
+    }) as unknown as jest.Mock & SetTheme
 
     const mockUseTheme = useTheme as jest.MockedFunction<typeof useTheme>
-    
+
     // First toggle: dark -> light
     mockUseTheme.mockReturnValue({
       theme: 'dark',
@@ -214,7 +222,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     })
 
     fireEvent.click(screen.getByLabelText('Toggle theme'))
-    
+
     await waitFor(() => {
       expect(mockSetTheme).toHaveBeenCalledWith('light')
     })
@@ -249,7 +257,7 @@ describe('Theme Integration - localStorage Persistence', () => {
   it('uses correct storage key for persistence', async () => {
     const mockSetTheme = jest.fn((newTheme: string) => {
       window.localStorage.setItem('zavala-theme', newTheme)
-    })
+    }) as unknown as jest.Mock & SetTheme
 
     const mockUseTheme = useTheme as jest.MockedFunction<typeof useTheme>
     mockUseTheme.mockReturnValue({
@@ -296,7 +304,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     const mockUseTheme = useTheme as jest.MockedFunction<typeof useTheme>
     mockUseTheme.mockReturnValue({
       theme: 'dark',
-      setTheme: jest.fn(),
+      setTheme: jest.fn() as unknown as SetTheme,
       systemTheme: 'dark',
       themes: ['light', 'dark'],
       resolvedTheme: 'dark',

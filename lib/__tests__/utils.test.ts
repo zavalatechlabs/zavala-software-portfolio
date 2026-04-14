@@ -23,12 +23,14 @@ describe('utils', () => {
 
   describe('formatDate', () => {
     it('formats a date string correctly', () => {
-      const result = formatDate('2024-01-15')
+      // Use a datetime with explicit time to avoid timezone-dependent date shifts
+      const result = formatDate('2024-01-15T12:00:00')
       expect(result).toBe('January 15, 2024')
     })
 
     it('formats a Date object correctly', () => {
-      const date = new Date('2024-01-15')
+      // Use noon local time to avoid UTC midnight shifting the day in western timezones
+      const date = new Date(2024, 0, 15, 12, 0, 0)
       const result = formatDate(date)
       expect(result).toBe('January 15, 2024')
     })
@@ -39,7 +41,7 @@ describe('utils', () => {
       const start = Date.now()
       await sleep(100)
       const duration = Date.now() - start
-      
+
       // Allow for some variance in timing
       expect(duration).toBeGreaterThanOrEqual(95)
       expect(duration).toBeLessThan(150)

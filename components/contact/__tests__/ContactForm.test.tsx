@@ -1,20 +1,41 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ContactForm } from '../ContactForm'
+
+// Mock useReducedMotion hook — default to no reduced motion
+jest.mock('@/hooks/useReducedMotion', () => ({
+  useReducedMotion: () => false,
+}))
 
 // Mock framer-motion to avoid animation complexities in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+      <p {...props}>{children}</p>
+    ),
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+      <div {...props}>{children}</div>
+    ),
   },
 }))
 
 describe('ContactForm', () => {
+  // Mock Date.now so the timing-based honeypot (2 s minimum) never triggers.
+  // Render "happens" at t = 0; every subsequent call returns t = 10 000.
+  let dateNowCallCount: number
+
   beforeEach(() => {
     // Reset fetch mock before each test
     global.fetch = jest.fn()
+
+    dateNowCallCount = 0
+    jest.spyOn(Date, 'now').mockImplementation(() => {
+      dateNowCallCount++
+      // First call is inside useRef(Date.now()) during mount → returns 0
+      // All later calls (inside handleSubmit) → return 10 000 (well past 2 s)
+      return dateNowCallCount === 1 ? 0 : 10000
+    })
   })
 
   afterEach(() => {
@@ -68,17 +89,29 @@ describe('ContactForm', () => {
       })
     })
 
-    it('shows error when name is too short', async () => {
+    it('accepts single-character name (server schema allows min 1)', async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ success: true }),
+      })
+      global.fetch = mockFetch
+
       render(<ContactForm />)
       const nameInput = screen.getByLabelText(/name/i)
-      const submitButton = screen.getByRole('button', { name: /send message/i })
 
       await userEvent.type(nameInput, 'A')
-      fireEvent.click(submitButton)
+      await userEvent.type(screen.getByLabelText(/email/i), 'a@example.com')
+      await userEvent.type(screen.getByLabelText(/message/i), 'This is a test message.')
+
+      fireEvent.click(screen.getByRole('button', { name: /send message/i }))
 
       await waitFor(() => {
-        expect(screen.getByText(/name must be at least 2 characters/i)).toBeInTheDocument()
+        expect(mockFetch).toHaveBeenCalled()
       })
+      // No name error should appear
+      expect(
+        screen.queryByText(/name/i, { selector: '.text-zavala-accent-error' })
+      ).not.toBeInTheDocument()
     })
 
     it('shows error when email is empty', async () => {
@@ -88,7 +121,7 @@ describe('ContactForm', () => {
       fireEvent.click(submitButton)
 
       await waitFor(() => {
-        expect(screen.getByText(/email is required/i)).toBeInTheDocument()
+        expect(screen.getByText(/invalid email address/i)).toBeInTheDocument()
       })
     })
 
@@ -102,10 +135,10 @@ describe('ContactForm', () => {
       fireEvent.change(nameInput, { target: { value: 'John Doe' } })
       fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
       fireEvent.change(messageInput, { target: { value: 'This is a test message.' } })
-      
+
       fireEvent.submit(form)
 
-      const errorMessage = await screen.findByText(/please enter a valid email address/i)
+      const errorMessage = await screen.findByText(/invalid email address/i)
       expect(errorMessage).toBeInTheDocument()
     })
 
@@ -116,7 +149,7 @@ describe('ContactForm', () => {
       fireEvent.click(submitButton)
 
       await waitFor(() => {
-        expect(screen.getByText(/message is required/i)).toBeInTheDocument()
+        expect(screen.getByText(/message must be at least 10 characters/i)).toBeInTheDocument()
       })
     })
 
@@ -161,8 +194,8 @@ describe('ContactForm', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/name is required/i)).toBeInTheDocument()
-        expect(screen.getByText(/email is required/i)).toBeInTheDocument()
-        expect(screen.getByText(/message is required/i)).toBeInTheDocument()
+        expect(screen.getByText(/invalid email address/i)).toBeInTheDocument()
+        expect(screen.getByText(/message must be at least 10 characters/i)).toBeInTheDocument()
       })
     })
   })
@@ -180,7 +213,10 @@ describe('ContactForm', () => {
       // Fill out the form
       await userEvent.type(screen.getByLabelText(/name/i), 'John Doe')
       await userEvent.type(screen.getByLabelText(/email/i), 'john@example.com')
-      await userEvent.type(screen.getByLabelText(/message/i), 'This is a test message with enough characters.')
+      await userEvent.type(
+        screen.getByLabelText(/message/i),
+        'This is a test message with enough characters.'
+      )
 
       // Submit the form
       fireEvent.click(screen.getByRole('button', { name: /send message/i }))
@@ -244,9 +280,21 @@ describe('ContactForm', () => {
 
   describe('Loading State', () => {
     it('shows loading spinner during submission', async () => {
-      const mockFetch = jest.fn().mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve({ ok: true }), 100))
-      )
+      const mockFetch = jest
+        .fn()
+        .mockImplementation(
+          () =>
+            new Promise((resolve) =>
+              setTimeout(
+                () =>
+                  resolve({
+                    ok: true,
+                    json: async () => ({ success: true, message: 'Message sent successfully!' }),
+                  }),
+                100
+              )
+            )
+        )
       global.fetch = mockFetch
 
       render(<ContactForm />)
@@ -268,9 +316,21 @@ describe('ContactForm', () => {
     })
 
     it('disables all inputs during submission', async () => {
-      const mockFetch = jest.fn().mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve({ ok: true }), 100))
-      )
+      const mockFetch = jest
+        .fn()
+        .mockImplementation(
+          () =>
+            new Promise((resolve) =>
+              setTimeout(
+                () =>
+                  resolve({
+                    ok: true,
+                    json: async () => ({ success: true, message: 'Message sent successfully!' }),
+                  }),
+                100
+              )
+            )
+        )
       global.fetch = mockFetch
 
       render(<ContactForm />)
@@ -405,6 +465,11 @@ describe('ContactForm', () => {
       const mockFetch = jest.fn().mockResolvedValue({
         ok: false,
         status: 500,
+        json: async () => ({
+          success: false,
+          message: 'An unexpected error occurred',
+          code: 'server_error',
+        }),
       })
       global.fetch = mockFetch
 
@@ -442,6 +507,11 @@ describe('ContactForm', () => {
       const mockFetch = jest.fn().mockResolvedValue({
         ok: false,
         status: 500,
+        json: async () => ({
+          success: false,
+          message: 'An unexpected error occurred',
+          code: 'server_error',
+        }),
       })
       global.fetch = mockFetch
 
@@ -481,10 +551,7 @@ describe('ContactForm', () => {
       fireEvent.click(screen.getByRole('button', { name: /send message/i }))
 
       await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-          'Form submission error:',
-          expect.any(Error)
-        )
+        expect(consoleErrorSpy).toHaveBeenCalledWith('Form submission error:', expect.any(Error))
       })
 
       consoleErrorSpy.mockRestore()

@@ -1,11 +1,24 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const handleEscapeKey = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setIsMenuOpen(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscapeKey)
+      return () => document.removeEventListener('keydown', handleEscapeKey)
+    }
+  }, [isMenuOpen, handleEscapeKey])
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -21,9 +34,9 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link 
-            href="/" 
-            className="text-xl font-bold text-zavala-text-primary hover:text-zavala-accent-primary transition-colors"
+          <Link
+            href="/"
+            className="text-xl font-bold text-zavala-text-primary hover:text-zavala-accent-primary transition-colors focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
           >
             MZ
           </Link>
@@ -34,7 +47,7 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors"
+                className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
               >
                 {link.name}
               </Link>
@@ -48,7 +61,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-zavala-text-secondary hover:text-zavala-text-primary focus:outline-none"
+              className="p-2 text-zavala-text-secondary hover:text-zavala-text-primary focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
             >
@@ -61,6 +74,7 @@ export default function Navbar() {
                   strokeWidth="2"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   <path d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -73,6 +87,7 @@ export default function Navbar() {
                   strokeWidth="2"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   <path d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -90,7 +105,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={closeMenu}
-                  className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors py-2"
+                  className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors py-2 focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
                 >
                   {link.name}
                 </Link>

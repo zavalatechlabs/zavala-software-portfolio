@@ -1,5 +1,12 @@
+'use client'
+
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import TerminalWindow from './TerminalWindow'
+
+const TerminalWindow = dynamic(() => import('@/components/TerminalWindow'), {
+  ssr: true,
+  loading: () => <div className="h-64 bg-zavala-terminal-bg rounded-lg animate-pulse" />,
+})
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -11,10 +18,7 @@ export default function Footer() {
       { name: 'Projects', href: '/projects' },
       { name: 'Contact', href: '/contact' },
     ],
-    social: [
-      { name: 'GitHub', href: 'https://github.com/zavalatechlabs' },
-      { name: 'LinkedIn', href: '#' },
-    ],
+    social: [{ name: 'GitHub', href: 'https://github.com/zavalatechlabs' }],
   }
 
   return (
@@ -46,7 +50,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm hover:text-zavala-accent-primary transition-colors duration-200"
+                    className="text-sm hover:text-zavala-accent-primary transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
                   >
                     {link.name}
                   </Link>
@@ -65,7 +69,7 @@ export default function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm hover:text-zavala-accent-primary transition-colors duration-200"
+                    className="text-sm hover:text-zavala-accent-primary transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
                   >
                     {link.name}
                   </a>

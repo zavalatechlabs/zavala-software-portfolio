@@ -4,7 +4,7 @@
 **Repository:** [zavalatechlabs/zavala-software-portfolio](https://github.com/zavalatechlabs/zavala-software-portfolio)  
 **Team:** Zavala TechLabs  
 **Architect:** ZTL Claw 🦞  
-**Last Updated:** 2026-02-08
+**Last Updated:** 2026-04-12
 
 ---
 
@@ -92,6 +92,7 @@ Modern developer portfolio website showcasing projects, skills, and experience. 
 **Framer Motion**
 
 - **Why:** Declarative animations, performant (GPU-accelerated), excellent DX
+- **Accessibility:** All animation components integrate the custom `useReducedMotion` hook (`hooks/useReducedMotion.ts`) to respect the user's `prefers-reduced-motion` OS setting
 - **Use Cases:**
   - Page transitions
   - Scroll-triggered animations
@@ -210,23 +211,31 @@ zavala-software-portfolio/
 │   ├── Navbar.tsx           # Navigation bar
 │   ├── Footer.tsx           # Footer
 │   ├── ProjectCard.tsx      # Project card component
-│   ├── ContactForm.tsx      # Contact form (client component)
+│   ├── ThemeProvider.tsx    # next-themes provider wrapper
+│   ├── ThemeToggle.tsx      # Dark/light mode toggle
+│   ├── TerminalWindow.tsx   # Decorative code window in footer
+│   ├── animations/          # Framer Motion animation wrappers
+│   ├── contact/             # ContactForm and related components
+│   ├── chat/                # AI chat widget
 │   └── ui/                  # Shared UI elements (buttons, inputs, etc.)
 ├── content/                  # MDX content files
 │   └── projects/
 │       ├── project-1.mdx
 │       └── project-2.mdx
 ├── lib/                      # Utility functions and helpers
-│   ├── getProjects.ts       # MDX file reader and parser
-│   ├── email.ts             # Email sending utilities
+│   ├── projects.ts          # MDX file reader/parser (Zod-validated frontmatter)
+│   ├── email.ts             # Email sending via Resend (CRLF-sanitized headers)
+│   ├── env.ts               # Zod-validated server environment variables
+│   ├── rate-limit.ts        # Rate limiter (Upstash Redis with in-memory fallback)
+│   ├── validation.ts        # Zod schemas for contact form input
 │   └── utils.ts             # General utilities
 ├── public/                   # Static assets (images, resume, etc.)
 │   ├── images/
 │   │   └── projects/        # Project screenshots/images
 │   ├── resume.pdf
 │   └── favicon.ico
-├── styles/
-│   └── globals.css          # Global Tailwind styles
+├── hooks/                    # Custom React hooks
+│   └── useReducedMotion.ts  # Respects prefers-reduced-motion
 ├── .env.local               # Environment variables (not committed to git)
 ├── .env.example             # Example env vars (committed for reference)
 ├── .gitignore               # Git ignore rules
@@ -252,13 +261,16 @@ zavala-software-portfolio/
 
 ### Additional Measures
 
-- **Rate Limiting:** Middleware for API routes (contact form)
+- **Zod Environment Validation:** `lib/env.ts` validates all required env vars (RESEND_API_KEY, optional Upstash creds) at server boot via Zod, failing loudly on misconfiguration
+- **Rate Limiting:** `lib/rate-limit.ts` supports Upstash Redis for persistent distributed rate limiting across serverless cold starts, with an in-memory sliding-window fallback for development
+- **CRLF Sanitization:** `lib/email.ts` strips `\r`, `\n`, and null bytes from user-supplied strings before placing them in email headers to prevent header injection
+- **Timing-Based Honeypot:** Contact form includes a hidden `website` field (classic honeypot) and a submission-timing check to reject bot submissions that arrive too fast
 - **Security Headers:** Configure in `next.config.js`:
   - Content-Security-Policy
   - X-Frame-Options
   - X-Content-Type-Options
   - Referrer-Policy
-- **Input Validation:** Server-side validation for all form inputs
+- **Input Validation:** Zod schemas in `lib/validation.ts` validate all contact form fields server-side, including newline rejection in the name field
 - **Email Protection:** API keys stored as environment variables, never in code
 
 ### Configuration Example
@@ -387,6 +399,7 @@ If portfolio evolves into a blog/business site:
 
 - `next-mdx-remote` - MDX support for Next.js
 - `gray-matter` - Parse frontmatter in MDX files
+- `zod` - Runtime schema validation (env vars, form inputs, MDX frontmatter)
 
 ### Animations
 
@@ -456,6 +469,8 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
   - User interactions (clicks, form inputs)
   - Edge cases and error states
   - Utility functions
+  - API route handlers (`app/api/contact/__tests__/route.test.ts`)
+  - Library modules (`lib/__tests__/` — email, rate-limit, utils, validation)
 
 **Example:**
 

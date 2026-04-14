@@ -5,6 +5,7 @@ This document outlines the SEO implementation for the Maximiliano Zavala Portfol
 ## Overview
 
 The portfolio implements comprehensive SEO best practices including:
+
 - Dynamic robots.txt and sitemap
 - PWA manifest for installability
 - Open Graph images for social sharing
@@ -20,6 +21,7 @@ The portfolio implements comprehensive SEO best practices including:
 **Location:** `app/robots.ts`
 
 **Features:**
+
 - Allows all search engines to crawl the site
 - Disallows API routes and private paths
 - Points to sitemap location
@@ -27,6 +29,7 @@ The portfolio implements comprehensive SEO best practices including:
 **Access:** https://zavalatechlabs.com/robots.txt
 
 **Example Output:**
+
 ```
 User-Agent: *
 Allow: /
@@ -43,6 +46,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Location:** `app/sitemap.ts`
 
 **Features:**
+
 - Automatically includes all static pages (home, about, projects, contact)
 - Dynamically includes all project pages from MDX content
 - Sets appropriate priority and change frequency for each page type
@@ -51,6 +55,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Access:** https://zavalatechlabs.com/sitemap.xml
 
 **Page Priorities:**
+
 - Homepage: 1.0 (highest)
 - Projects listing: 0.9
 - About: 0.8
@@ -64,6 +69,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Location:** `app/manifest.ts`
 
 **Features:**
+
 - App name and description
 - Theme colors (background: black, theme: indigo)
 - App icons in multiple sizes (192x192, 512x512)
@@ -78,6 +84,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 #### Homepage OG Image (`app/opengraph-image.tsx`)
 
 **Features:**
+
 - Generated dynamically using Next.js `ImageResponse` API
 - Gradient background (purple to violet)
 - Shows name, title, and key technologies
@@ -88,6 +95,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 #### About Page OG Image (`app/about/opengraph-image.tsx`)
 
 **Features:**
+
 - Custom design for the about page
 - Blue gradient background to differentiate from homepage
 - Focused on "About Me" messaging
@@ -100,12 +108,14 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Purpose:** Provide branding across browsers and platforms.
 
 **Implementation:**
+
 - `app/icon.tsx`: Standard favicon (32x32)
 - `app/apple-icon.tsx`: Apple touch icon (180x180)
 - `public/icon-192.png`: PWA icon (192x192)
 - `public/icon-512.png`: PWA icon (512x512)
 
 **Features:**
+
 - All icons use consistent branding (MZ initials)
 - Gradient background matching site theme
 - Generated programmatically for consistency
@@ -117,28 +127,33 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Features:**
 
 #### Basic Metadata
+
 - Enhanced title and description
 - Relevant keywords for search optimization
 - Author and creator information
 - Publisher metadata
 
 #### Robots Configuration
+
 - Explicitly allows indexing
 - Configures Google-specific directives
 - Enables rich previews (images, videos, snippets)
 
 #### Open Graph Tags
+
 - Complete Open Graph implementation
 - High-quality preview images
 - Proper URLs and descriptions
 - Optimized for Facebook, LinkedIn, etc.
 
 #### Twitter Cards
+
 - Large image card format
 - Optimized titles and descriptions
 - Proper image references
 
 #### Canonical URLs
+
 - Prevents duplicate content issues
 - Uses environment-based base URL
 
@@ -149,6 +164,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Schemas Implemented:**
 
 #### Person Schema
+
 ```json
 {
   "@type": "Person",
@@ -159,6 +175,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 ```
 
 #### WebSite Schema
+
 ```json
 {
   "@type": "WebSite",
@@ -169,6 +186,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 ```
 
 **Benefits:**
+
 - Enhanced search results with rich snippets
 - Better understanding of site purpose
 - Potential for knowledge graph inclusion
@@ -180,12 +198,14 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Tool:** https://www.opengraph.xyz/
 
 **Steps:**
+
 1. Enter your site URL
 2. Verify preview image loads correctly
 3. Check title and description
 4. Test on multiple pages (home, about, projects)
 
 **Expected Results:**
+
 - Images should be 1200x630px
 - Titles should be descriptive
 - Descriptions should be compelling
@@ -195,11 +215,13 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Tool:** https://cards-dev.twitter.com/validator
 
 **Steps:**
+
 1. Enter URL in validator
 2. Preview the card appearance
 3. Verify image and text display
 
 **Expected Results:**
+
 - Summary card with large image
 - Clear title and description
 - Professional appearance
@@ -209,11 +231,13 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Tool:** https://search.google.com/test/rich-results
 
 **Steps:**
+
 1. Enter URL or paste code
 2. Check for detected structured data
 3. Verify no errors or warnings
 
 **Expected Results:**
+
 - Person schema detected
 - WebSite schema detected
 - All required properties present
@@ -224,6 +248,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Tool:** Chrome DevTools > Lighthouse
 
 **Steps:**
+
 1. Open site in Chrome
 2. Open DevTools (F12)
 3. Navigate to Lighthouse tab
@@ -232,6 +257,7 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Target Score:** ≥ 95/100
 
 **Key Metrics:**
+
 - ✓ Meta description present
 - ✓ Page has title
 - ✓ Links are crawlable
@@ -245,11 +271,13 @@ Sitemap: https://zavalatechlabs.com/sitemap.xml
 **Tool:** https://search.google.com/test/mobile-friendly
 
 **Steps:**
+
 1. Enter site URL
 2. Wait for analysis
 3. Review mobile usability
 
 **Expected Results:**
+
 - Mobile-friendly designation
 - No mobile usability issues
 - Proper viewport configuration
@@ -267,15 +295,6 @@ Update `NEXT_PUBLIC_BASE_URL` in `.env` or `.env.local`:
 ```bash
 NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
-
-### Regenerating Icons
-
-If you need to update the icon design:
-
-1. Edit `scripts/generate-icons.js` to modify the SVG template
-2. Run: `node scripts/generate-icons.js`
-3. Run: `node scripts/convert-icons-to-png.js`
-4. Update `app/icon.tsx` and `app/apple-icon.tsx` if needed
 
 ### Adding Social Media Links
 
@@ -297,6 +316,7 @@ sameAs: [
 ### Static Generation
 
 All SEO files are generated at build time:
+
 - robots.txt: Static output
 - sitemap.xml: Generated from content at build time
 - manifest.json: Static configuration
@@ -319,7 +339,7 @@ All SEO files are generated at build time:
 ✅ **Security:** HTTPS, proper CSP headers  
 ✅ **Social Sharing:** OG images and Twitter cards  
 ✅ **PWA Ready:** Manifest and service worker ready  
-✅ **Canonical URLs:** Prevent duplicate content issues  
+✅ **Canonical URLs:** Prevent duplicate content issues
 
 ## Future Enhancements
 
@@ -342,6 +362,7 @@ All SEO files are generated at build time:
 ## Support
 
 For questions or issues related to SEO implementation, consult:
+
 1. This documentation
 2. Next.js official documentation
 3. Google Search Central help

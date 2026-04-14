@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -46,24 +47,35 @@ const taglineVariants = {
   },
 }
 
+const staticVariant = {
+  hidden: { opacity: 1, y: 0, scale: 1 },
+  visible: { opacity: 1, y: 0, scale: 1 },
+}
+
 interface HeroNameRevealProps {
   name?: string
   tagline?: string
 }
 
-export function HeroNameReveal({ 
+export function HeroNameReveal({
   name = 'Maximiliano Zavala',
-  tagline = 'Software Engineer | AI Enthusiast'
+  tagline = 'Software Engineer | AI Enthusiast',
 }: HeroNameRevealProps) {
+  const prefersReducedMotion = useReducedMotion()
+
   // Split name into words to prevent breaking within last name
   const words = name.split(' ')
-  
+
+  const activeContainerVariants = prefersReducedMotion ? staticVariant : containerVariants
+  const activeLetterVariants = prefersReducedMotion ? staticVariant : letterVariants
+  const activeTaglineVariants = prefersReducedMotion ? staticVariant : taglineVariants
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="text-center">
         {/* Name with letter-by-letter reveal */}
         <motion.h1
-          variants={containerVariants}
+          variants={activeContainerVariants}
           initial="hidden"
           animate="visible"
           className="text-6xl md:text-8xl font-bold tracking-tight text-zavala-text-primary"
@@ -77,7 +89,7 @@ export function HeroNameReveal({
               {word.split('').map((char, charIndex) => (
                 <motion.span
                   key={`${char}-${wordIndex}-${charIndex}`}
-                  variants={letterVariants}
+                  variants={activeLetterVariants}
                   className="inline-block"
                 >
                   {char}
@@ -86,10 +98,10 @@ export function HeroNameReveal({
             </span>
           ))}
         </motion.h1>
-        
+
         {/* Tagline fades in after name */}
         <motion.p
-          variants={taglineVariants}
+          variants={activeTaglineVariants}
           initial="hidden"
           animate="visible"
           className="text-xl md:text-2xl font-medium text-zavala-text-secondary mt-6"
@@ -99,18 +111,22 @@ export function HeroNameReveal({
 
         {/* Scroll indicator */}
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 3, duration: 0.8 }}
+          transition={prefersReducedMotion ? { duration: 0 } : { delay: 3, duration: 0.8 }}
           className="mt-16"
         >
           <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
+            animate={prefersReducedMotion ? { y: 0 } : { y: [0, 8, 0] }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : {
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }
+            }
             className="text-zavala-text-tertiary"
           >
             <svg

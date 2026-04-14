@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx jest *)",
+      "Bash(npx prettier *)",
+      "Bash(npx playwright *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git status *)",
+      "Bash(git branch *)",
+      "Bash(ls *)",
+      "Bash(wc *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(rm --recursive *)",
+      "Bash(git push --force *)",
+      "Bash(git clean *)",
+      "Bash(npm publish *)",
+      "Edit(.env.local)"
+    ]
+  }
+}

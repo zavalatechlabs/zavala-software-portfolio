@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your AI Development Team — Claude Code Customization Guide</title>
+<style>
+  /* ================================================================
+     RESET & BASE
+     ================================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #0a0a0a;
+    --bg-surface: #1a1a1a;
+    --bg-elevated: #242424;
+    --border-subtle: #2a2a2a;
+    --border-default: #3a3a3a;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #737373;
+    --accent-blue: #3b82f6;
+    --accent-green: #10b981;
+    --accent-orange: #f97316;
+    --accent-purple: #a855f7;
+    --accent-red: #ef4444;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    --slide-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ================================================================
+     TYPOGRAPHY
+     ================================================================ */
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+  h2 { font-size: clamp(1.6rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+  h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 600; line-height: 1.3; }
+  p  { font-size: clamp(0.9rem, 1.8vw, 1.1rem); line-height: 1.7; color: var(--text-secondary); }
+
+  code, .mono {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--bg-elevated);
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    color: var(--accent-green);
+  }
+
+  /* ================================================================
+     SLIDE DECK CONTAINER
+     ================================================================ */
+  #deck {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 2rem 4.5rem;
+    overflow-y: auto;
+  }
+
+  .slide.active {
+    display: flex;
+  }
+
+  .slide-inner {
+    max-width: 960px;
+    width: 100%;
+  }
+
+  /* ================================================================
+     NAVIGATION
+     ================================================================ */
+  .nav-zone {
+    position: fixed;
+    top: 0;
+    bottom: 60px;
+    width: 15%;
+    z-index: 100;
+    cursor: pointer;
+  }
+  .nav-zone:hover { background: rgba(255,255,255,0.02); }
+  .nav-zone.left  { left: 0; }
+  .nav-zone.right { right: 0; }
+
+  /* Dot indicators */
+  #dots {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(transparent, rgba(10,10,10,0.95));
+    z-index: 200;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border-default);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0;
+  }
+  .dot:hover { background: var(--text-tertiary); transform: scale(1.3); }
+  .dot.active { background: var(--accent-blue); transform: scale(1.3); box-shadow: 0 0 10px rgba(59,130,246,0.5); }
+
+  /* Slide counter */
+  #counter {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    z-index: 200;
+  }
+
+  /* ================================================================
+     COMPONENT: CARDS
+     ================================================================ */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.2rem;
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    border-color: var(--border-default);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card .card-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .card .card-model {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.15em 0.5em;
+    border-radius: 9999px;
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+
+  .model-opus {
+    background: rgba(168,85,247,0.15);
+    color: var(--accent-purple);
+    border: 1px solid rgba(168,85,247,0.3);
+  }
+  .model-sonnet {
+    background: rgba(59,130,246,0.15);
+    color: var(--accent-blue);
+    border: 1px solid rgba(59,130,246,0.3);
+  }
+
+  /* ================================================================
+     COMPONENT: FILE TREE
+     ================================================================ */
+  .file-tree {
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 1.3vw, 0.88rem);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    overflow-x: auto;
+  }
+  .file-tree .dir  { color: var(--accent-blue); }
+  .file-tree .file { color: var(--text-secondary); }
+  .file-tree .new  { color: var(--accent-green); }
+  .file-tree .count { color: var(--text-tertiary); font-style: italic; }
+
+  /* ================================================================
+     COMPONENT: WORKFLOW
+     ================================================================ */
+  .workflow {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-top: 0.8rem;
+  }
+  .workflow-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  .workflow-steps {
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 1.3vw, 0.85rem);
+    color: var(--accent-green);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .workflow-steps .arrow {
+    color: var(--text-tertiary);
+  }
+  .workflow-steps .agent {
+    color: var(--accent-blue);
+  }
+  .workflow-steps .skill {
+    color: var(--accent-orange);
+  }
+  .workflow-steps .action {
+    color: var(--text-secondary);
+  }
+
+  /* ================================================================
+     COMPONENT: EXAMPLE BLOCK
+     ================================================================ */
+  .example-list {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .example-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+  }
+  .example-prompt {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  .example-arrow {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+  }
+  .example-agent {
+    font-family: var(--font-mono);
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+
+  /* ================================================================
+     COMPONENT: TWO-COLUMN
+     ================================================================ */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; gap: 1rem; }
+  }
+
+  .col-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .col-section ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .col-section li {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    padding: 0.4rem 0.7rem;
+    background: var(--bg-surface);
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* ================================================================
+     COMPONENT: PILL LIST
+     ================================================================ */
+  .pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .pill {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.35em 0.8em;
+    border-radius: 9999px;
+    border: 1px solid;
+  }
+  .pill.allow { background: rgba(16,185,129,0.1); color: var(--accent-green); border-color: rgba(16,185,129,0.3); }
+  .pill.deny  { background: rgba(239,68,68,0.1); color: var(--accent-red); border-color: rgba(239,68,68,0.3); }
+
+  /* ================================================================
+     COMPONENT: CUT LIST
+     ================================================================ */
+  .cut-list {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .cut-item {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+    background: var(--bg-surface);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+  }
+  .cut-item .cut-name {
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    text-decoration: line-through;
+  }
+  .cut-item .cut-reason {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  /* ================================================================
+     COMPONENT: BIG NUMBER
+     ================================================================ */
+  .big-numbers {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+    justify-content: center;
+  }
+  .big-num {
+    text-align: center;
+  }
+  .big-num .num {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    line-height: 1;
+  }
+  .big-num .label {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    margin-top: 0.3rem;
+  }
+
+  /* ================================================================
+     COMPONENT: SQUAD BADGES
+     ================================================================ */
+  .squad-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  @media (max-width: 700px) {
+    .squad-row { grid-template-columns: 1fr; }
+  }
+  .squad-badge {
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid;
+  }
+  .squad-badge.career {
+    background: rgba(168,85,247,0.06);
+    border-color: rgba(168,85,247,0.25);
+  }
+  .squad-badge.tech {
+    background: rgba(59,130,246,0.06);
+    border-color: rgba(59,130,246,0.25);
+  }
+  .squad-badge h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+  .squad-badge p {
+    font-size: 0.85rem;
+  }
+  .squad-badge .squad-count {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  /* ================================================================
+     COMPONENT: COMMAND LIST (Slide 16)
+     ================================================================ */
+  .start-commands {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .start-cmd {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+  }
+  .start-cmd:hover { border-color: var(--border-default); }
+  .start-cmd .cmd-num {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 2rem;
+    text-align: center;
+  }
+  .start-cmd .cmd-body .cmd-name {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--accent-green);
+    font-size: 1rem;
+  }
+  .start-cmd .cmd-body .cmd-desc {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+  }
+
+  /* ================================================================
+     TITLE SLIDE SPECIFICS
+     ================================================================ */
+  .title-slide {
+    text-align: center;
+  }
+  .title-slide h1 {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-green) 50%, var(--accent-orange) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.8rem;
+  }
+  .title-slide .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+  .title-slide .meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+  }
+
+  /* ================================================================
+     DECORATIVE
+     ================================================================ */
+  .glow-line {
+    width: 60px;
+    height: 3px;
+    border-radius: 3px;
+    margin: 1rem 0 1.5rem;
+  }
+  .glow-blue   { background: var(--accent-blue);   box-shadow: 0 0 12px rgba(59,130,246,0.4); }
+  .glow-green  { background: var(--accent-green);  box-shadow: 0 0 12px rgba(16,185,129,0.4); }
+  .glow-orange { background: var(--accent-orange); box-shadow: 0 0 12px rgba(249,115,22,0.4); }
+  .glow-purple { background: var(--accent-purple); box-shadow: 0 0 12px rgba(168,85,247,0.4); }
+
+  .slide-footer {
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+
+  .accent-blue   { color: var(--accent-blue); }
+  .accent-green  { color: var(--accent-green); }
+  .accent-orange { color: var(--accent-orange); }
+  .accent-purple { color: var(--accent-purple); }
+  .accent-red    { color: var(--accent-red); }
+
+  /* ================================================================
+     SUBTLE BACKGROUND DECORATION
+     ================================================================ */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(59,130,246,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(16,185,129,0.03) 0%, transparent 50%);
+  }
+
+  /* ================================================================
+     RESPONSIVE
+     ================================================================ */
+  @media (max-width: 600px) {
+    .slide { padding: 2rem 1.2rem 4rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .big-numbers { gap: 1rem; }
+    .file-tree { padding: 1rem; font-size: 0.72rem; }
+  }
+
+  /* Subtle entrance animation for elements inside active slide */
+  .slide.active .animate-in {
+    animation: fadeUp 0.6s ease both;
+  }
+  .slide.active .animate-in:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active .animate-in:nth-child(3) { animation-delay: 0.18s; }
+  .slide.active .animate-in:nth-child(4) { animation-delay: 0.25s; }
+  .slide.active .animate-in:nth-child(5) { animation-delay: 0.32s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Skills section */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .skill-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    transition: border-color 0.3s ease;
+  }
+  .skill-card:hover { border-color: var(--accent-orange); }
+  .skill-card .skill-name {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--accent-orange);
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+  }
+  .skill-card .skill-desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Security slide */
+  .security-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 700px) {
+    .security-grid { grid-template-columns: 1fr; }
+  }
+  .security-section h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+  }
+
+  /* Rule highlight */
+  .rule-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--accent-orange);
+    border-radius: 0 12px 12px 0;
+    padding: 1.2rem 1.5rem;
+    margin-top: 1.2rem;
+  }
+  .rule-block h3 {
+    font-size: 0.95rem;
+    color: var(--accent-orange);
+    margin-bottom: 0.5rem;
+  }
+  .rule-block ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .rule-block li {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    padding-left: 1rem;
+    position: relative;
+  }
+  .rule-block li::before {
+    content: "\2022";
+    color: var(--accent-orange);
+    position: absolute;
+    left: 0;
+  }
+
+  /* Quick ref bottom bar */
+  .qr-skills {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+  }
+  .qr-skills h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<div id="deck">
+
+  <!-- ============================================================
+       SLIDE 1: Title
+       ============================================================ -->
+  <div class="slide active" data-slide="0">
+    <div class="slide-inner title-slide">
+      <div class="animate-in">
+        <h1>Your AI Development Team</h1>
+      </div>
+      <div class="animate-in">
+        <p class="subtitle">Claude Code Customization for Zavala Software Portfolio</p>
+      </div>
+      <div class="animate-in">
+        <div class="big-numbers">
+          <div class="big-num"><div class="num accent-blue">10</div><div class="label">Agents</div></div>
+          <div class="big-num"><div class="num accent-orange">5</div><div class="label">Skills</div></div>
+          <div class="big-num"><div class="num accent-green">1</div><div class="label">CLAUDE.md</div></div>
+          <div class="big-num"><div class="num accent-purple">19</div><div class="label">Files</div></div>
+        </div>
+      </div>
+      <div class="animate-in">
+        <p class="meta">Built for Career Success</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 2: The Mission
+       ============================================================ -->
+  <div class="slide" data-slide="1">
+    <div class="slide-inner">
+      <h2 class="animate-in">The Mission</h2>
+      <div class="glow-line glow-purple animate-in"></div>
+      <p class="animate-in" style="font-size: clamp(1rem, 2vw, 1.15rem); color: var(--text-primary); margin-bottom: 1.5rem;">
+        This isn't just a codebase &mdash; it's a career site.<br>
+        Every customization serves one goal: <strong class="accent-green">help you land opportunities.</strong>
+      </p>
+      <p class="animate-in" style="margin-bottom: 1.5rem;">The AI team is split into two squads:</p>
+      <div class="squad-row animate-in">
+        <div class="squad-badge career">
+          <div class="squad-count accent-purple">5</div>
+          <h3 class="accent-purple">Career &amp; Content Team</h3>
+          <p>Serve the portfolio's mission. Resume strategy, storytelling, brand consistency, and recruiter readiness.</p>
+        </div>
+        <div class="squad-badge tech">
+          <div class="squad-count accent-blue">5</div>
+          <h3 class="accent-blue">Technical Team</h3>
+          <p>Serve the codebase. Components, testing, code review, content authoring, and SEO.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 3: What Was Implemented
+       ============================================================ -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <h2 class="animate-in">What Was Implemented</h2>
+      <div class="glow-line glow-blue animate-in"></div>
+      <p class="animate-in">19 files across the <code>.claude/</code> directory and project root:</p>
+      <div class="file-tree animate-in">
+<span class="new">CLAUDE.md</span>                          <span class="count"># project brain</span>
+<span class="new">CLAUDE.local.md</span>                    <span class="count"># local overrides</span>
+<span class="dir">.claude/</span>
+  <span class="file">settings.json</span>                    <span class="count"># permissions &amp; security</span>
+  <span class="dir">rules/</span>
+    <span class="new">api-security.md</span>                <span class="count"># path-scoped rule</span>
+  <span class="dir">agents/</span>                          <span class="count"># 10 agents</span>
+    <span class="new">career-coach.md</span>
+    <span class="new">project-storyteller.md</span>
+    <span class="new">portfolio-strategist.md</span>
+    <span class="new">brand-voice.md</span>
+    <span class="new">recruiter-eye.md</span>
+    <span class="new">frontend-builder.md</span>
+    <span class="new">code-reviewer.md</span>
+    <span class="new">test-writer.md</span>
+    <span class="new">mdx-content-builder.md</span>
+    <span class="new">seo-specialist.md</span>
+  <span class="dir">skills/</span>                          <span class="count"># 5 skills</span>
+    <span class="dir">quality-gate/</span><span class="new">SKILL.md</span>
+    <span class="dir">add-project/</span><span class="new">SKILL.md</span>
+    <span class="dir">update-resume/</span><span class="new">SKILL.md</span>
+    <span class="dir">portfolio-audit/</span><span class="new">SKILL.md</span>
+    <span class="dir">seo-check/</span><span class="new">SKILL.md</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 4: CLAUDE.md
+       ============================================================ -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <h2 class="animate-in">CLAUDE.md &mdash; Your Project Brain</h2>
+      <div class="glow-line glow-green animate-in"></div>
+      <p class="animate-in" style="margin-bottom: 1.5rem;">
+        ~80 lines of project instructions loaded into <strong>every</strong> Claude Code session automatically.
+      </p>
+      <div class="card-grid animate-in">
+        <div class="card">
+          <div class="card-title">Architecture</div>
+          <div class="card-desc">Next.js 15 App Router, TypeScript, Tailwind 3.4, MDX for content. Tech stack context so every agent knows the codebase.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Design System</div>
+          <div class="card-desc">Semantic CSS variables, dark-first approach, JetBrains Mono for code, Inter for body text.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Testing Patterns</div>
+          <div class="card-desc">Jest + React Testing Library. Three mock strategies for different component types.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Security Rules</div>
+          <div class="card-desc">Rate limiting, input validation, no secrets in code. Keeps agents from making dangerous changes.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Career Mission</div>
+          <div class="card-desc">Portfolio context so every agent understands the user is a job-seeking developer. Content should serve that goal.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Deep-Dive Refs</div>
+          <div class="card-desc">References <code>@docs/</code> for animation patterns, SEO config, and other detailed guides.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 5: Career Team Overview
+       ============================================================ -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <h2 class="animate-in"><span class="accent-purple">Career &amp; Content Team</span></h2>
+      <div class="glow-line glow-purple animate-in"></div>
+      <p class="animate-in">5 agents focused on your professional narrative and career positioning.</p>
+      <div class="card-grid animate-in">
+        <div class="card">
+          <div class="card-title">@career-coach</div>
+          <div class="card-desc">Resume &amp; experience strategist. Translates your work into compelling career artifacts.</div>
+          <div class="card-model model-opus">opus</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@project-storyteller</div>
+          <div class="card-desc">Narrative transformer. Turns technical projects into stories that resonate with employers.</div>
+          <div class="card-model model-sonnet">sonnet</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@portfolio-strategist</div>
+          <div class="card-desc">Holistic audit &amp; gap analysis. Ensures your portfolio covers all the angles recruiters look for.</div>
+          <div class="card-model model-opus">opus</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@brand-voice</div>
+          <div class="card-desc">Copy &amp; messaging consistency. Keeps tone, phrasing, and personality unified across all pages.</div>
+          <div class="card-model model-opus">opus</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@recruiter-eye</div>
+          <div class="card-desc">First-impression simulator. Reviews your site as a hiring manager would in 30 seconds.</div>
+          <div class="card-model model-opus">opus</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 6: How to Use Career Agents
+       ============================================================ -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <h2 class="animate-in">Using the Career Team</h2>
+      <div class="glow-line glow-purple animate-in"></div>
+      <p class="animate-in">Match your task to the right agent:</p>
+      <div class="example-list animate-in">
+        <div class="example-row">
+          <span class="example-prompt">"Review my resume"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@career-coach</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Make this project description more compelling"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@project-storyteller</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Am I ready for job applications?"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@recruiter-eye</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Does my site tell a coherent story?"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@portfolio-strategist</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Is my messaging consistent across pages?"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@brand-voice</span>
+        </div>
+      </div>
+      <div style="margin-top: 2rem; padding: 1rem 1.5rem; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-subtle);" class="animate-in">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          <strong class="accent-purple">Tip:</strong> Career agents use <strong>Opus</strong> (except @project-storyteller which uses Sonnet) for deeper reasoning on subjective, high-stakes career advice.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 7: Technical Team Overview
+       ============================================================ -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <h2 class="animate-in"><span class="accent-blue">Technical Team</span></h2>
+      <div class="glow-line glow-blue animate-in"></div>
+      <p class="animate-in">5 agents focused on code quality, testing, and content authoring.</p>
+      <div class="card-grid animate-in">
+        <div class="card">
+          <div class="card-title">@frontend-builder</div>
+          <div class="card-desc">Components &amp; pages. Builds UI following the design system and accessibility standards.</div>
+          <div class="card-model model-sonnet">sonnet</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@code-reviewer</div>
+          <div class="card-desc">Security + accessibility + design review. Triple-checks every code change.</div>
+          <div class="card-model model-sonnet">sonnet</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@test-writer</div>
+          <div class="card-desc">Tests with 3 mock strategies. Knows the Jest + RTL patterns used in the project.</div>
+          <div class="card-model model-sonnet">sonnet</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@mdx-content-builder</div>
+          <div class="card-desc">MDX project files. Creates structured content that matches the portfolio's schema.</div>
+          <div class="card-model model-sonnet">sonnet</div>
+        </div>
+        <div class="card">
+          <div class="card-title">@seo-specialist</div>
+          <div class="card-desc">Meta tags &amp; structured data. JSON-LD, Open Graph, sitemaps, and search optimization.</div>
+          <div class="card-model model-sonnet">sonnet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 8: How to Use Technical Agents
+       ============================================================ -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <h2 class="animate-in">Using the Technical Team</h2>
+      <div class="glow-line glow-blue animate-in"></div>
+      <p class="animate-in">Chain agents together for complete workflows:</p>
+      <div class="example-list animate-in">
+        <div class="example-row">
+          <span class="example-prompt">"Build a testimonials section"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@frontend-builder</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@code-reviewer</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Write tests for the new component"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@test-writer</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Add a new project to the portfolio"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@mdx-content-builder</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@seo-specialist</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Review this PR for issues"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@code-reviewer</span>
+        </div>
+        <div class="example-row">
+          <span class="example-prompt">"Improve SEO for the about page"</span>
+          <span class="example-arrow">&rarr;</span>
+          <span class="example-agent">@seo-specialist</span>
+        </div>
+      </div>
+      <div style="margin-top: 2rem; padding: 1rem 1.5rem; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-subtle);" class="animate-in">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          <strong class="accent-blue">Tip:</strong> All technical agents use <strong>Sonnet</strong> for fast, cost-effective code generation. The CLAUDE.md context keeps them aligned with project standards.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 9: Skills (Slash Commands)
+       ============================================================ -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <h2 class="animate-in"><span class="accent-orange">Skills</span> <span style="font-size: 0.6em; color: var(--text-tertiary);">(Slash Commands)</span></h2>
+      <div class="glow-line glow-orange animate-in"></div>
+      <p class="animate-in">Reusable, multi-step workflows triggered with a single command.</p>
+      <div class="skill-grid animate-in">
+        <div class="skill-card">
+          <div class="skill-name">/quality-gate</div>
+          <div class="skill-desc">Full pipeline: type-check &rarr; lint &rarr; format &rarr; test &rarr; build. Run before every commit.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-name">/add-project [slug]</div>
+          <div class="skill-desc">Scaffold a new MDX project file with frontmatter, sections, and proper metadata.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-name">/update-resume [title] [company] [dates]</div>
+          <div class="skill-desc">Add work experience to your resume data. Keeps formatting consistent.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-name">/portfolio-audit</div>
+          <div class="skill-desc">Monthly health check. Reviews content freshness, broken links, missing metadata, and more.</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-name">/seo-check</div>
+          <div class="skill-desc">SEO audit. Validates meta tags, structured data, sitemap, and search engine readiness.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 10: Recommended Workflows
+       ============================================================ -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <h2 class="animate-in">Recommended Workflows</h2>
+      <div class="glow-line glow-green animate-in"></div>
+      <div class="animate-in">
+        <div class="workflow">
+          <div class="workflow-title">Adding a New Project</div>
+          <div class="workflow-steps">
+            <span class="skill">/add-project</span>
+            <span class="arrow">&rarr;</span>
+            <span class="action">edit content</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@project-storyteller</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@seo-specialist</span>
+            <span class="arrow">&rarr;</span>
+            <span class="skill">/quality-gate</span>
+          </div>
+        </div>
+      </div>
+      <div class="animate-in">
+        <div class="workflow">
+          <div class="workflow-title">Quarterly Review</div>
+          <div class="workflow-steps">
+            <span class="agent">@portfolio-strategist</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@recruiter-eye</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@brand-voice</span>
+            <span class="arrow">&rarr;</span>
+            <span class="action">fix items</span>
+            <span class="arrow">&rarr;</span>
+            <span class="skill">/portfolio-audit</span>
+            <span class="arrow">&rarr;</span>
+            <span class="skill">/seo-check</span>
+          </div>
+        </div>
+      </div>
+      <div class="animate-in">
+        <div class="workflow">
+          <div class="workflow-title">Building a Feature</div>
+          <div class="workflow-steps">
+            <span class="agent">@frontend-builder</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@test-writer</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@code-reviewer</span>
+            <span class="arrow">&rarr;</span>
+            <span class="skill">/quality-gate</span>
+          </div>
+        </div>
+      </div>
+      <div class="animate-in">
+        <div class="workflow">
+          <div class="workflow-title">Updating Resume</div>
+          <div class="workflow-steps">
+            <span class="skill">/update-resume</span>
+            <span class="arrow">&rarr;</span>
+            <span class="agent">@career-coach</span>
+            <span class="arrow">&rarr;</span>
+            <span class="skill">/quality-gate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 11: Settings & Security
+       ============================================================ -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <h2 class="animate-in">Settings &amp; Security</h2>
+      <div class="glow-line glow-green animate-in"></div>
+      <p class="animate-in">Permissions in <code>.claude/settings.json</code> control what Claude Code can and cannot do.</p>
+      <div class="security-grid animate-in">
+        <div class="security-section">
+          <h3 class="accent-green">12 Allow Rules</h3>
+          <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.6rem;">Safe, scoped commands:</p>
+          <div class="pill-list">
+            <span class="pill allow">npm test</span>
+            <span class="pill allow">npm run lint</span>
+            <span class="pill allow">npm run build</span>
+            <span class="pill allow">npm run format</span>
+            <span class="pill allow">npx tsc</span>
+            <span class="pill allow">npx prettier</span>
+            <span class="pill allow">git status</span>
+            <span class="pill allow">git log</span>
+            <span class="pill allow">git diff</span>
+            <span class="pill allow">git add</span>
+            <span class="pill allow">git commit</span>
+            <span class="pill allow">git branch</span>
+          </div>
+        </div>
+        <div class="security-section">
+          <h3 class="accent-red">7 Deny Rules</h3>
+          <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.6rem;">Destructive commands blocked:</p>
+          <div class="pill-list">
+            <span class="pill deny">rm -rf</span>
+            <span class="pill deny">git push -f</span>
+            <span class="pill deny">git reset --hard</span>
+            <span class="pill deny">DROP TABLE</span>
+            <span class="pill deny">node *</span>
+            <span class="pill deny">cat *</span>
+            <span class="pill deny">find *</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; padding: 1rem 1.5rem; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-subtle);" class="animate-in">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          <strong class="accent-green">Key decisions:</strong> Removed dangerous wildcard permissions (<code>node *</code>, <code>cat *</code>, <code>find *</code>).
+          The <code>.env.local</code> file is protected from edits. Pre-commit hook handles formatting so there are no fragile hooks to break.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 12: The Rules
+       ============================================================ -->
+  <div class="slide" data-slide="11">
+    <div class="slide-inner">
+      <h2 class="animate-in">The Rules</h2>
+      <div class="glow-line glow-orange animate-in"></div>
+      <p class="animate-in">Path-scoped rules load automatically when editing specific files.</p>
+      <div class="rule-block animate-in">
+        <h3><code>.claude/rules/api-security.md</code></h3>
+        <p style="font-size: 0.82rem; color: var(--text-tertiary); margin-bottom: 0.6rem;">
+          Only loads when editing <code>app/api/**/*.ts</code> files
+        </p>
+        <ul>
+          <li>IP extraction &mdash; safe headers for rate-limiting behind proxies</li>
+          <li>Structured logging &mdash; consistent error tracking format</li>
+          <li>Error responses &mdash; never leak stack traces to clients</li>
+          <li>Rate limiting &mdash; token bucket with configurable limits</li>
+        </ul>
+      </div>
+      <div style="margin-top: 1.5rem; padding: 1rem 1.5rem; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-subtle);" class="animate-in">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          <strong class="accent-orange">Design choice:</strong> Only 1 path-scoped rule was created. Everything else lives in <code>CLAUDE.md</code> as the single source of truth. Rules are for context that should <em>only</em> appear when relevant files are open.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 13: What's NOT Included
+       ============================================================ -->
+  <div class="slide" data-slide="12">
+    <div class="slide-inner">
+      <h2 class="animate-in">What's NOT Included <span style="font-size: 0.5em; color: var(--text-tertiary);">(and Why)</span></h2>
+      <div class="glow-line glow-blue animate-in"></div>
+      <p class="animate-in">Intentionally cut to keep the system lean. Each omission has a rationale.</p>
+      <div class="cut-list animate-in">
+        <div class="cut-item">
+          <span class="cut-name">animation-specialist</span>
+          <span class="cut-reason">3 animation files in the entire project &mdash; too niche for a dedicated agent</span>
+        </div>
+        <div class="cut-item">
+          <span class="cut-name">performance-optimizer</span>
+          <span class="cut-reason">Monthly task at most &mdash; use the bundle analyzer directly when needed</span>
+        </div>
+        <div class="cut-item">
+          <span class="cut-name">interview-prep</span>
+          <span class="cut-reason">Occasional use &mdash; just ask Claude directly, no agent prompt needed</span>
+        </div>
+        <div class="cut-item">
+          <span class="cut-name">competitive-intel</span>
+          <span class="cut-reason">Quarterly at best &mdash; use WebSearch tool when the need arises</span>
+        </div>
+        <div class="cut-item">
+          <span class="cut-name">hooks</span>
+          <span class="cut-reason">Broken on Windows, redundant with pre-commit &mdash; more trouble than value</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 14: Future Expansion
+       ============================================================ -->
+  <div class="slide" data-slide="13">
+    <div class="slide-inner">
+      <h2 class="animate-in">Future Expansion</h2>
+      <div class="glow-line glow-green animate-in"></div>
+      <p class="animate-in" style="margin-bottom: 1.5rem;">When you hit a <strong>recurring problem</strong>, add the right tool:</p>
+      <div class="card-grid animate-in">
+        <div class="card">
+          <div class="card-title"><span class="accent-orange">Animation bugs?</span></div>
+          <div class="card-desc"><code>.claude/agents/animation-specialist.md</code><br>Create when Framer Motion issues become frequent.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="accent-orange">Bundle growing?</span></div>
+          <div class="card-desc"><code>.claude/agents/performance-optimizer.md</code><br>Create when build sizes start trending upward.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="accent-orange">Need CI?</span></div>
+          <div class="card-desc"><code>.claude/skills/ci-setup/SKILL.md</code><br>Automate GitHub Actions pipeline setup.</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="accent-orange">GitHub integration?</span></div>
+          <div class="card-desc"><code>.mcp.json</code><br>Add MCP servers for PR automation, issue tracking.</div>
+        </div>
+      </div>
+      <div style="margin-top: 1.5rem; padding: 1rem 1.5rem; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-subtle);" class="animate-in">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          <strong class="accent-green">Rule of thumb:</strong> If you've asked Claude to do the same thing 3+ times, it's worth creating an agent or skill for it.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 15: Quick Reference Card
+       ============================================================ -->
+  <div class="slide" data-slide="14">
+    <div class="slide-inner">
+      <h2 class="animate-in">Quick Reference Card</h2>
+      <div class="glow-line glow-blue animate-in"></div>
+      <div class="two-col animate-in">
+        <div class="col-section">
+          <h3><span class="accent-purple">Career Commands</span></h3>
+          <ul>
+            <li><span class="accent-purple">@career-coach</span> &mdash; Resume strategy</li>
+            <li><span class="accent-purple">@project-storyteller</span> &mdash; Narratives</li>
+            <li><span class="accent-purple">@portfolio-strategist</span> &mdash; Audit &amp; gaps</li>
+            <li><span class="accent-purple">@brand-voice</span> &mdash; Messaging</li>
+            <li><span class="accent-purple">@recruiter-eye</span> &mdash; First impressions</li>
+          </ul>
+        </div>
+        <div class="col-section">
+          <h3><span class="accent-blue">Technical Commands</span></h3>
+          <ul>
+            <li><span class="accent-blue">@frontend-builder</span> &mdash; UI components</li>
+            <li><span class="accent-blue">@code-reviewer</span> &mdash; Code review</li>
+            <li><span class="accent-blue">@test-writer</span> &mdash; Test authoring</li>
+            <li><span class="accent-blue">@mdx-content-builder</span> &mdash; MDX content</li>
+            <li><span class="accent-blue">@seo-specialist</span> &mdash; SEO optimization</li>
+          </ul>
+        </div>
+      </div>
+      <div class="qr-skills animate-in">
+        <h3><span class="accent-orange">Skills</span></h3>
+        <div class="pill-list" style="justify-content: center;">
+          <span class="pill" style="background: rgba(249,115,22,0.1); color: var(--accent-orange); border-color: rgba(249,115,22,0.3);">/quality-gate</span>
+          <span class="pill" style="background: rgba(249,115,22,0.1); color: var(--accent-orange); border-color: rgba(249,115,22,0.3);">/add-project</span>
+          <span class="pill" style="background: rgba(249,115,22,0.1); color: var(--accent-orange); border-color: rgba(249,115,22,0.3);">/update-resume</span>
+          <span class="pill" style="background: rgba(249,115,22,0.1); color: var(--accent-orange); border-color: rgba(249,115,22,0.3);">/portfolio-audit</span>
+          <span class="pill" style="background: rgba(249,115,22,0.1); color: var(--accent-orange); border-color: rgba(249,115,22,0.3);">/seo-check</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 16: Get Started
+       ============================================================ -->
+  <div class="slide" data-slide="15">
+    <div class="slide-inner" style="text-align: center;">
+      <h2 class="animate-in">Get Started</h2>
+      <div class="glow-line glow-green animate-in" style="margin-left: auto; margin-right: auto;"></div>
+      <p class="animate-in" style="font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-primary); margin-bottom: 0.5rem;">
+        Start with these 3 commands today:
+      </p>
+      <div class="start-commands animate-in">
+        <div class="start-cmd">
+          <div class="cmd-num">1</div>
+          <div class="cmd-body">
+            <div class="cmd-name">@recruiter-eye</div>
+            <div class="cmd-desc">See your site through a hiring manager's eyes</div>
+          </div>
+        </div>
+        <div class="start-cmd">
+          <div class="cmd-num">2</div>
+          <div class="cmd-body">
+            <div class="cmd-name">@portfolio-strategist</div>
+            <div class="cmd-desc">Get a strategic audit of your portfolio</div>
+          </div>
+        </div>
+        <div class="start-cmd">
+          <div class="cmd-num">3</div>
+          <div class="cmd-body">
+            <div class="cmd-name">/quality-gate</div>
+            <div class="cmd-desc">Verify everything builds and passes</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer animate-in" style="margin-top: 3rem;">
+        Built with Claude Code &nbsp;|&nbsp; 19 files &nbsp;|&nbsp; 10 agents &nbsp;|&nbsp; 5 skills
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Counter -->
+<div id="counter">1 / 16</div>
+
+<!-- Dot indicators -->
+<div id="dots"></div>
+
+<!-- Navigation zones -->
+<div class="nav-zone left" id="navLeft"></div>
+<div class="nav-zone right" id="navRight"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  var slides = document.querySelectorAll('.slide');
+  var dotsContainer = document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var total = slides.length;
+  var current = 0;
+
+  // Build dot indicators
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('button');
+    dot.classList.add('dot');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    if (i === 0) dot.classList.add('active');
+    (function(idx) {
+      dot.addEventListener('click', function() { goTo(idx); });
+    })(i);
+    dotsContainer.appendChild(dot);
+  }
+  var dots = dotsContainer.querySelectorAll('.dot');
+
+  function goTo(index) {
+    if (index === current) return;
+    if (index < 0 || index >= total) return;
+
+    // Immediately hide all slides and clear all classes/styles
+    for (var s = 0; s < total; s++) {
+      slides[s].classList.remove('active', 'exit-left');
+      slides[s].removeAttribute('style');
+    }
+
+    // Show the target slide
+    slides[index].classList.add('active');
+
+    // Update dots
+    dots[current].classList.remove('active');
+    dots[index].classList.add('active');
+
+    current = index;
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goNext() { if (current < total - 1) goTo(current + 1); }
+  function goPrev() { if (current > 0) goTo(current - 1); }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goNext();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goPrev();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      goTo(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      goTo(total - 1);
+    }
+  });
+
+  // Click navigation zones
+  document.getElementById('navLeft').addEventListener('click', goPrev);
+  document.getElementById('navRight').addEventListener('click', goNext);
+
+  // Touch swipe
+  var touchStartX = 0;
+  var touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].screenX - touchStartX;
+    var dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) goNext();
+      else goPrev();
+    }
+  }, { passive: true });
+
+})();
+</script>
+</body>
+</html>

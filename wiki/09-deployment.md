@@ -28,7 +28,6 @@ Before deploying, verify everything passes locally:
 | `NEXT_PUBLIC_BASE_URL`     | Site URL for meta tags and canonical URLs      | `https://your-domain.com`                   |
 | `UPSTASH_REDIS_REST_URL`   | Upstash Redis URL for persistent rate limiting | Falls back to in-memory                     |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis auth token                       | Falls back to in-memory                     |
-| `RATE_LIMIT_ENABLED`       | Disable rate limiting for development          | `true` (enabled by default)                 |
 
 Set environment variables in: Vercel Dashboard > Project Settings > Environment Variables.
 Redeploy after adding or changing variables.
@@ -104,11 +103,9 @@ Once connected, Vercel deploys automatically:
 
 ## See Also
 
-- [Full deployment reference](../docs/DEPLOYMENT.md)
-- [Troubleshooting](11-troubleshooting.md)
-- [Quick Start](01-quick-start.md)
-- [Security Posture](security-posture.md)
+- [Deployment Reference](../docs/DEPLOYMENT.md) -- full deployment procedures
+- [Troubleshooting](11-troubleshooting.md) -- common build and deployment errors
+- [Quick Start](01-quick-start.md) -- initial setup and local development
+- [Security Posture](security-posture.md) -- security headers and CSP configuration
 
----
-
-`tags: deployment, vercel, environment-variables, ci-cd, production, hosting`
+**Tags:** deployment, vercel, environment-variables, ci-cd, production, hosting

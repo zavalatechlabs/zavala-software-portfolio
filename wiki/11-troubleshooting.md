@@ -2,6 +2,17 @@
 
 Common issues and their solutions.
 
+## Quick Index
+
+- [Build Failures](#build-failures)
+- [Theme / Dark Mode](#theme--dark-mode-not-working)
+- [Contact Form Not Sending](#contact-form-not-sending)
+- [Tests Failing](#tests-failing)
+- [Animation Issues](#animation-issues)
+- [Dependency Issues](#dependency-issues)
+- [Pre-Commit Hook Failures](#pre-commit-hook-failures)
+- [Rate Limiter Behavior](#rate-limiter-behavior)
+
 ## Build Failures
 
 ### ESLint errors on config files
@@ -61,14 +72,14 @@ if (!mounted) return null // or skeleton
 
 **Symptom:** Form submits but email never arrives, or API returns an error.
 
-| Check                 | Details                                                                                        |
-| --------------------- | ---------------------------------------------------------------------------------------------- |
-| `RESEND_API_KEY` set? | Must be set in Vercel dashboard (or `.env.local` for dev)                                      |
-| Test key prefix?      | Keys starting with `re_test_` do not send real emails. Use a production key for live delivery. |
-| `CONTACT_EMAIL` set?  | This is the delivery destination. Required.                                                    |
-| Rate limited?         | The contact API enforces rate limiting. Check server logs for 429 responses.                   |
-| Honeypot triggered?   | The form includes a hidden honeypot field. Bots filling it get silently rejected.              |
-| Timing check?         | Submissions faster than a few seconds after page load are rejected as bot traffic.             |
+| Check                 | Details                                                                                                           |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `RESEND_API_KEY` set? | Must be set in Vercel dashboard (or `.env.local` for dev)                                                         |
+| Test key prefix?      | Keys starting with `re_test_` do not send real emails. Use a production key for live delivery.                    |
+| `CONTACT_EMAIL` set?  | This is the delivery destination. Required.                                                                       |
+| Rate limited?         | The contact API enforces rate limiting. Check server logs for 429 responses.                                      |
+| Honeypot triggered?   | The form includes a hidden honeypot field. Bots filling it get silently rejected.                                 |
+| Timing check?         | Client-side only: submissions faster than 2s after page load are silently rejected. Direct API calls bypass this. |
 
 ## Tests Failing
 
@@ -169,7 +180,7 @@ UPSTASH_REDIS_REST_TOKEN=your-token
 
 Without these variables, the app falls back to in-memory limiting automatically. For local development, in-memory is fine.
 
-To disable rate limiting entirely during development, set `RATE_LIMIT_ENABLED=false`.
+Without Upstash env vars, the app uses in-memory rate limiting which resets on each server restart -- effectively no persistent limiting during local development.
 
 ## See Also
 
@@ -178,6 +189,4 @@ To disable rate limiting entirely during development, set `RATE_LIMIT_ENABLED=fa
 - [Security Posture](security-posture.md)
 - [Quick Start](01-quick-start.md)
 
----
-
-`tags: troubleshooting, debugging, errors, build, tests, theme, contact-form, rate-limiting`
+**Tags:** troubleshooting, debugging, errors, build, tests, theme, contact-form, rate-limiting

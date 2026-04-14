@@ -92,7 +92,8 @@ zavala-software-portfolio/
 |   |-- contact/page.tsx          Contact form page
 |   |-- projects/page.tsx         Projects listing
 |   |-- projects/[slug]/page.tsx  Dynamic project detail (SSG)
-|   |-- api/contact/route.ts      POST endpoint (Zod + honeypot + timing + rate limit + email)
+|   |-- api/contact/route.ts      POST endpoint (rate limit + Zod + honeypot + email)
+|   |-- api/health/route.ts       GET health check endpoint
 |
 |-- components/                   React components
 |   |-- Navbar.tsx                Navigation bar
@@ -124,7 +125,8 @@ zavala-software-portfolio/
 |-- public/                       Static assets
 |   |-- images/projects/          SVG project placeholders
 |   |-- resume.pdf                Downloadable resume
-|   |-- favicon.ico               Favicon
+|   |-- icon-192.png / .svg        PWA icons (192x192)
+|   |-- icon-512.png / .svg        PWA icons (512x512)
 |
 |-- docs/                         Internal documentation
 |   |-- SECURITY.md               Security practices and threat model
@@ -157,6 +159,19 @@ zavala-software-portfolio/
 - Mobile-first responsive design with `md:` as the primary breakpoint
 
 See `../docs/DESIGN_SYSTEM.md` for the full color palette and spacing patterns.
+
+## Adding a New Page
+
+To add a new route (e.g., `/blog` or `/services`):
+
+1. Create `app/new-page/page.tsx` -- Server Component by default
+2. Export `metadata` with title and description (uses title.template from layout)
+3. Wrap content in `<main id="main-content">` for the skip-to-content link
+4. Use `zavala-*` tokens only for all styling
+5. Add the route to `app/sitemap.ts` with appropriate priority and changeFrequency
+6. Add a nav link in `components/Navbar.tsx` if it should appear in navigation
+7. Optionally create `app/new-page/opengraph-image.tsx` for a custom social card
+8. Run `/quality-gate` to verify the build
 
 ## See Also
 

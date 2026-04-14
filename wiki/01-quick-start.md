@@ -33,7 +33,6 @@ Copy `.env.example` to `.env.local` and fill in values as needed:
 | `NEXT_PUBLIC_BASE_URL`     | For SEO   | Production URL for canonical tags and meta             |
 | `UPSTASH_REDIS_REST_URL`   | No        | Persistent rate limiting (Upstash Redis)               |
 | `UPSTASH_REDIS_REST_TOKEN` | No        | Must be set together with the URL above                |
-| `RATE_LIMIT_ENABLED`       | No        | Set to `false` to disable rate limiting                |
 
 Both Upstash variables must be set together or both omitted. See `lib/env.ts` for the full Zod validation schema.
 

@@ -138,10 +138,8 @@ The local settings file adds additional allow rules for npm install, build with 
 ## See Also
 
 - [CLAUDE.md](../CLAUDE.md) -- project-level instructions loaded into every session
-- [Quick Start](01-quick-start.md)
-- [Development Workflow](03-development-workflow.md)
-- [Testing Strategy](testing-strategy.md)
+- [Quick Start](01-quick-start.md) -- initial setup and local development
+- [Development Workflow](03-development-workflow.md) -- git conventions, quality gates
+- [Testing Strategy](testing-strategy.md) -- audit findings on test coverage
 
----
-
-`tags: claude-code, agents, skills, ai, automation, workflows, settings`
+**Tags:** claude-code, agents, skills, ai, automation, workflows, settings

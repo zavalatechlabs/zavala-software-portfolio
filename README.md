@@ -16,31 +16,33 @@ Professional software portfolio showcasing projects, skills, and experience for 
 
 This project uses a modern, secure, and performant tech stack:
 
-- **Framework:** Next.js 14+ (App Router)
+- **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
-- **Content:** MDX (Markdown + React components)
+- **Content:** MDX (Markdown + React components, parsed via `gray-matter` + `next-mdx-remote`)
 - **Deployment:** Vercel
-- **Email:** Resend + React Email
-- **Animations:** Framer Motion
+- **Email:** Resend
+- **Animations:** Framer Motion (with `prefers-reduced-motion` respected)
 
 For complete architecture details, design decisions, and security considerations, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## ✨ Features
 
 ### Core Pages
+
 - **Homepage:** Hero section with animated name reveal, featured projects showcase
 - **About:** Professional bio, "What I Do" cards, skills showcase, resume download
-- **Projects:** Grid layout with filtering, detailed project pages with tech stacks
-- **Contact:** Form with validation, email integration via Resend API
+- **Projects:** Grid of project cards, individual MDX-driven project case studies
+- **Contact:** Validated form with rate limiting, honeypot, and Resend-powered email
 
 ### Interactive Elements
-- **AI Chat Widget:** Floating assistant button with animated chat interface (UI-ready for future AI integration)
-- **Terminal Code Window:** VS Code-themed terminal displaying developer info as TypeScript code
-- **Theme Toggle:** Dark/light mode support with system preference detection
-- **Smooth Animations:** Framer Motion-powered transitions, hover effects, and scroll animations
+
+- **Terminal Code Window:** VS Code-themed footer terminal displaying developer info as syntax-highlighted TypeScript
+- **Theme Toggle:** Dark/light mode via `next-themes` with persisted preference
+- **Smooth Animations:** Framer Motion transitions, hover effects, and scroll reveals
 
 ### Technical Highlights
+
 - **MDX Content Management:** Write projects in Markdown with embedded React components
 - **Type-Safe:** Full TypeScript coverage with strict mode enabled
 - **Responsive Design:** Mobile-first approach, tested across devices
@@ -120,7 +122,13 @@ For detailed deployment instructions, see [docs/DEPLOYMENT.md](./docs/DEPLOYMENT
 
 Additional documentation can be found in the `/docs` folder:
 
-- [Research & Portfolio Examples](./docs/RESEARCH.md)
+- [Design System](./docs/DESIGN_SYSTEM.md)
+- [Animation Patterns](./docs/ANIMATION_PATTERNS.md)
+- [Code Quality](./docs/CODE_QUALITY.md)
+- [Testing](./docs/TESTING.md)
+- [SEO](./docs/SEO.md)
+- [Security](./docs/SECURITY.md)
+- [Deployment](./docs/DEPLOYMENT.md)
 
 ## 🤝 Contributing
 

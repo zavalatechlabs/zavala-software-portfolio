@@ -3,12 +3,15 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
-const TerminalWindow = dynamic(() => import('@/components/TerminalWindow'), {
-  ssr: true,
-  loading: () => <div className="h-64 bg-zavala-terminal-bg rounded-lg animate-pulse" />,
-})
+const TerminalWindow = dynamic(
+  () => import('@/components/TerminalWindow').then((m) => m.TerminalWindow),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 bg-zavala-terminal-bg rounded-lg animate-pulse" />,
+  }
+)
 
-export default function Footer() {
+export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const footerLinks = {
@@ -23,7 +26,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-zavala-footer-bg text-zavala-footer-text">
-      {/* Terminal Window Section */}
       <div className="bg-zavala-footer-terminal-section py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <TerminalWindow />
@@ -32,7 +34,6 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Brand Section */}
           <div>
             <h3 className="text-zavala-footer-heading text-lg font-bold mb-4">
               Maximiliano Zavala
@@ -42,7 +43,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Navigation Links */}
           <div>
             <h4 className="text-zavala-footer-heading font-semibold mb-4">Navigation</h4>
             <ul className="space-y-2">
@@ -59,7 +59,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social Links */}
           <div>
             <h4 className="text-zavala-footer-heading font-semibold mb-4">Connect</h4>
             <ul className="space-y-2">
@@ -79,7 +78,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="mt-8 pt-8 border-t border-zavala-footer-border">
           <p className="text-center text-sm text-zavala-footer-text-muted">
             &copy; {currentYear} Maximiliano Zavala. All rights reserved.

@@ -18,10 +18,10 @@ Modern developer portfolio website showcasing projects, skills, and experience. 
 
 ### Frontend Framework
 
-**Next.js 14+ (App Router)**
+**Next.js 15 (App Router)**
 
 - **Why:** Industry standard for React applications, built-in SSR/SSG, excellent SEO, zero-config
-- **Version:** Latest stable (14.x+)
+- **Version:** 15.x with React 19
 - **Router:** App Router (modern approach, better DX)
 - **Key Features:**
   - File-based routing
@@ -123,11 +123,11 @@ Modern developer portfolio website showcasing projects, skills, and experience. 
 
 ### Email/Contact Form
 
-**Resend + React Email**
+**Resend**
 
-- **Why:** Modern email API, free tier (100/day, 3K/month), React-based templates
-- **Implementation:** Next.js API route handles form submissions
-- **Security:** API key server-side only, rate limiting, optional CAPTCHA
+- **Why:** Modern email API, free tier (100/day, 3K/month), simple SDK
+- **Implementation:** Next.js API route at `app/api/contact/route.ts` handles form submissions
+- **Security:** API key server-side only, Zod validation, honeypot, timing check, rate limiting
 
 **Alternative considered:** Formspree (simpler, but less customizable)
 
@@ -216,8 +216,7 @@ zavala-software-portfolio/
 │   ├── TerminalWindow.tsx   # Decorative code window in footer
 │   ├── animations/          # Framer Motion animation wrappers
 │   ├── contact/             # ContactForm and related components
-│   ├── chat/                # AI chat widget
-│   └── ui/                  # Shared UI elements (buttons, inputs, etc.)
+│   └── ui/                  # Shared UI primitives (Button, Card)
 ├── content/                  # MDX content files
 │   └── projects/
 │       ├── project-1.mdx
@@ -408,7 +407,6 @@ If portfolio evolves into a blog/business site:
 ### Email
 
 - `resend` - Email API client
-- `@react-email/components` - Email templates
 
 ### Testing
 

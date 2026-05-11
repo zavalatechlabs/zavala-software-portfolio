@@ -1,6 +1,19 @@
 import { renderHook, act } from '@testing-library/react'
 import { useReducedMotion } from '../useReducedMotion'
 
+// The hook attaches a parameterless handler, so the test listeners
+// also take no arguments. Mock objects use a structural shape rather
+// than the strict MediaQueryList type because jest.fn signatures
+// aren't 1:1 with the lib.dom overloads.
+type MQListListener = () => void
+type MockMQList = {
+  matches: boolean
+  media: string
+  addEventListener: jest.Mock
+  removeEventListener: jest.Mock
+  dispatchEvent: jest.Mock
+}
+
 describe('useReducedMotion', () => {
   let mockMatchMedia: jest.Mock
   let matchMediaListeners: Array<(e: MediaQueryListEvent) => void>
@@ -78,12 +91,12 @@ describe('useReducedMotion', () => {
   })
 
   it('updates when media query changes to true', () => {
-    let listeners: Array<() => void> = []
-    
-    const mediaQueryList: any = {
+    const listeners: Array<() => void> = []
+
+    const mediaQueryList: MockMQList & { matches: boolean } = {
       matches: false,
       media: '(prefers-reduced-motion: reduce)',
-      addEventListener: jest.fn((event: string, listener: any) => {
+      addEventListener: jest.fn((event: string, listener: MQListListener) => {
         if (event === 'change') {
           listeners.push(listener)
         }
@@ -101,19 +114,19 @@ describe('useReducedMotion', () => {
     // Simulate media query change
     act(() => {
       mediaQueryList.matches = true
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
 
     expect(result.current).toBe(true)
   })
 
   it('updates when media query changes to false', () => {
-    let listeners: Array<() => void> = []
-    
-    const mediaQueryList: any = {
+    const listeners: Array<() => void> = []
+
+    const mediaQueryList: MockMQList & { matches: boolean } = {
       matches: true,
       media: '(prefers-reduced-motion: reduce)',
-      addEventListener: jest.fn((event: string, listener: any) => {
+      addEventListener: jest.fn((event: string, listener: MQListListener) => {
         if (event === 'change') {
           listeners.push(listener)
         }
@@ -131,19 +144,19 @@ describe('useReducedMotion', () => {
     // Simulate media query change
     act(() => {
       mediaQueryList.matches = false
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
 
     expect(result.current).toBe(false)
   })
 
   it('handles multiple media query changes', () => {
-    let listeners: Array<() => void> = []
-    
-    const mediaQueryList: any = {
+    const listeners: Array<() => void> = []
+
+    const mediaQueryList: MockMQList & { matches: boolean } = {
       matches: false,
       media: '(prefers-reduced-motion: reduce)',
-      addEventListener: jest.fn((event: string, listener: any) => {
+      addEventListener: jest.fn((event: string, listener: MQListListener) => {
         if (event === 'change') {
           listeners.push(listener)
         }
@@ -161,21 +174,21 @@ describe('useReducedMotion', () => {
     // Change to true
     act(() => {
       mediaQueryList.matches = true
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
     expect(result.current).toBe(true)
 
     // Change to false
     act(() => {
       mediaQueryList.matches = false
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
     expect(result.current).toBe(false)
 
     // Change to true again
     act(() => {
       mediaQueryList.matches = true
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
     expect(result.current).toBe(true)
   })
@@ -198,12 +211,12 @@ describe('useReducedMotion', () => {
 
   it('cleans up event listener on unmount', () => {
     const removeEventListenerSpy = jest.fn()
-    const addedListener = { current: null as any }
+    const addedListener: { current: MQListListener | null } = { current: null }
 
     mockMatchMedia.mockReturnValue({
       matches: false,
       media: '(prefers-reduced-motion: reduce)',
-      addEventListener: jest.fn((event: string, listener: any) => {
+      addEventListener: jest.fn((event: string, listener: MQListListener) => {
         addedListener.current = listener
       }),
       removeEventListener: removeEventListenerSpy,
@@ -287,7 +300,7 @@ describe('useReducedMotion', () => {
   it('handles matchMedia not being available', () => {
     // Remove matchMedia temporarily
     const originalMatchMedia = window.matchMedia
-    // @ts-ignore - Testing error case
+    // @ts-expect-error - matchMedia is required by lib.dom but we're testing its absence
     delete window.matchMedia
 
     // Should not throw
@@ -300,12 +313,12 @@ describe('useReducedMotion', () => {
   })
 
   it('correctly reflects system preference changes', () => {
-    let listeners: Array<() => void> = []
-    
-    const mediaQueryList: any = {
+    const listeners: Array<() => void> = []
+
+    const mediaQueryList: MockMQList & { matches: boolean } = {
       matches: false,
       media: '(prefers-reduced-motion: reduce)',
-      addEventListener: jest.fn((event: string, listener: any) => {
+      addEventListener: jest.fn((event: string, listener: MQListListener) => {
         if (event === 'change') {
           listeners.push(listener)
         }
@@ -323,7 +336,7 @@ describe('useReducedMotion', () => {
     // Simulate user enabling reduced motion in OS settings
     act(() => {
       mediaQueryList.matches = true
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
 
     expect(result.current).toBe(true)
@@ -331,7 +344,7 @@ describe('useReducedMotion', () => {
     // Simulate user disabling reduced motion in OS settings
     act(() => {
       mediaQueryList.matches = false
-      listeners.forEach(listener => listener())
+      listeners.forEach((listener) => listener())
     })
 
     expect(result.current).toBe(false)

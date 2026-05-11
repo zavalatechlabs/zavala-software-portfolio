@@ -324,7 +324,6 @@ Using `react-text-scramble`:
 
 ```tsx
 import { TextScramble } from 'react-text-scramble'
-
 ;<TextScramble
   text="Selected Projects"
   className="text-3xl md:text-5xl font-bold"
@@ -1062,7 +1061,6 @@ const ANIMATION_DURATIONS = {
 
 ```tsx
 import { AnimatePresence } from 'framer-motion'
-
 ;<AnimatePresence mode="wait">
   {isVisible && (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>

@@ -75,7 +75,10 @@ export default function Error({
         {/* Additional Help Text */}
         <p className="text-sm text-zavala-text-tertiary mt-8">
           If this problem persists, please{' '}
-          <Link href="/contact" className="text-zavala-accent-primary hover:underline">
+          <Link
+            href="/contact"
+            className="text-zavala-accent-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm"
+          >
             contact me
           </Link>
           .

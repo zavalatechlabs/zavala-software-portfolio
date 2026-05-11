@@ -11,7 +11,7 @@ export default function ProjectLoading() {
         <div className="mb-16">
           {/* Title */}
           <div className="h-12 bg-zavala-bg-surface rounded-lg animate-pulse mb-6 max-w-2xl"></div>
-          
+
           {/* Metadata (Date, Tags) */}
           <div className="flex flex-wrap gap-4 mb-8">
             <div className="h-6 w-32 bg-zavala-bg-surface rounded-lg animate-pulse"></div>
@@ -37,8 +37,8 @@ export default function ProjectLoading() {
           <div className="h-8 w-48 bg-zavala-bg-surface rounded-lg animate-pulse mb-6"></div>
           <div className="flex flex-wrap gap-3">
             {[...Array(6)].map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="h-10 w-24 bg-zavala-bg-surface rounded-lg animate-pulse"
               ></div>
             ))}
@@ -71,11 +71,12 @@ export default function ProjectLoading() {
           {/* Code Block Skeleton */}
           <div className="p-6 bg-zavala-terminal-bg border border-zavala-terminal-border rounded-xl">
             <div className="space-y-2">
-              {[...Array(8)].map((_, i) => (
-                <div 
-                  key={i} 
+              {/* Static widths avoid SSR/client hydration mismatch */}
+              {[82, 68, 95, 74, 88, 71, 63, 90].map((width, i) => (
+                <div
+                  key={i}
                   className="h-4 bg-zavala-bg-surface/50 rounded animate-pulse"
-                  style={{ width: `${Math.random() * 40 + 60}%` }}
+                  style={{ width: `${width}%` }}
                 ></div>
               ))}
             </div>

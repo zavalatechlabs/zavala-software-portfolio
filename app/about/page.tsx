@@ -1,20 +1,30 @@
 import type { Metadata } from 'next'
 import { Download } from 'lucide-react'
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
+
 export const metadata: Metadata = {
-  title: 'Resume',
-  description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
+  title: 'About',
+  description:
+    'Maximiliano Zavala — full-stack engineer working at the intersection of web development and AI. Resume, work history, and a downloadable PDF.',
+  alternates: {
+    canonical: `${baseUrl}/about`,
+  },
   openGraph: {
-    title: 'Resume',
-    description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
+    title: 'About — Maximiliano Zavala',
+    description:
+      'Maximiliano Zavala — full-stack engineer working at the intersection of web development and AI.',
+    url: `${baseUrl}/about`,
+    type: 'profile',
     images: [
       { url: '/about/opengraph-image', width: 1200, height: 630, alt: 'About Maximiliano Zavala' },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Resume',
-    description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
+    title: 'About — Maximiliano Zavala',
+    description:
+      'Maximiliano Zavala — full-stack engineer working at the intersection of web development and AI.',
   },
 }
 
@@ -284,7 +294,7 @@ export default function AboutPage() {
             <a
               href="/resume.pdf"
               download="Max_Zavala_Resume.pdf"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-zavala-accent-primary text-white font-semibold rounded-lg transition-all duration-200 hover:bg-zavala-accent-primary/90 hover:shadow-lg hover:shadow-zavala-accent-primary/20 hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-zavala-accent-primary text-zavala-accent-foreground font-semibold rounded-lg transition-all duration-200 hover:bg-zavala-accent-primary/90 hover:shadow-lg hover:shadow-zavala-accent-primary/20 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zavala-accent-foreground/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary"
             >
               <Download className="w-5 h-5" />
               Download Resume (PDF)

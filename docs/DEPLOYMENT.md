@@ -36,7 +36,7 @@ Add these in Vercel Dashboard → Project Settings → Environment Variables:
 RESEND_API_KEY=re_your_api_key_here
 
 # Optional: Site URL for metadata
-NEXT_PUBLIC_SITE_URL=https://your-vercel-domain.vercel.app
+NEXT_PUBLIC_BASE_URL=https://your-vercel-domain.vercel.app
 ```
 
 **Note:** Environment variables are optional for Phase 2. Contact form will be implemented in Phase 3.

@@ -24,7 +24,7 @@ Security headers are configured in `next.config.js` and applied to all routes.
 Our CSP is configured to:
 
 - **`default-src 'self'`** - Only load resources from same origin by default
-- **`script-src 'self' 'unsafe-eval' 'unsafe-inline'`** - Allow inline scripts (required for Next.js)
+- **`script-src 'self' 'unsafe-inline'`** - Allow inline scripts (required for Next.js bootstrap and next-themes pre-hydration). `'unsafe-eval'` has been removed; nonce-based CSP is a planned follow-up.
 - **`style-src 'self' 'unsafe-inline'`** - Allow inline styles (required for Tailwind)
 - **`img-src 'self' data: https:`** - Allow images from same origin, data URIs, and HTTPS
 - **`font-src 'self' data:`** - Allow fonts from same origin and data URIs
@@ -33,7 +33,7 @@ Our CSP is configured to:
 - **`base-uri 'self'`** - Restrict base tag URLs
 - **`form-action 'self'`** - Only allow form submissions to same origin
 
-**Note:** `unsafe-inline` and `unsafe-eval` are necessary for Next.js and Tailwind CSS to function. In a future enhancement, we could implement nonces or hashes for stricter CSP.
+**Note:** `unsafe-inline` is necessary for Next.js bootstrap scripts, next-themes pre-hydration, and Tailwind CSS to function. In a future enhancement, nonces or hashes via middleware could replace `unsafe-inline` on `script-src` for a stricter CSP.
 
 ## Environment Variables
 
@@ -48,7 +48,7 @@ RESEND_API_KEY=re_your_api_key_here
 ### Public Variables
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
 
 **Important:** Only prefix variables with `NEXT_PUBLIC_` if they need to be exposed to the browser. All other variables remain server-side only.

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 
-export default function Navbar() {
+export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleEscapeKey = useCallback((event: KeyboardEvent) => {
@@ -64,6 +64,7 @@ export default function Navbar() {
               className="p-2 text-zavala-text-secondary hover:text-zavala-text-primary focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
+              aria-controls="mobile-nav-menu"
             >
               {isMenuOpen ? (
                 <svg
@@ -98,7 +99,10 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-zavala-border pt-4">
+          <div
+            id="mobile-nav-menu"
+            className="md:hidden mt-4 pb-4 border-t border-zavala-border pt-4"
+          >
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link

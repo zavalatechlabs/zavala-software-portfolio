@@ -12,9 +12,7 @@ export default function Loading() {
         </div>
 
         {/* Loading Text */}
-        <h2 className="text-2xl md:text-3xl font-bold text-zavala-text-primary mb-4">
-          Loading...
-        </h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-zavala-text-primary mb-4">Loading...</h2>
         <p className="text-base text-zavala-text-secondary">
           Please wait while we prepare your content
         </p>

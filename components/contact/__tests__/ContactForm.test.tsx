@@ -280,21 +280,19 @@ describe('ContactForm', () => {
 
   describe('Loading State', () => {
     it('shows loading spinner during submission', async () => {
-      const mockFetch = jest
-        .fn()
-        .mockImplementation(
-          () =>
-            new Promise((resolve) =>
-              setTimeout(
-                () =>
-                  resolve({
-                    ok: true,
-                    json: async () => ({ success: true, message: 'Message sent successfully!' }),
-                  }),
-                100
-              )
+      const mockFetch = jest.fn().mockImplementation(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  json: async () => ({ success: true, message: 'Message sent successfully!' }),
+                }),
+              100
             )
-        )
+          )
+      )
       global.fetch = mockFetch
 
       render(<ContactForm />)
@@ -316,21 +314,19 @@ describe('ContactForm', () => {
     })
 
     it('disables all inputs during submission', async () => {
-      const mockFetch = jest
-        .fn()
-        .mockImplementation(
-          () =>
-            new Promise((resolve) =>
-              setTimeout(
-                () =>
-                  resolve({
-                    ok: true,
-                    json: async () => ({ success: true, message: 'Message sent successfully!' }),
-                  }),
-                100
-              )
+      const mockFetch = jest.fn().mockImplementation(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  json: async () => ({ success: true, message: 'Message sent successfully!' }),
+                }),
+              100
             )
-        )
+          )
+      )
       global.fetch = mockFetch
 
       render(<ContactForm />)

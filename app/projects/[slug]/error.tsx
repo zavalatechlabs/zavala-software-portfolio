@@ -13,14 +13,16 @@ export default function ProjectError({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log error to console (ready for Sentry integration later)
-    console.error('Project page error:', {
-      message: error.message,
-      digest: error.digest,
-      stack: error.stack,
-      timestamp: new Date().toISOString(),
-      context: 'projects/[slug]',
-    })
+    // Only log full stack in development to avoid exposing file paths
+    // in production browser consoles. Replace with Sentry/etc when wired up.
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Project page error:', {
+        message: error.message,
+        digest: error.digest,
+        stack: error.stack,
+        context: 'projects/[slug]',
+      })
+    }
   }, [error])
 
   return (
@@ -40,7 +42,8 @@ export default function ProjectError({
 
         {/* Error Message */}
         <p className="text-lg text-zavala-text-secondary mb-8 leading-relaxed">
-          We couldn&apos;t load this project. It might not exist or there was a problem fetching the data.
+          We couldn&apos;t load this project. It might not exist or there was a problem fetching the
+          data.
         </p>
 
         {/* Error Details (Development Only) */}
@@ -62,20 +65,11 @@ export default function ProjectError({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-          <Button
-            variant="primary"
-            size="md"
-            onClick={reset}
-            className="w-full sm:w-auto"
-          >
+          <Button variant="primary" size="md" onClick={reset} className="w-full sm:w-auto">
             Try Again
           </Button>
           <Link href="/projects" className="w-full sm:w-auto">
-            <Button
-              variant="secondary"
-              size="md"
-              className="w-full"
-            >
+            <Button variant="secondary" size="md" className="w-full">
               <ArrowLeft className="w-5 h-5 mr-2" />
               All Projects
             </Button>
@@ -83,8 +77,8 @@ export default function ProjectError({
         </div>
 
         {/* Go Home Link */}
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="inline-flex items-center text-zavala-text-tertiary hover:text-zavala-accent-primary transition-colors text-sm"
         >
           <Home className="w-4 h-4 mr-2" />

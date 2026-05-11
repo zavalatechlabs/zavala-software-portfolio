@@ -4,7 +4,6 @@ import { test, expect, devices } from '@playwright/test'
 test.use({ ...devices['iPhone 12'] })
 
 test.describe('Mobile Responsiveness', () => {
-
   test('mobile menu button is visible on mobile viewport', async ({ page }) => {
     await page.goto('/')
 
@@ -280,11 +279,9 @@ test.describe('Mobile Responsiveness', () => {
   test('forms do not zoom on input focus (iOS)', async ({ page }) => {
     await page.goto('/contact')
 
-    // Check viewport meta tag prevents zoom on focus
-    const viewportMeta = await page.locator('meta[name="viewport"]').getAttribute('content')
-
-    // Should include user-scalable=no or maximum-scale=1 to prevent zoom on input focus
-    // Or font-size should be at least 16px (iOS doesn't zoom if text is 16px+)
+    // iOS doesn't zoom inputs if the rendered font-size is >= 16px.
+    // The viewport meta tag is inspected separately; here we assert the
+    // input itself meets the size threshold.
     const emailInput = page.locator('#email')
     const fontSize = await emailInput.evaluate((el) => {
       return window.getComputedStyle(el).fontSize

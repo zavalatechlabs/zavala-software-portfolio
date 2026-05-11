@@ -22,70 +22,70 @@ This document defines the complete design system for the Zavala Software Portfol
 ### Dark Theme (Default)
 
 #### Background Colors
+
 ```css
---bg-primary:   #0a0a0a    /* Main background - near-black */
---bg-surface:   #1a1a1a    /* Cards, elevated elements */
---bg-elevated:  #242424    /* Hover states, modals */
+--bg-primary: #0a0a0a /* Main background - near-black */ --bg-surface: #1a1a1a
+  /* Cards, elevated elements */ --bg-elevated: #242424 /* Hover states, modals */;
 ```
 
 #### Border Colors
+
 ```css
---border-subtle:  #2a2a2a    /* Subtle dividers */
---border-default: #3a3a3a    /* Standard borders */
---border-strong:  #4a4a4a    /* Emphasized borders */
+--border-subtle: #2a2a2a /* Subtle dividers */ --border-default: #3a3a3a /* Standard borders */
+  --border-strong: #4a4a4a /* Emphasized borders */;
 ```
 
 #### Text Colors
+
 ```css
---text-primary:   #f5f5f5    /* Primary content - near-white */
---text-secondary: #a3a3a3    /* Secondary content - muted gray */
---text-tertiary:  #737373    /* Tertiary content - subtle gray */
---text-inverse:   #0a0a0a    /* Text on light backgrounds */
+--text-primary: #f5f5f5 /* Primary content - near-white */ --text-secondary: #a3a3a3
+  /* Secondary content - muted gray */ --text-tertiary: #737373 /* Tertiary content - subtle gray */
+  --text-inverse: #0a0a0a /* Text on light backgrounds */;
 ```
 
 #### Accent Colors
+
 ```css
---accent-primary:   #3b82f6    /* Primary blue - CTAs, links */
---accent-secondary: #10b981    /* Green - success, hover effects */
---accent-code:      #f97316    /* Orange - code, terminal prompts */
---accent-warning:   #f59e0b    /* Amber - warnings */
---accent-error:     #ef4444    /* Red - errors */
+--accent-primary: #3b82f6 /* Primary blue - CTAs, links */ --accent-secondary: #10b981
+  /* Green - success, hover effects */ --accent-code: #f97316 /* Orange - code, terminal prompts */
+  --accent-warning: #f59e0b /* Amber - warnings */ --accent-error: #ef4444 /* Red - errors */;
 ```
 
 #### Special Effects
+
 ```css
---glow-blue:    rgba(59, 130, 246, 0.1)     /* Subtle blue glow */
---glow-green:   rgba(16, 185, 129, 0.1)     /* Subtle green glow */
---shadow-sm:    rgba(0, 0, 0, 0.3)          /* Small shadow */
---shadow-md:    rgba(0, 0, 0, 0.5)          /* Medium shadow */
---shadow-lg:    rgba(0, 0, 0, 0.7)          /* Large shadow */
+--glow-blue: rgba(59, 130, 246, 0.1) /* Subtle blue glow */ --glow-green: rgba(16, 185, 129, 0.1)
+  /* Subtle green glow */ --shadow-sm: rgba(0, 0, 0, 0.3) /* Small shadow */
+  --shadow-md: rgba(0, 0, 0, 0.5) /* Medium shadow */ --shadow-lg: rgba(0, 0, 0, 0.7)
+  /* Large shadow */;
 ```
 
 ### Light Theme (Optional)
 
 #### Background Colors
+
 ```css
---bg-primary:   #ffffff    /* Main background - white */
---bg-surface:   #f5f5f5    /* Cards, elevated elements */
---bg-elevated:  #e5e5e5    /* Hover states, modals */
+--bg-primary: #ffffff /* Main background - white */ --bg-surface: #f5f5f5
+  /* Cards, elevated elements */ --bg-elevated: #e5e5e5 /* Hover states, modals */;
 ```
 
 #### Border Colors
+
 ```css
---border-subtle:  #e5e5e5    /* Subtle dividers */
---border-default: #d4d4d4    /* Standard borders */
---border-strong:  #a3a3a3    /* Emphasized borders */
+--border-subtle: #e5e5e5 /* Subtle dividers */ --border-default: #d4d4d4 /* Standard borders */
+  --border-strong: #a3a3a3 /* Emphasized borders */;
 ```
 
 #### Text Colors
+
 ```css
---text-primary:   #0a0a0a    /* Primary content - near-black */
---text-secondary: #525252    /* Secondary content - dark gray */
---text-tertiary:  #737373    /* Tertiary content - medium gray */
---text-inverse:   #ffffff    /* Text on dark backgrounds */
+--text-primary: #0a0a0a /* Primary content - near-black */ --text-secondary: #525252
+  /* Secondary content - dark gray */ --text-tertiary: #737373 /* Tertiary content - medium gray */
+  --text-inverse: #ffffff /* Text on dark backgrounds */;
 ```
 
 #### Accent Colors (Same as Dark Theme)
+
 Light theme uses the same accent colors for consistency across themes.
 
 ### Tailwind Configuration
@@ -135,6 +135,7 @@ export default config
 ```
 
 **Usage Example:**
+
 ```tsx
 <div className="bg-zavala-bg-surface border border-zavala-border">
   <h2 className="text-zavala-text-primary">Heading</h2>
@@ -150,16 +151,18 @@ export default config
 ### Font Families
 
 #### Primary Font (Sans-Serif)
+
 **Font:** Inter or SF Pro Display  
 **Purpose:** Main content, headings, UI elements  
 **Weights:** 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
 
 **Installation (Inter via Google Fonts):**
+
 ```tsx
 // app/layout.tsx
 import { Inter } from 'next/font/google'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-inter',
@@ -167,16 +170,18 @@ const inter = Inter({
 ```
 
 #### Monospace Font
+
 **Font:** JetBrains Mono or Fira Code  
 **Purpose:** Code snippets, terminal windows, tech stack, data structures  
 **Weights:** 400 (regular), 500 (medium), 600 (semibold)
 
 **Installation (JetBrains Mono via Google Fonts):**
+
 ```tsx
 // app/layout.tsx
 import { JetBrains_Mono } from 'next/font/google'
 
-const jetbrainsMono = JetBrains_Mono({ 
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-mono',
@@ -200,6 +205,7 @@ theme: {
 ### Type Scale
 
 #### Hero Typography
+
 ```tsx
 // Hero name (Homepage)
 <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
@@ -213,6 +219,7 @@ theme: {
 ```
 
 #### Heading Scale
+
 ```tsx
 // H1 - Section headings
 <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
@@ -236,6 +243,7 @@ theme: {
 ```
 
 #### Body Typography
+
 ```tsx
 // Large body text
 <p className="text-lg leading-relaxed">
@@ -259,6 +267,7 @@ theme: {
 ```
 
 #### Code Typography
+
 ```tsx
 // Inline code
 <code className="font-mono text-sm bg-zavala-bg-elevated px-2 py-1 rounded">
@@ -274,18 +283,21 @@ theme: {
 ### Font Properties
 
 #### Line Heights
+
 - **Tight:** `leading-tight` (1.25) — Hero text, large headings
 - **Normal:** `leading-normal` (1.5) — Body text, paragraphs
 - **Relaxed:** `leading-relaxed` (1.75) — Long-form content
 - **Loose:** `leading-loose` (2) — Spaced content, lists
 
 #### Letter Spacing
+
 - **Tighter:** `tracking-tighter` (-0.05em) — Large display text
 - **Tight:** `tracking-tight` (-0.025em) — Headings
 - **Normal:** `tracking-normal` (0) — Body text
 - **Wide:** `tracking-wide` (0.025em) — Small caps, labels
 
 #### Font Weights
+
 - **Regular:** `font-normal` (400) — Body text
 - **Medium:** `font-medium` (500) — Emphasized text
 - **Semibold:** `font-semibold` (600) — Subheadings, buttons
@@ -298,10 +310,12 @@ theme: {
 ### Button Variants
 
 #### Primary Button
+
 **Use Case:** Main CTAs, important actions
 
 ```tsx
-<button className="
+<button
+  className="
   px-6 py-3 
   bg-zavala-accent-primary 
   text-white font-semibold 
@@ -313,16 +327,19 @@ theme: {
   active:translate-y-0
   focus:outline-none focus:ring-2 focus:ring-zavala-accent-primary focus:ring-offset-2 focus:ring-offset-zavala-bg-primary
   disabled:opacity-50 disabled:cursor-not-allowed
-">
+"
+>
   Primary Action
 </button>
 ```
 
 #### Secondary Button
+
 **Use Case:** Alternative actions, less emphasis
 
 ```tsx
-<button className="
+<button
+  className="
   px-6 py-3 
   bg-transparent 
   text-zavala-accent-primary font-semibold 
@@ -335,16 +352,19 @@ theme: {
   active:translate-y-0
   focus:outline-none focus:ring-2 focus:ring-zavala-accent-primary focus:ring-offset-2 focus:ring-offset-zavala-bg-primary
   disabled:opacity-50 disabled:cursor-not-allowed
-">
+"
+>
   Secondary Action
 </button>
 ```
 
 #### Ghost Button
+
 **Use Case:** Subtle actions, navigation
 
 ```tsx
-<button className="
+<button
+  className="
   px-4 py-2 
   bg-transparent 
   text-zavala-text-secondary font-medium 
@@ -354,16 +374,19 @@ theme: {
   hover:text-zavala-text-primary
   active:bg-zavala-bg-surface
   focus:outline-none focus:ring-2 focus:ring-zavala-border-strong focus:ring-offset-2 focus:ring-offset-zavala-bg-primary
-">
+"
+>
   Ghost Action
 </button>
 ```
 
 #### Icon Button
+
 **Use Case:** Toolbar actions, compact interfaces
 
 ```tsx
-<button className="
+<button
+  className="
   p-2 
   bg-transparent 
   text-zavala-text-secondary 
@@ -373,7 +396,8 @@ theme: {
   hover:text-zavala-text-primary
   active:bg-zavala-bg-surface
   focus:outline-none focus:ring-2 focus:ring-zavala-border-strong focus:ring-offset-2 focus:ring-offset-zavala-bg-primary
-">
+"
+>
   <IconComponent className="w-5 h-5" />
 </button>
 ```
@@ -381,10 +405,12 @@ theme: {
 ### Card Styles
 
 #### Project Card
+
 **Use Case:** Displaying projects in grid
 
 ```tsx
-<article className="
+<article
+  className="
   bg-zavala-bg-surface 
   border border-zavala-border 
   rounded-lg 
@@ -394,25 +420,24 @@ theme: {
   hover:shadow-xl hover:shadow-black/30
   hover:-translate-y-2
   group
-">
+"
+>
   {/* Image */}
   <div className="relative aspect-video overflow-hidden bg-zavala-bg-elevated">
-    <img 
-      src="/project-image.jpg" 
+    <img
+      src="/project-image.jpg"
       alt="Project"
       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
     />
   </div>
-  
+
   {/* Content */}
   <div className="p-6">
-    <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
-      Project Title
-    </h3>
+    <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">Project Title</h3>
     <p className="text-zavala-text-secondary text-sm mb-4">
       Brief project description explaining what it does.
     </p>
-    
+
     {/* Tech stack tags */}
     <div className="flex flex-wrap gap-2 mb-4">
       <span className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border rounded-full">
@@ -422,7 +447,7 @@ theme: {
         TypeScript
       </span>
     </div>
-    
+
     {/* CTA */}
     <button className="text-zavala-accent-primary font-medium text-sm hover:underline">
       View Project →
@@ -432,10 +457,12 @@ theme: {
 ```
 
 #### Info Card
+
 **Use Case:** "What I Do" sections, feature boxes
 
 ```tsx
-<div className="
+<div
+  className="
   bg-zavala-bg-surface 
   border border-zavala-border 
   rounded-lg 
@@ -443,24 +470,22 @@ theme: {
   transition-all duration-200
   hover:border-zavala-accent-secondary/50
   hover:shadow-lg hover:shadow-black/20
-">
+"
+>
   {/* Icon */}
   <div className="w-12 h-12 bg-zavala-accent-secondary/10 rounded-lg flex items-center justify-center mb-4">
     <IconComponent className="w-6 h-6 text-zavala-accent-secondary" />
   </div>
-  
-  <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
-    Category Title
-  </h3>
-  <p className="text-zavala-text-secondary">
-    Description of this category or service area.
-  </p>
+
+  <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">Category Title</h3>
+  <p className="text-zavala-text-secondary">Description of this category or service area.</p>
 </div>
 ```
 
 ### Form Input Styles
 
 #### Text Input
+
 ```tsx
 <input
   type="text"
@@ -483,6 +508,7 @@ theme: {
 ```
 
 #### Textarea
+
 ```tsx
 <textarea
   rows={4}
@@ -506,23 +532,23 @@ theme: {
 ```
 
 #### Label
+
 ```tsx
-<label className="block text-sm font-medium text-zavala-text-secondary mb-2">
-  Field Label
-</label>
+<label className="block text-sm font-medium text-zavala-text-secondary mb-2">Field Label</label>
 ```
 
 #### Error State
+
 ```tsx
 <input
   type="text"
   className="
     w-full px-4 py-3
-    bg-zavala-bg-surface 
-    border-2 border-zavala-accent-error 
+    bg-zavala-bg-surface
+    border-2 border-zavala-accent-error
     rounded-lg
     text-zavala-text-primary
-    focus:outline-none 
+    focus:outline-none
     focus:ring-2 focus:ring-zavala-accent-error/20
   "
 />
@@ -534,33 +560,48 @@ theme: {
 ### Navigation Styles
 
 #### Navbar
+
 ```tsx
-<nav className="
+<nav
+  className="
   fixed top-0 left-0 right-0 z-50
   bg-zavala-bg-primary/80 
   backdrop-blur-lg 
   border-b border-zavala-border
-">
+"
+>
   <div className="max-w-7xl mx-auto px-6 py-4">
     <div className="flex items-center justify-between">
       {/* Logo */}
-      <a href="/" className="text-xl font-bold text-zavala-text-primary hover:text-zavala-accent-primary transition-colors">
+      <a
+        href="/"
+        className="text-xl font-bold text-zavala-text-primary hover:text-zavala-accent-primary transition-colors"
+      >
         MZ
       </a>
-      
+
       {/* Nav links */}
       <div className="flex items-center gap-8">
-        <a href="/about" className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors">
+        <a
+          href="/about"
+          className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors"
+        >
           About
         </a>
-        <a href="/projects" className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors">
+        <a
+          href="/projects"
+          className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors"
+        >
           Projects
         </a>
-        <a href="/contact" className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors">
+        <a
+          href="/contact"
+          className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors"
+        >
           Contact
         </a>
       </div>
-      
+
       {/* Theme toggle */}
       <button className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors">
         <IconMoon className="w-5 h-5" />
@@ -571,25 +612,32 @@ theme: {
 ```
 
 #### Footer
+
 ```tsx
-<footer className="
+<footer
+  className="
   bg-zavala-bg-surface 
   border-t border-zavala-border 
   py-12
-">
+"
+>
   <div className="max-w-7xl mx-auto px-6">
     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
       {/* Copyright */}
-      <p className="text-zavala-text-tertiary text-sm">
-        © 2026 Max Zavala. All rights reserved.
-      </p>
-      
+      <p className="text-zavala-text-tertiary text-sm">© 2026 Max Zavala. All rights reserved.</p>
+
       {/* Social links */}
       <div className="flex items-center gap-6">
-        <a href="https://github.com" className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors">
+        <a
+          href="https://github.com"
+          className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors"
+        >
           <IconGitHub className="w-5 h-5" />
         </a>
-        <a href="https://linkedin.com" className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors">
+        <a
+          href="https://linkedin.com"
+          className="text-zavala-text-secondary hover:text-zavala-text-primary transition-colors"
+        >
           <IconLinkedIn className="w-5 h-5" />
         </a>
       </div>
@@ -603,6 +651,7 @@ theme: {
 ## Spacing Scale
 
 ### Tailwind Default Spacing
+
 The portfolio uses Tailwind's default spacing scale (4px base unit):
 
 ```
@@ -618,33 +667,36 @@ spacing[6]  = 24px     spacing[16] = 64px    spacing[48] = 192px
 ### Component Spacing Standards
 
 #### Padding Standards
+
 ```tsx
 // Small components (buttons, inputs)
-className="px-4 py-2"     // 16px horizontal, 8px vertical
+className = 'px-4 py-2' // 16px horizontal, 8px vertical
 
 // Medium components (cards, sections)
-className="px-6 py-4"     // 24px horizontal, 16px vertical
+className = 'px-6 py-4' // 24px horizontal, 16px vertical
 
 // Large components (hero sections, containers)
-className="px-8 py-6"     // 32px horizontal, 24px vertical
+className = 'px-8 py-6' // 32px horizontal, 24px vertical
 ```
 
 #### Margin/Gap Standards
+
 ```tsx
 // Tight spacing (within components)
-className="gap-2"         // 8px
+className = 'gap-2' // 8px
 
 // Normal spacing (between elements)
-className="gap-4"         // 16px
+className = 'gap-4' // 16px
 
 // Loose spacing (between sections)
-className="gap-8"         // 32px
+className = 'gap-8' // 32px
 
 // Extra loose spacing (major sections)
-className="gap-16"        // 64px
+className = 'gap-16' // 64px
 ```
 
 #### Section Spacing
+
 ```tsx
 // Section padding
 <section className="py-16 md:py-24">
@@ -658,6 +710,7 @@ className="gap-16"        // 64px
 ```
 
 #### Container Max-Width
+
 ```tsx
 // Standard container
 <div className="max-w-7xl mx-auto px-6">
@@ -682,9 +735,11 @@ className="gap-16"        // 64px
 ### Theme Implementation
 
 #### Default Theme
+
 **Dark mode** is the default theme. Light mode is available as an opt-in alternative.
 
 #### Theme Toggle UI
+
 **Location:** Navbar (top-right corner)  
 **Design:** Icon button (sun/moon icon)  
 **Behavior:** Click to toggle between light and dark themes
@@ -698,7 +753,7 @@ import { Moon, Sun } from 'lucide-react'
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
-  
+
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -774,16 +829,19 @@ const config: Config = {
 #### Theme-Aware Component Example
 
 ```tsx
-<div className="
+<div
+  className="
   bg-white dark:bg-zavala-bg-primary
   text-gray-900 dark:text-zavala-text-primary
   border-gray-200 dark:border-zavala-border
-">
+"
+>
   Content adapts to theme
 </div>
 ```
 
 ### Theme Persistence
+
 - Theme choice is stored in `localStorage`
 - Automatically restored on page load
 - No flash of wrong theme (SSR-safe)
@@ -793,6 +851,7 @@ const config: Config = {
 ## Usage Guidelines
 
 ### Component Composition
+
 Build complex components from base styles:
 
 ```tsx
@@ -813,6 +872,7 @@ Build complex components from base styles:
 ```
 
 ### Responsive Design
+
 Follow mobile-first approach:
 
 ```tsx
@@ -830,7 +890,9 @@ Follow mobile-first approach:
 ### Accessibility
 
 #### Focus States
+
 All interactive elements must have visible focus states:
+
 ```tsx
 <button className="focus:outline-none focus:ring-2 focus:ring-zavala-accent-primary focus:ring-offset-2">
   Accessible Button
@@ -838,12 +900,15 @@ All interactive elements must have visible focus states:
 ```
 
 #### Color Contrast
+
 - Text on background: Minimum 4.5:1 ratio
 - Large text (18px+): Minimum 3:1 ratio
 - All accent colors meet WCAG AA standards
 
 #### Semantic HTML
+
 Use appropriate HTML elements:
+
 ```tsx
 // ✅ Good
 <nav>...</nav>

@@ -6,12 +6,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hover?: boolean
 }
 
-export function Card({ 
-  children, 
-  hover = false, 
-  className, 
-  ...props 
-}: CardProps) {
+export function Card({ children, hover = false, className, ...props }: CardProps) {
   const baseStyles = `
     bg-zavala-bg-surface 
     border border-zavala-border 
@@ -29,10 +24,7 @@ export function Card({
     : ''
 
   return (
-    <div 
-      className={clsx(baseStyles, hoverStyles, className)} 
-      {...props}
-    >
+    <div className={clsx(baseStyles, hoverStyles, className)} {...props}>
       {children}
     </div>
   )

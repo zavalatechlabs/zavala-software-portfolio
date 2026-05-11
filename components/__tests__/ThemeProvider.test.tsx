@@ -103,9 +103,7 @@ describe('ThemeProvider', () => {
 
     const TestComponent = () => {
       const { setTheme } = useTheme()
-      return (
-        <button onClick={() => setTheme('light')}>Change Theme</button>
-      )
+      return <button onClick={() => setTheme('light')}>Change Theme</button>
     }
 
     render(

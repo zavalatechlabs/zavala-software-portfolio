@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { getProjectBySlug, getAllProjectSlugs } from '@/lib/projects'
-import { getBreadcrumbSchema } from '@/lib/schema'
+import { getBreadcrumbSchema, getCreativeWorkSchema } from '@/lib/schema'
 
 type ProjectPageProps = {
   params: Promise<{
@@ -65,23 +65,38 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     { name: project.title, url: `${baseUrl}/projects/${slug}` },
   ])
 
+  const creativeWorkJsonLd = getCreativeWorkSchema({
+    baseUrl,
+    slug,
+    title: project.title,
+    description: project.description,
+    date: project.date,
+    tags: project.tags,
+    image: project.image,
+  })
+
   return (
     <div className="min-h-screen bg-zavala-bg-primary">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkJsonLd) }}
+      />
       <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
         {/* Back Link */}
         <Link
           href="/projects"
           className="
-            inline-flex items-center 
-            text-zavala-text-secondary 
-            hover:text-zavala-text-primary 
-            transition-colors 
-            mb-8 
+            inline-flex items-center
+            text-zavala-text-secondary
+            hover:text-zavala-text-primary
+            transition-colors
+            mb-8
             group
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm
           "
         >
           <ArrowLeft
@@ -142,17 +157,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 rel="noopener noreferrer"
                 className="
                   inline-flex items-center
-                  px-6 py-3 
-                  bg-zavala-bg-surface 
-                  text-zavala-text-primary 
-                  font-semibold 
-                  border border-zavala-border 
-                  rounded-lg 
+                  px-6 py-3
+                  bg-zavala-bg-surface
+                  text-zavala-text-primary
+                  font-semibold
+                  border border-zavala-border
+                  rounded-lg
                   transition-all duration-200
                   hover:border-zavala-accent-primary
                   hover:bg-zavala-bg-elevated
                   hover:-translate-y-0.5
                   active:translate-y-0
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary
                 "
               >
                 {/* Inline SVG kept: lucide-react's Github icon is a simplified outline,
@@ -179,16 +195,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 rel="noopener noreferrer"
                 className="
                   inline-flex items-center
-                  px-6 py-3 
-                  bg-zavala-accent-primary 
-                  text-white 
-                  font-semibold 
-                  rounded-lg 
+                  px-6 py-3
+                  bg-zavala-accent-primary
+                  text-zavala-accent-foreground
+                  font-semibold
+                  rounded-lg
                   transition-all duration-200
                   hover:bg-zavala-accent-primary/90
                   hover:shadow-lg hover:shadow-zavala-accent-primary/20
                   hover:-translate-y-0.5
                   active:translate-y-0
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zavala-accent-foreground/70 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary
                 "
               >
                 <ExternalLink className="w-5 h-5 mr-2" aria-hidden="true" />
@@ -229,12 +246,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <Link
             href="/projects"
             className="
-              inline-flex items-center 
-              text-zavala-accent-primary 
-              hover:text-zavala-accent-secondary 
+              inline-flex items-center
+              text-zavala-accent-primary
+              hover:text-zavala-accent-secondary
               font-medium
-              transition-colors 
+              transition-colors
               group
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm
             "
           >
             <ArrowLeft

@@ -8,6 +8,31 @@ jest.mock('@/lib/projects', () => ({
   getAllProjects: jest.fn(),
 }))
 
+jest.mock('@/components/ProjectCard', () => ({
+  ProjectCard: ({
+    title,
+    description,
+    tags,
+  }: {
+    title: string
+    description: string
+    tags: string[]
+    slug: string
+    demo?: string | null
+    github?: string | null
+  }) => (
+    <article data-testid="project-card">
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <ul>
+        {tags.map((tag) => (
+          <li key={tag}>{tag}</li>
+        ))}
+      </ul>
+    </article>
+  ),
+}))
+
 // ---------------------------------------------------------------------------
 import { getAllProjects } from '@/lib/projects'
 

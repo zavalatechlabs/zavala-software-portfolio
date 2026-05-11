@@ -11,7 +11,7 @@
   },
   "overrides": [
     {
-      "files": ["jest.config.js", "tailwind.config.ts", "postcss.config.js"],
+      "files": ["jest.config.js", "postcss.config.js"],
       "rules": {
         "@typescript-eslint/no-require-imports": "off"
       }

@@ -75,7 +75,8 @@ test.describe('Projects Page', () => {
 
     // Check first project card has title (h2 or h3)
     const firstCard = projectCards.first()
-    const hasHeading = (await firstCard.locator('h2').count()) > 0 || (await firstCard.locator('h3').count()) > 0
+    const hasHeading =
+      (await firstCard.locator('h2').count()) > 0 || (await firstCard.locator('h3').count()) > 0
     expect(hasHeading).toBeTruthy()
   })
 

@@ -19,29 +19,29 @@ export function Button({
     inline-flex items-center justify-center
     font-semibold rounded-lg
     transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zavala-bg-primary
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary
     disabled:opacity-50 disabled:cursor-not-allowed
   `
 
   const variantStyles = {
     primary: `
-      bg-zavala-accent-primary text-white
+      bg-zavala-accent-primary text-zavala-accent-foreground
       hover:bg-zavala-accent-primary/90 hover:shadow-lg hover:shadow-zavala-accent-primary/20
       hover:-translate-y-0.5 active:translate-y-0
-      focus:ring-zavala-accent-primary
+      focus-visible:ring-zavala-accent-primary
     `,
     secondary: `
       bg-transparent text-zavala-accent-primary
       border-2 border-zavala-accent-primary
-      hover:bg-zavala-accent-primary hover:text-white
+      hover:bg-zavala-accent-primary hover:text-zavala-accent-foreground
       hover:-translate-y-0.5 active:translate-y-0
-      focus:ring-zavala-accent-primary
+      focus-visible:ring-zavala-accent-primary
     `,
     ghost: `
       bg-transparent text-zavala-text-secondary
       hover:bg-zavala-bg-elevated hover:text-zavala-text-primary
       active:bg-zavala-bg-surface
-      focus:ring-zavala-border-strong
+      focus-visible:ring-zavala-border-strong
     `,
   }
 

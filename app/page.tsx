@@ -12,10 +12,7 @@ export default function Home() {
     <div>
       {/* Hero Section with Name Reveal Animation */}
       <section>
-        <HeroNameReveal 
-          name="Maximiliano Zavala"
-          tagline="Software Engineer | AI Enthusiast"
-        />
+        <HeroNameReveal name="Maximiliano Zavala" tagline="Software Engineer | AI Enthusiast" />
       </section>
 
       {/* About Brief Section */}
@@ -30,12 +27,12 @@ export default function Home() {
           <FadeInView delay={0.1}>
             <div className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-lg md:text-xl text-zavala-text-primary leading-relaxed mb-6">
-                I&apos;m a software engineer passionate about building intelligent systems and exploring 
-                the intersection of full-stack development and AI. I specialize in creating scalable 
-                web applications and experimenting with cutting-edge technologies.
+                I&apos;m a software engineer passionate about building intelligent systems and
+                exploring the intersection of full-stack development and AI. I specialize in
+                creating scalable web applications and experimenting with cutting-edge technologies.
               </p>
               <p className="text-base md:text-lg text-zavala-text-secondary leading-relaxed">
-                From e-commerce platforms to AI-powered assistants, I love turning complex problems 
+                From e-commerce platforms to AI-powered assistants, I love turning complex problems
                 into elegant solutions.
               </p>
             </div>
@@ -57,8 +54,8 @@ export default function Home() {
                   Full-Stack Development
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Building scalable web applications with modern frameworks and best practices. 
-                  From database design to responsive UIs, I handle the entire stack.
+                  Building scalable web applications with modern frameworks and best practices. From
+                  database design to responsive UIs, I handle the entire stack.
                 </p>
               </Card>
             </FadeInView>
@@ -72,7 +69,7 @@ export default function Home() {
                   AI & Automation
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Exploring intelligent systems and conversational AI to solve real problems. 
+                  Exploring intelligent systems and conversational AI to solve real problems.
                   Building tools that leverage language models and machine learning.
                 </p>
               </Card>
@@ -87,7 +84,7 @@ export default function Home() {
                   Cloud Infrastructure
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Designing and deploying reliable, scalable systems on modern cloud platforms. 
+                  Designing and deploying reliable, scalable systems on modern cloud platforms.
                   Infrastructure as code, monitoring, and DevOps best practices.
                 </p>
               </Card>
@@ -118,8 +115,8 @@ export default function Home() {
 
           <FadeInView delay={0.1}>
             <p className="text-center text-zavala-text-secondary text-lg mb-12 max-w-2xl mx-auto">
-              A selection of recent projects showcasing full-stack development, AI integration, 
-              and cloud infrastructure.
+              A selection of recent projects showcasing full-stack development, AI integration, and
+              cloud infrastructure.
             </p>
           </FadeInView>
 
@@ -174,8 +171,8 @@ export default function Home() {
 
           <FadeInView delay={0.2}>
             <p className="text-lg md:text-xl text-zavala-text-secondary mb-8 leading-relaxed">
-              Have an interesting project in mind? Whether it&apos;s a web application, AI integration, 
-              or cloud infrastructure challenge, I&apos;d love to hear about it.
+              Have an interesting project in mind? Whether it&apos;s a web application, AI
+              integration, or cloud infrastructure challenge, I&apos;d love to hear about it.
             </p>
           </FadeInView>
 
@@ -186,11 +183,7 @@ export default function Home() {
                   Get in Touch
                 </Button>
               </Link>
-              <a 
-                href="https://github.com/zavalatechlabs" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
+              <a href="https://github.com/zavalatechlabs" target="_blank" rel="noopener noreferrer">
                 <Button variant="secondary" size="lg">
                   View GitHub
                 </Button>

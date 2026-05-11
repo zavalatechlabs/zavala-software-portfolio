@@ -115,6 +115,7 @@ export function HeroNameReveal({
           animate={{ opacity: 1 }}
           transition={prefersReducedMotion ? { duration: 0 } : { delay: 3, duration: 0.8 }}
           className="mt-16"
+          aria-hidden="true"
         >
           <motion.div
             animate={prefersReducedMotion ? { y: 0 } : { y: [0, 8, 0] }}

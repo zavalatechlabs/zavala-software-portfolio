@@ -1,19 +1,13 @@
 # CI/CD Pipeline — Zavala Software Portfolio
-# DISABLED by default. Uses workflow_dispatch (manual trigger only).
-# Uncomment the push/pull_request triggers below to enable automatic CI.
 
 name: CI
 
 on:
   workflow_dispatch: # Manual trigger — always available
-
-  # ──────────────────────────────────────────────────────
-  # Uncomment to enable automatic CI
-  # ──────────────────────────────────────────────────────
-  # push:
-  #   branches: [main]
-  # pull_request:
-  #   branches: [main]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 # ─── Security: minimal permissions ────────────────────
 permissions:
@@ -40,7 +34,7 @@ jobs:
         # Security: action pinned to full SHA (actions/setup-node v4.1.0)
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
-          node-version: 18
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
@@ -52,6 +46,9 @@ jobs:
 
       - name: Type-check
         run: npm run type-check
+
+      - name: Format check
+        run: npm run format:check
 
   # ──────────────────────────────────────────────────────
   # Job 2: Test
@@ -67,7 +64,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
-          node-version: 18
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
@@ -98,7 +95,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
-          node-version: 18
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies

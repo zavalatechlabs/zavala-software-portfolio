@@ -13,7 +13,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["jest", "@testing-library/jest-dom"],
+    "noUncheckedIndexedAccess": true,
     "plugins": [
       {
         "name": "next"
@@ -24,5 +24,7 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // Test files are type-checked separately via tsconfig.test.json so jest's
+  // ambient globals (describe/it/expect) never leak into production source.
+  "exclude": ["node_modules", "**/__tests__/**", "jest.setup.js"]
 }

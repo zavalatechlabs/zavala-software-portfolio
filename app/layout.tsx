@@ -4,6 +4,10 @@ import './globals.css'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import { VariantProvider } from '@/components/variants/VariantProvider'
+import { VariantSwitcher } from '@/components/variants/VariantSwitcher'
+import { VariantEffects } from '@/components/variants/VariantEffects'
+import { VARIANT_INIT_SCRIPT } from '@/lib/variants'
 import { getPersonSchema, getWebSiteSchema, serializeJsonLd } from '@/lib/schema'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '@/lib/site'
 
@@ -81,6 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+        {/* Apply the persisted design variant before first paint (no flash).
+            Same pre-hydration pattern next-themes uses for the theme class. */}
+        <script dangerouslySetInnerHTML={{ __html: VARIANT_INIT_SCRIPT }} />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
         <a
@@ -98,11 +105,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
         <ThemeProvider>
-          <Navbar />
-          <main id="main-content" className="min-h-screen pt-16">
-            {children}
-          </main>
-          <Footer />
+          <VariantProvider>
+            <VariantEffects />
+            <Navbar />
+            <main id="main-content" className="min-h-screen pt-16">
+              {children}
+            </main>
+            <Footer />
+            <VariantSwitcher />
+          </VariantProvider>
         </ThemeProvider>
       </body>
     </html>

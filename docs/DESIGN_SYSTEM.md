@@ -748,6 +748,30 @@ className = 'gap-16' // 64px
 
 ---
 
+## Design Variants
+
+Three switchable site-wide skins, driven by `data-variant` on `<html>`:
+
+| Variant    | Feel                                                | Key techniques                                                                                                                                               |
+| ---------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `classic`  | The original minimal near-black design (default)    | No attribute set; zero added runtime cost                                                                                                                    |
+| `aurora`   | Glassmorphism over a living gradient field          | GPU-composited gradient blobs, registered `@property` conic sheen, SVG-noise grain, rAF cursor spotlight, `backdrop-filter` glass, gradient-clipped headline |
+| `terminal` | CRT phosphor — mono headings, scanlines, green glow | Layered scanline/dot-grid/vignette overlays, CSS-only blinking caret with accessible alt text (`content: '▊' / ''`)                                          |
+
+Mechanics:
+
+- Palettes swap by overriding the token CSS variables under
+  `html[data-variant='...']` in `app/globals.css` — components never change.
+- Persistence: `localStorage` (`zavala-variant`) applied **before first
+  paint** by a pre-hydration script (`lib/variants.ts`), so there is no flash.
+- Switching animates via the **View Transitions API**
+  (`document.startViewTransition`) with `flushSync`, falling back to an
+  instant swap for unsupported browsers and reduced-motion users.
+- The floating switcher (`components/variants/VariantSwitcher.tsx`) is a
+  keyboard-accessible radiogroup; effect layers are `aria-hidden` and
+  `pointer-events: none`.
+- All variant animation honors `prefers-reduced-motion` via the global rule.
+
 ## Light/Dark Mode
 
 ### Theme Implementation

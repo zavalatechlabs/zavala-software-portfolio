@@ -35,6 +35,9 @@ lib/ (utilities) | hooks/ (custom React hooks) | public/ (static assets) | docs/
 - Hydration guard for client components reading browser state:
   `const [mounted, setMounted] = useState(false); useEffect(() => setMounted(true), [])`
 - Root `<html>` has `suppressHydrationWarning` for next-themes compatibility.
+- Design variants (Classic/Aurora/Terminal): `data-variant` on `<html>` swaps the token CSS
+  variables (see lib/variants.ts + the unlayered variant CSS in globals.css). Variant effect
+  layers mount only when active; Classic must render identically to no variant at all.
 - JSON-LD structured data (Person, WebSite schemas) in layout.tsx. Do not remove.
 - Fonts: Inter (sans) + JetBrains Mono (mono) via next/font/google.
 

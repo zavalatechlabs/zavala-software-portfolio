@@ -41,6 +41,7 @@ For complete architecture details, design decisions, and security considerations
 - **Terminal Code Window:** VS Code-themed terminal displaying developer info as TypeScript code
 - **Theme Toggle:** Dark/light mode via next-themes (dark by default; explicit user choice, persisted in localStorage)
 - **Smooth Animations:** CSS-driven entrance/scroll/hover animations that respect `prefers-reduced-motion`
+- **Design Variants:** three switchable skins — Classic, Aurora (glassmorphism over an animated gradient field), and Terminal (CRT phosphor) — persisted per visitor and animated with the View Transitions API
 
 ### Technical Highlights
 

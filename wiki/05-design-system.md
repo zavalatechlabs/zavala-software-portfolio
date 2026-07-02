@@ -177,4 +177,4 @@ For the full performance audit, see [performance.md](performance.md).
 - [accessibility.md](accessibility.md) -- accessibility audit
 - [performance.md](performance.md) -- performance audit
 
-**Tags:** design-system, colors, typography, dark-mode, tailwind, framer-motion, accessibility, theming
+**Tags:** design-system, colors, typography, dark-mode, tailwind, css-animations, accessibility, theming

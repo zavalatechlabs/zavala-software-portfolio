@@ -5,11 +5,13 @@ This document covers the testing infrastructure and practices for the Zavala Sof
 ## Testing Stack
 
 ### Unit & Component Testing
+
 - **Framework:** Jest
 - **Library:** React Testing Library
 - **Coverage:** Jest coverage reports
 
 ### End-to-End (E2E) Testing
+
 - **Framework:** Playwright
 - **Browsers:** Chromium, Firefox, WebKit
 - **Mobile:** iPhone 12, Pixel 5
@@ -96,7 +98,7 @@ describe('Button', () => {
   it('calls onClick when clicked', async () => {
     const handleClick = jest.fn()
     render(<Button onClick={handleClick}>Click me</Button>)
-    
+
     await userEvent.click(screen.getByText('Click me'))
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
@@ -111,13 +113,13 @@ import { test, expect } from '@playwright/test'
 
 test('contact form submission', async ({ page }) => {
   await page.goto('/contact')
-  
+
   await page.fill('[name="name"]', 'John Doe')
   await page.fill('[name="email"]', 'john@example.com')
   await page.fill('[name="message"]', 'Test message')
-  
+
   await page.click('button[type="submit"]')
-  
+
   await expect(page.locator('.success-message')).toBeVisible()
 })
 ```
@@ -127,6 +129,7 @@ test('contact form submission', async ({ page }) => {
 ### Unit Tests
 
 **Do:**
+
 - Test component rendering
 - Test user interactions (clicks, inputs)
 - Test edge cases and error states
@@ -134,6 +137,7 @@ test('contact form submission', async ({ page }) => {
 - Keep tests focused and isolated
 
 **Don't:**
+
 - Test implementation details
 - Test third-party libraries
 - Write tests that depend on other tests
@@ -142,6 +146,7 @@ test('contact form submission', async ({ page }) => {
 ### E2E Tests
 
 **Do:**
+
 - Test critical user flows
 - Test across multiple browsers
 - Test mobile responsive behavior
@@ -149,6 +154,7 @@ test('contact form submission', async ({ page }) => {
 - Take screenshots on failure
 
 **Don't:**
+
 - Test every possible scenario (leave that to unit tests)
 - Make tests dependent on external services
 - Use flaky selectors (e.g., nth-child without context)
@@ -160,11 +166,19 @@ test('contact form submission', async ({ page }) => {
 
 ```javascript
 {
-  branches: 70,
-  functions: 70,
-  lines: 70,
-  statements: 70
+  branches: 60,
+  functions: 50,
+  lines: 60,
+  statements: 60
 }
+```
+
+These are the values enforced by `jest.config.js` — they sit a few points
+below current coverage so regressions fail the gate. Raise them as coverage
+grows.
+
+```
+
 ```
 
 ### Viewing Coverage
@@ -182,6 +196,7 @@ start coverage/lcov-report/index.html  # Windows
 ### What to Cover
 
 **High Priority:**
+
 - Business logic in `/lib`
 - Critical UI components
 - Form validation
@@ -189,6 +204,7 @@ start coverage/lcov-report/index.html  # Windows
 - Error handling
 
 **Lower Priority:**
+
 - Simple presentational components
 - Third-party integrations (mock instead)
 - Configuration files
@@ -242,22 +258,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Type check
         run: npm run type-check
-      
+
       - name: Lint
         run: npm run lint
-      
+
       - name: Unit tests
         run: npm test -- --coverage
-      
+
       - name: E2E tests
         run: npm run test:e2e
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -273,6 +289,7 @@ jobs:
 
 **Issue:** "TextEncoder is not defined"
 **Fix:** Add to `jest.setup.js`:
+
 ```javascript
 import { TextEncoder, TextDecoder } from 'util'
 global.TextEncoder = TextEncoder
@@ -283,6 +300,7 @@ global.TextDecoder = TextDecoder
 
 **Issue:** "Timeout 30000ms exceeded"
 **Fix:** Increase timeout in `playwright.config.ts`:
+
 ```typescript
 use: {
   actionTimeout: 10000,
@@ -291,6 +309,7 @@ use: {
 
 **Issue:** "Browser not found"
 **Fix:** Install browsers:
+
 ```bash
 npx playwright install
 ```

@@ -106,6 +106,6 @@ Once connected, Vercel deploys automatically:
 - [Deployment Reference](../docs/DEPLOYMENT.md) -- full deployment procedures
 - [Troubleshooting](11-troubleshooting.md) -- common build and deployment errors
 - [Quick Start](01-quick-start.md) -- initial setup and local development
-- [Security Posture](security-posture.md) -- security headers and CSP configuration
+- [Security](07-security.md) -- security headers and CSP configuration
 
 **Tags:** deployment, vercel, environment-variables, ci-cd, production, hosting

@@ -14,17 +14,22 @@ Security headers are configured in `next.config.js` and applied to all routes.
 | **Strict-Transport-Security** | `max-age=63072000; includeSubDomains; preload` | Forces HTTPS for 2 years, including subdomains     |
 | **X-Frame-Options**           | `DENY`                                         | Prevents clickjacking by blocking iframe embedding |
 | **X-Content-Type-Options**    | `nosniff`                                      | Prevents MIME type sniffing                        |
-| **X-XSS-Protection**          | `1; mode=block`                                | Enables browser XSS protection                     |
 | **Referrer-Policy**           | `strict-origin-when-cross-origin`              | Controls referrer information sent with requests   |
 | **Permissions-Policy**        | `camera=(), microphone=(), geolocation=()`     | Disables unnecessary browser features              |
 | **Content-Security-Policy**   | See below                                      | Controls which resources can be loaded             |
+
+API routes additionally send `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`.
+
+`X-XSS-Protection` is intentionally **not** sent: the legacy browser XSS
+auditor is deprecated and can itself introduce vulnerabilities. CSP is the
+real protection. `X-Powered-By` is disabled via `poweredByHeader: false`.
 
 ### Content Security Policy (CSP)
 
 Our CSP is configured to:
 
 - **`default-src 'self'`** - Only load resources from same origin by default
-- **`script-src 'self' 'unsafe-eval' 'unsafe-inline'`** - Allow inline scripts (required for Next.js)
+- **`script-src 'self' 'unsafe-inline'`** - Inline scripts allowed (Next.js bootstrap + next-themes pre-hydration script). `unsafe-eval` is NOT allowed.
 - **`style-src 'self' 'unsafe-inline'`** - Allow inline styles (required for Tailwind)
 - **`img-src 'self' data: https:`** - Allow images from same origin, data URIs, and HTTPS
 - **`font-src 'self' data:`** - Allow fonts from same origin and data URIs
@@ -32,26 +37,41 @@ Our CSP is configured to:
 - **`frame-ancestors 'none'`** - Prevent embedding in iframes
 - **`base-uri 'self'`** - Restrict base tag URLs
 - **`form-action 'self'`** - Only allow form submissions to same origin
+- **`object-src 'none'`** - Block plugins/objects
 
-**Note:** `unsafe-inline` and `unsafe-eval` are necessary for Next.js and Tailwind CSS to function. In a future enhancement, we could implement nonces or hashes for stricter CSP.
+**Note:** `unsafe-inline` on `script-src`/`style-src` is required by Next.js
+and Tailwind today. A nonce-based CSP via middleware is a tracked follow-up.
 
 ## Environment Variables
 
 Sensitive data is stored in environment variables and never committed to Git.
+`lib/env.ts` validates them lazily with Zod on first access and fails loudly
+with a descriptive error if anything required is missing or malformed
+(including a paired-variable check for the Upstash credentials).
 
 ### Required Variables (Production)
 
 ```bash
-RESEND_API_KEY=re_your_api_key_here
+RESEND_API_KEY=re_your_api_key_here   # must start with re_
+CONTACT_EMAIL=you@example.com          # where submissions are delivered
+```
+
+### Optional Variables
+
+```bash
+FROM_EMAIL="Portfolio Contact <onboarding@resend.dev>"  # sender (has default)
+UPSTASH_REDIS_REST_URL=...    # persistent rate limiting (recommended in prod)
+UPSTASH_REDIS_REST_TOKEN=...  # must be set together with the URL
 ```
 
 ### Public Variables
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
 
-**Important:** Only prefix variables with `NEXT_PUBLIC_` if they need to be exposed to the browser. All other variables remain server-side only.
+**Important:** Only prefix variables with `NEXT_PUBLIC_` if they need to be
+exposed to the browser. All other variables remain server-side only.
 
 ## HTTPS/TLS
 
@@ -59,17 +79,27 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 - **HSTS Header:** Forces HTTPS for 2 years with preload
 - **Mixed Content:** Prevented by CSP and HTTPS enforcement
 
-## Input Validation
+## Contact Form Defense Pipeline (implemented)
 
-### Contact Form (Future Enhancement)
+`app/api/contact/route.ts` runs, in order:
 
-When implemented, the contact form will include:
+1. **Rate limiting** — 5 requests/hour per IP, keyed on `x-real-ip` (proxy-verified) with `x-forwarded-for` fallback. Uses Upstash Redis when configured; otherwise a per-instance in-memory sliding window with periodic key eviction. Counted before validation so invalid probes also consume quota.
+2. **Zod validation** — `lib/validation.ts`: trim-first length checks, email format, and control-character rejection (`\r`, `\n`, null bytes, Unicode line separators) on every field. Field-level errors are returned as structured `details`.
+3. **Honeypot** — a hidden `website` field; bots that fill it receive a **fake success** response so they can't learn they were caught.
+4. **Sanitization** — `sanitizeForHeader()` strips header-injection characters from values used in the email subject/reply-to; `sanitizeHtml()` entity-encodes all user content in the email body.
+5. **Send** — Resend with a 10 s timeout guard. The SDK's `{ data, error }` response is checked explicitly; API-level errors return a 500 to the client instead of a false success.
 
-- Server-side validation of all inputs
-- Email validation (format and domain checks)
-- Rate limiting (max 5 submissions per hour per IP)
-- CAPTCHA or honeypot for spam prevention
-- XSS prevention through React's built-in escaping
+Client-side, `ContactForm` mirrors the same limits via `lib/contact-form.ts`
+(no Zod in the browser bundle) for inline UX, and surfaces the API's
+structured 429/validation responses. There is deliberately **no** client-side
+timing check — an earlier version silently discarded fast (autofilled)
+legitimate submissions.
+
+## Logging
+
+`lib/logger.ts` emits structured JSON in production and redacts PII fields
+(`ip`, `clientIp`, `email`, `name`). Errors return generic messages to
+clients; details stay server-side.
 
 ## Dependency Security
 
@@ -80,8 +110,12 @@ Run security audits regularly:
 ```bash
 npm audit
 npm audit fix          # Fix non-breaking issues
-npm audit fix --force  # Fix all issues (may break things)
 ```
+
+**Known accepted advisory:** Next.js pins an internal `postcss@8.4.31`
+(GHSA-qx2v-qp2m-jg93, moderate). It is build-time only, processes no
+untrusted CSS in this project, and npm's proposed "fix" is a breaking
+downgrade of Next itself. It will clear when Next bumps its internal pin.
 
 ### Dependabot
 
@@ -91,25 +125,16 @@ GitHub Dependabot is enabled to:
 - Auto-create PRs for security updates
 - Alert on new vulnerabilities
 
-## Authentication (Future)
-
-If authentication is added in the future:
-
-- Use NextAuth.js or Clerk for OAuth
-- Implement CSRF protection
-- Use secure, HttpOnly cookies
-- Hash passwords with bcrypt (if using credentials)
-- Implement rate limiting on login
-
 ## API Security
 
-When API routes are added:
+Implemented for `/api/contact` (see pipeline above) and `/api/health`
+(no sensitive data — returns a static `{ status: 'ok' }`). Rules for future
+routes live in `.claude/rules/api-security.md`:
 
-- Validate all inputs
-- Implement rate limiting
-- Use API keys or JWT for authentication
-- Log all requests for monitoring
-- Handle errors without leaking info
+- Validate all inputs with Zod
+- Rate limit POST endpoints
+- Extract client IP: `x-real-ip` → first `x-forwarded-for` entry → `unknown`
+- Log with `logger.*` (PII-redacting); return generic errors to clients
 
 ## Monitoring
 
@@ -119,21 +144,10 @@ When API routes are added:
 - Track errors and performance
 - Alert on anomalies
 
-### Browser Dev Tools
+### Verifying Headers
 
-Test security headers locally:
-
-1. Open browser dev tools (F12)
-2. Go to Network tab
-3. Click any request
-4. Check Response Headers
-5. Verify security headers are present
-
-### Online Tools
-
-- [Security Headers](https://securityheaders.com) - Check header configuration
-- [SSL Labs](https://www.ssllabs.com/ssltest/) - Test SSL/TLS configuration
-- [Mozilla Observatory](https://observatory.mozilla.org) - Comprehensive security scan
+1. Open browser dev tools (F12) → Network tab → any request → Response Headers
+2. Or use [Security Headers](https://securityheaders.com), [SSL Labs](https://www.ssllabs.com/ssltest/), [Mozilla Observatory](https://observatory.mozilla.org)
 
 ## Incident Response
 
@@ -147,15 +161,16 @@ If a security issue is discovered:
 
 ## Security Checklist
 
-- ✅ Security headers configured
+- ✅ Security headers configured (HSTS, CSP, frame/MIME protections)
 - ✅ HTTPS enforced via HSTS
-- ✅ CSP prevents XSS and code injection
-- ✅ Clickjacking prevented (X-Frame-Options)
-- ✅ MIME sniffing blocked
-- ✅ Environment variables protected
-- ✅ Dependencies regularly audited
-- ⏳ Rate limiting (to be added with API routes)
-- ⏳ CAPTCHA/honeypot (to be added with contact form)
+- ✅ CSP without `unsafe-eval`; `form-action 'self'`
+- ✅ Clickjacking prevented (X-Frame-Options + frame-ancestors)
+- ✅ Environment variables validated lazily with Zod
+- ✅ Contact form: rate limiting, validation, honeypot, header-injection + XSS sanitization
+- ✅ Structured logging with PII redaction
+- ✅ Dependencies audited; Dependabot enabled
+- ⏳ Nonce-based CSP (follow-up)
+- ⏳ Error monitoring service (e.g. Sentry) — logger is structured and ready
 
 ## Resources
 
@@ -170,5 +185,5 @@ For security concerns or to report vulnerabilities, contact: zavala.techlabs@gma
 
 ---
 
-**Last Updated:** 2026-02-08  
-**Next Review:** 2026-05-08 (quarterly)
+**Last Updated:** 2026-07-02
+**Next Review:** 2026-10-02 (quarterly)

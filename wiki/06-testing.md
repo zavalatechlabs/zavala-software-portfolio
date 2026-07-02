@@ -35,10 +35,10 @@ Defined in `jest.config.js`:
 
 | Metric     | Threshold |
 | ---------- | --------- |
-| Branches   | 25%       |
-| Functions  | 35%       |
-| Lines      | 40%       |
-| Statements | 40%       |
+| Branches   | 60%       |
+| Functions  | 50%       |
+| Lines      | 60%       |
+| Statements | 60%       |
 
 Coverage collects from `app/`, `components/`, and `lib/`, excluding `.d.ts`, `node_modules`, `.next`, and `coverage` directories.
 
@@ -70,44 +70,34 @@ Use `userEvent` for typing and keyboard interactions. `fireEvent.click` is accep
 
 ---
 
-## Framer Motion Mock Strategies
+## Animation Mock Strategies
 
-Animation components require mocking. There are three strategies; choose based on what the component uses.
+Animations are CSS-driven (no framer-motion). Two hooks need mocking in
+animation tests.
 
-### Strategy 1: Mock `motion.*` with Passthrough Elements
+### Strategy 1: Mock `@/hooks/useInView`
 
-When a component uses `motion.div`, `motion.h1`, etc. Replace them with plain HTML elements that forward motion props as `data-*` attributes for assertion.
+The custom IntersectionObserver hook returns a `[ref, isInView]` tuple.
+Mock it to control visibility deterministically (jsdom has no
+IntersectionObserver).
 
-**Demonstrated in:** `FadeInView.test.tsx`, `HeroNameReveal.test.tsx`
-
-```tsx
-jest.mock('framer-motion', () => {
-  const React = jest.requireActual('react')
-  const MotionDiv = React.forwardRef((props, ref) => {
-    const { initial, whileInView, transition, children, ...rest } = props
-    return (
-      <div ref={ref} data-initial={JSON.stringify(initial)} {...rest}>
-        {children}
-      </div>
-    )
-  })
-  return { motion: { div: MotionDiv } }
-})
-```
-
-### Strategy 2: Mock `useInView` Directly
-
-When a component calls `useInView` from framer-motion but does not render `motion.*` elements. Return `true` or `false` to control animation triggers.
-
-**Demonstrated in:** `DecipherText.test.tsx`
+**Demonstrated in:** `FadeInView.test.tsx`, `DecipherText.test.tsx`
 
 ```tsx
-jest.mock('framer-motion', () => ({
+jest.mock('@/hooks/useInView', () => ({
   useInView: jest.fn(),
 }))
 const mockUseInView = useInView as jest.MockedFunction<typeof useInView>
-mockUseInView.mockReturnValue(true) // triggers animation
+mockUseInView.mockReturnValue([{ current: null }, true]) // element is in view
 ```
+
+### Strategy 2: Assert CSS animation classes and inline styles
+
+Pure-CSS components (e.g. `HeroNameReveal`, a Server Component) need no
+mocks at all — assert on the rendered markup: `animate-rise-in` classes,
+`style.animationDelay` staggering, and `aria-hidden` on decorative spans.
+
+**Demonstrated in:** `HeroNameReveal.test.tsx`
 
 ### Strategy 3: Mock `useReducedMotion`
 
@@ -164,7 +154,7 @@ Screenshots are captured on failure. Traces are collected on first retry.
 
 ## Using the Test Writer Agent
 
-The `@test-writer` agent can generate tests that follow these patterns. Provide it with the component path and it will produce a test file co-located in `__tests__/` with the correct mocking strategy for framer-motion and useReducedMotion.
+The `@test-writer` agent can generate tests that follow these patterns. Provide it with the component path and it will produce a test file co-located in `__tests__/` with the correct mocking strategy for useInView and useReducedMotion.
 
 ---
 
@@ -174,4 +164,4 @@ The `@test-writer` agent can generate tests that follow these patterns. Provide 
 - [05-design-system.md](05-design-system.md) -- animation guidelines (useReducedMotion)
 - [07-security.md](07-security.md) -- API route security tested via route.test.ts
 
-**Tags:** testing, jest, react-testing-library, playwright, coverage, framer-motion, mocking, e2e
+**Tags:** testing, jest, react-testing-library, playwright, coverage, mocking, e2e

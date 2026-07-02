@@ -21,26 +21,29 @@ This project uses a modern, secure, and performant tech stack:
 - **Styling:** Tailwind CSS
 - **Content:** MDX (Markdown + React components)
 - **Deployment:** Vercel
-- **Email:** Resend + React Email
-- **Animations:** Framer Motion
+- **Email:** Resend (HTML template built in `lib/email.ts`)
+- **Animations:** CSS keyframes/transitions + a small IntersectionObserver hook (no animation library)
 
 For complete architecture details, design decisions, and security considerations, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## ✨ Features
 
 ### Core Pages
+
 - **Homepage:** Hero section with animated name reveal, featured projects showcase
 - **About:** Professional bio, "What I Do" cards, skills showcase, resume download
 - **Projects:** Grid layout with filtering, detailed project pages with tech stacks
 - **Contact:** Form with validation, email integration via Resend API
 
 ### Interactive Elements
+
 - **AI Chat Widget:** Floating assistant button with animated chat interface (UI-ready for future AI integration)
 - **Terminal Code Window:** VS Code-themed terminal displaying developer info as TypeScript code
-- **Theme Toggle:** Dark/light mode support with system preference detection
-- **Smooth Animations:** Framer Motion-powered transitions, hover effects, and scroll animations
+- **Theme Toggle:** Dark/light mode via next-themes (dark by default; explicit user choice, persisted in localStorage)
+- **Smooth Animations:** CSS-driven entrance/scroll/hover animations that respect `prefers-reduced-motion`
 
 ### Technical Highlights
+
 - **MDX Content Management:** Write projects in Markdown with embedded React components
 - **Type-Safe:** Full TypeScript coverage with strict mode enabled
 - **Responsive Design:** Mobile-first approach, tested across devices
@@ -119,8 +122,6 @@ For detailed deployment instructions, see [docs/DEPLOYMENT.md](./docs/DEPLOYMENT
 ## 📚 Documentation
 
 Additional documentation can be found in the `/docs` folder:
-
-- [Research & Portfolio Examples](./docs/RESEARCH.md)
 
 ## 🤝 Contributing
 

@@ -1,6 +1,6 @@
 # Security Reference
 
-Security headers, contact form defense pipeline, rate limiting, environment handling, and API documentation. For the full security overview, see [../docs/SECURITY.md](../docs/SECURITY.md). For the audit checklist, see [security-posture.md](security-posture.md).
+Security headers, contact form defense pipeline, rate limiting, environment handling, and API documentation. For the full security overview, see [../docs/SECURITY.md](../docs/SECURITY.md). For the audit checklist, see [../docs/SECURITY.md](../docs/SECURITY.md).
 
 ---
 
@@ -160,7 +160,6 @@ Health check endpoint. No authentication or rate limiting.
 ## See Also
 
 - [../docs/SECURITY.md](../docs/SECURITY.md) -- full security configuration reference
-- [security-posture.md](security-posture.md) -- security audit and checklist
 - [06-testing.md](06-testing.md) -- API route test patterns (route.test.ts)
 - [05-design-system.md](05-design-system.md) -- CSP implications for inline styles
 

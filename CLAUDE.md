@@ -49,8 +49,10 @@ lib/ (utilities) | hooks/ (custom React hooks) | public/ (static assets) | docs/
 ## Design System
 
 - Use `zavala-*` color tokens only. Never raw hex or default Tailwind colors.
+  (Documented exception: TerminalWindow's macOS traffic lights + VS Code syntax palette.)
 - Dark mode: class-based via next-themes. Default: dark. Key: `zavala-theme`.
 - Accents: primary (blue), secondary (green), code (orange), warning (amber), error (red).
+  Accents are theme-aware CSS vars; filled buttons use `zavala-accent-primary-strong` (AA with white text).
 - Focus: `focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:outline-none`
 - Responsive: mobile-first, `md:` primary breakpoint.
 - Transitions: `duration-200` for hover/interactive.
@@ -62,15 +64,13 @@ lib/ (utilities) | hooks/ (custom React hooks) | public/ (static assets) | docs/
 ## Testing
 
 - Co-locate in `__tests__/` next to source. Unit: `*.test.ts(x)`. E2E: `e2e/*.spec.ts`.
-- Coverage thresholds: 25% branches, 35% functions, 40% lines/statements.
+- Coverage thresholds: 60% branches/lines/statements, 50% functions (jest.config.js is authoritative).
 - API route tests: `/** @jest-environment node */` docblock at file top.
-- framer-motion mocking (3 strategies -- read component source to choose):
-  - `motion.*` elements -> mock motion with passthrough divs
-  - `useInView` -> mock useInView specifically
-  - Always mock `@/hooks/useReducedMotion`
+- Animations are CSS-driven (no framer-motion). For components using `@/hooks/useInView`,
+  mock it to return `[{ current: null }, boolean]`. Mock `@/hooks/useReducedMotion` where used.
 - `userEvent` for text/keyboard; `fireEvent.click` OK for buttons.
 - Lib tests import from `@jest/globals`; component tests use ambient globals.
-- CI is disabled. Run `npm run check` before committing.
+- CI runs on push/PR to main (lint, format, type-check, tests, build). Run `npm run check` before committing.
 - See @docs/TESTING.md for full test infrastructure details.
 
 ## Git & Security
@@ -78,4 +78,4 @@ lib/ (utilities) | hooks/ (custom React hooks) | public/ (static assets) | docs/
 - Conventional commits: `fix:`, `feat:`, `refactor:`, `chore:`, `docs:`, `test:`
 - Never force push to main. Pre-commit: lint-staged (ESLint + Prettier).
 - Never commit .env files or API keys.
-- Contact API security: Zod -> honeypot -> timing check -> rate limit -> CRLF sanitization.
+- Contact API security: rate limit -> Zod -> honeypot -> CRLF sanitization -> send.

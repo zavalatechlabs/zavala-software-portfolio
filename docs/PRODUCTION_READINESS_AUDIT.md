@@ -288,3 +288,48 @@ implementations.
 _Methodology note: every Critical and High finding above was independently re-verified against the
 working tree (grep/read/compile/build output) before inclusion. Medium findings were reported by
 specialist review passes and spot-checked; line numbers may drift as fixes land._
+
+---
+
+## Remediation Addendum (2026-07-02)
+
+All Critical and High findings — and the actionable Mediums — were addressed
+the same day, directly on `main`:
+
+- **C1/C2:** Resend `{ data, error }` is now checked; the client-side
+  fake-success timing check was removed (docs updated to match the real
+  pipeline: rate limit → Zod → honeypot → sanitize → send).
+- **C3:** Per-page canonicals + OG blocks; root-layout canonical and the
+  broken manual `twitter:image` reference removed (file-convention OG images).
+- **C4:** Hero rewritten as a Server Component with pure CSS stagger
+  animation — visible in server HTML, reduced-motion collapses to final frame.
+- **C5/H1:** Placeholder GitHub/demo links nulled, duplicate project deleted,
+  SVG hero images render via `unoptimized` (no more optimizer 400s).
+  _Remaining owner action: replace the placeholder employers/university on
+  the resume page with real history._
+- **H2/H3:** E2E specs rewritten against the real UI (CI runs the production
+  build); CI enabled on push/PR; `format:check` added to `npm run check`;
+  Prettier applied repo-wide; coverage thresholds raised to 60/50/60/60.
+- **H4:** Node 22 (`node-version-file`), ESLint 9 flat config + ESLint CLI,
+  `@types/jest@29`, jest globals scoped to tests via `tsconfig.test.json`,
+  `noUncheckedIndexedAccess` enabled.
+- **H5:** Deleted: chat feature, `lib/utils.ts` + `tailwind-merge`,
+  `@next/bundle-analyzer`, `sharp`, duplicate MDX/SVG, icon SVG duplicates,
+  root planning artifacts. Adopted: ui primitives now power ContactForm.
+- **H6:** `border-zavala-border-default` → `border-zavala-border` (16×).
+- **H7:** Theme-aware accent variables (light mode uses AA-compliant darker
+  shades); filled buttons use `accent-primary-strong` (#2563eb); dark
+  tertiary text bumped to #8a8a8a; ProjectCard rebuilt with the
+  stretched-link pattern (no nested interactive elements) and
+  keyboard-visible quick links; focus-visible rings applied consistently.
+- **H8:** framer-motion **removed entirely** (~36KB gz off every page) in
+  favor of CSS keyframes + a 50-line `useInView` hook; client Zod replaced
+  by a dependency-free validator sharing constants with the server schema
+  (~25KB gz off /contact); TerminalWindow now loads on footer visibility.
+- **H9:** Documentation truth pass across SECURITY.md, ARCHITECTURE.md
+  (false CSRF claim removed), DEPLOYMENT.md (correct env vars), TESTING.md,
+  CLAUDE.md, READMEs, and wiki links.
+
+Remaining accepted items: Next.js's internal `postcss@8.4.31` advisory
+(build-time only, documented in SECURITY.md) and the nonce-based CSP
+follow-up.

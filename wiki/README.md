@@ -47,7 +47,7 @@ These pages document the three-pass engineering audit and its outcomes:
 
 - [Architecture Audit](architecture-overview.md) -- Audit findings on tech stack and structure
 - [Accessibility](accessibility.md) -- WCAG 2.1 AA compliance status
-- [Security Posture](security-posture.md) -- Headers, validation, rate limiting, threat model
+- [Security](07-security.md) -- Headers, validation, rate limiting, threat model
 - [SEO Audit](seo-metadata.md) -- Audit findings on metadata and structured data
 - [Performance](performance.md) -- Bundle analysis, lazy loading, font optimization
 - [Testing Strategy](testing-strategy.md) -- Coverage, test quality, gaps, thresholds

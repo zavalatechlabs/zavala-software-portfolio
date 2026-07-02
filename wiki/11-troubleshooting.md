@@ -72,35 +72,21 @@ if (!mounted) return null // or skeleton
 
 **Symptom:** Form submits but email never arrives, or API returns an error.
 
-| Check                 | Details                                                                                                           |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `RESEND_API_KEY` set? | Must be set in Vercel dashboard (or `.env.local` for dev)                                                         |
-| Test key prefix?      | Keys starting with `re_test_` do not send real emails. Use a production key for live delivery.                    |
-| `CONTACT_EMAIL` set?  | This is the delivery destination. Required.                                                                       |
-| Rate limited?         | The contact API enforces rate limiting. Check server logs for 429 responses.                                      |
-| Honeypot triggered?   | The form includes a hidden honeypot field. Bots filling it get silently rejected.                                 |
-| Timing check?         | Client-side only: submissions faster than 2s after page load are silently rejected. Direct API calls bypass this. |
+| Check                 | Details                                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------- |
+| `RESEND_API_KEY` set? | Must be set in Vercel dashboard (or `.env.local` for dev)                                      |
+| Test key prefix?      | Keys starting with `re_test_` do not send real emails. Use a production key for live delivery. |
+| `CONTACT_EMAIL` set?  | This is the delivery destination. Required.                                                    |
+| Rate limited?         | The contact API enforces rate limiting. Check server logs for 429 responses.                   |
+| Honeypot triggered?   | The form includes a hidden honeypot field. Bots filling it get silently rejected.              |
 
 ## Tests Failing
 
-### framer-motion mock errors
+### Animation hook mock errors
 
-**Symptom:** `TypeError: Cannot read properties of undefined` or `motion.div is not a function`.
+**Symptom:** animation component tests fail because jsdom lacks IntersectionObserver.
 
-**Fix:** framer-motion must be mocked. The codebase uses 3 strategies depending on the component:
-
-1. **Data attributes** (for animation config testing) -- see `FadeInView.test.tsx`
-2. **Minimal passthrough** (for behavior testing) -- see `ContactForm.test.tsx`
-3. **Mock useInView** (for scroll-triggered components) -- see `DecipherText.test.tsx`
-
-Always also mock `useReducedMotion`:
-
-```typescript
-const mockUseReducedMotion = jest.fn(() => false)
-jest.mock('@/hooks/useReducedMotion', () => ({
-  useReducedMotion: () => mockUseReducedMotion(),
-}))
-```
+**Fix:** mock the custom hook: `jest.mock('@/hooks/useInView', () => ({ useInView: jest.fn() }))` and return `[{ current: null }, true]` to simulate the element being in view. Always mock `@/hooks/useReducedMotion` where the component uses it.
 
 ### Wrong jest environment
 
@@ -128,7 +114,7 @@ Component tests use the default `jest-environment-jsdom` and do not need a docbl
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `useReducedMotion`         | All animations must call `useReducedMotion()` and provide a static fallback when it returns `true`                 |
 | `prefers-reduced-motion`   | OS-level setting. When enabled, animations should skip or simplify. Test by toggling in OS accessibility settings. |
-| `useInView` not triggering | framer-motion's `useInView` requires the element to be in the viewport. Check the `once` and `amount` options.     |
+| `useInView` not triggering | The hook requires the element to be in the viewport (IntersectionObserver). Check the `once` and `amount` options. |
 
 ## Dependency Issues
 
@@ -186,7 +172,7 @@ Without Upstash env vars, the app uses in-memory rate limiting which resets on e
 
 - [Deployment](09-deployment.md)
 - [Testing Strategy](testing-strategy.md)
-- [Security Posture](security-posture.md)
+- [Security](07-security.md)
 - [Quick Start](01-quick-start.md)
 
 **Tags:** troubleshooting, debugging, errors, build, tests, theme, contact-form, rate-limiting

@@ -1,5 +1,14 @@
 # Animation Patterns and Interactions
 
+> **Implementation note (2026-07):** The shipped site implements these
+> animation designs with **pure CSS keyframes/transitions** plus a small
+> `useInView` IntersectionObserver hook (`hooks/useInView.ts`) — framer-motion
+> was removed to cut ~36KB gz from every page and keep first paint
+> JavaScript-free. The framer-motion snippets below are preserved as the
+> original design specifications; when implementing new animations, prefer
+> the CSS patterns in `app/globals.css` (`rise-in`, `fade-in-up`,
+> `.fade-in-view`) and always respect `prefers-reduced-motion`.
+
 **Project:** Zavala Software Portfolio  
 **Version:** 1.0  
 **Last Updated:** 2026-02-08  
@@ -12,8 +21,6 @@
 This document defines all animation patterns, timing specifications, and interaction behaviors for the Zavala Software Portfolio. Animations should feel premium, purposeful, and performant.
 
 **Animation Philosophy:** Subtle sophistication over flashy gimmicks. Animations should enhance usability, guide attention, and create delight without overwhelming the user.
-
-**Reference:** See [`DESIGN_DIRECTION.md`](./DESIGN_DIRECTION.md) for design decisions and feature priorities.
 
 ---
 
@@ -324,7 +331,6 @@ Using `react-text-scramble`:
 
 ```tsx
 import { TextScramble } from 'react-text-scramble'
-
 ;<TextScramble
   text="Selected Projects"
   className="text-3xl md:text-5xl font-bold"
@@ -1062,7 +1068,6 @@ const ANIMATION_DURATIONS = {
 
 ```tsx
 import { AnimatePresence } from 'framer-motion'
-
 ;<AnimatePresence mode="wait">
   {isVisible && (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -1109,7 +1114,6 @@ const AnimationPerformance = () => {
 
 ## References
 
-- **Design Direction:** [`DESIGN_DIRECTION.md`](./DESIGN_DIRECTION.md) — Feature priorities and design decisions
 - **Design System:** [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) — Colors, typography, component styles
 - **Framer Motion:** [framer.com/motion](https://www.framer.com/motion/)
 - **Animation Best Practices:** [web.dev/animations](https://web.dev/animations/)

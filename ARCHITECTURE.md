@@ -256,7 +256,7 @@ zavala-software-portfolio/
 ✅ **Environment Variables:** Server-side by default (unless prefixed with `NEXT_PUBLIC_`)  
 ✅ **HTTPS:** Automatic on Vercel  
 ✅ **XSS Protection:** React escapes strings by default  
-✅ **CSRF Protection:** Next.js API routes include CSRF tokens  
+✅ **Cross-site POST mitigation:** CSP `form-action 'self'`, no auth cookies to ride, and per-IP rate limiting (App Router has no built-in CSRF tokens; none are needed for this cookie-less API)  
 ✅ **Dependency Scanning:** Run `npm audit` regularly
 
 ### Additional Measures

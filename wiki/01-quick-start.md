@@ -53,7 +53,7 @@ Both Upstash variables must be set together or both omitted. See `lib/env.ts` fo
 ## See Also
 
 - [Architecture Overview](architecture-overview.md)
-- [Security Posture](security-posture.md)
+- [Security](07-security.md)
 - [Testing Strategy](testing-strategy.md)
 - `../CLAUDE.md` -- full project instructions for AI assistants
 

@@ -177,7 +177,7 @@ To add a new route (e.g., `/blog` or `/services`):
 
 - [Architecture Overview](architecture-overview.md) -- the existing wiki deep-dive
 - [Quick Start](01-quick-start.md) -- get running locally
-- [Security Posture](security-posture.md) -- security layers in detail
+- [Security](07-security.md) -- security layers in detail
 - [Performance](performance.md) -- performance analysis
 - `../ARCHITECTURE.md` -- full architecture document
 

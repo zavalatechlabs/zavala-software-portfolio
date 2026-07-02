@@ -24,13 +24,13 @@ Agent definitions live in `.claude/agents/*.md`. Skill definitions live in `.cla
 
 ## Technical Team
 
-| Agent                  | Model  | Purpose                                                                                       | When to Use                                    |
-| ---------------------- | ------ | --------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `@frontend-builder`    | sonnet | Builds React components, pages, and UI features matching the zavala design system             | Implementing new components or visual features |
-| `@test-writer`         | sonnet | Writes Jest + RTL tests matching codebase patterns, including 3 framer-motion mock strategies | After building new features                    |
-| `@code-reviewer`       | sonnet | Consolidated review: security, accessibility, and design system compliance in one pass        | After code changes, before committing          |
-| `@seo-specialist`      | sonnet | Optimizes page metadata, structured data, OG tags, sitemap, and robots configuration          | After content changes or for SEO audits        |
-| `@mdx-content-builder` | sonnet | Creates and edits MDX project files with validated frontmatter matching the Zod schema        | Adding new portfolio projects                  |
+| Agent                  | Model  | Purpose                                                                                                      | When to Use                                    |
+| ---------------------- | ------ | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `@frontend-builder`    | sonnet | Builds React components, pages, and UI features matching the zavala design system                            | Implementing new components or visual features |
+| `@test-writer`         | sonnet | Writes Jest + RTL tests matching codebase patterns, including the useInView/useReducedMotion mock strategies | After building new features                    |
+| `@code-reviewer`       | sonnet | Consolidated review: security, accessibility, and design system compliance in one pass                       | After code changes, before committing          |
+| `@seo-specialist`      | sonnet | Optimizes page metadata, structured data, OG tags, sitemap, and robots configuration                         | After content changes or for SEO audits        |
+| `@mdx-content-builder` | sonnet | Creates and edits MDX project files with validated frontmatter matching the Zod schema                       | Adding new portfolio projects                  |
 
 ## Skills
 

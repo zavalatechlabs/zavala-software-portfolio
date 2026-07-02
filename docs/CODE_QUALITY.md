@@ -35,6 +35,7 @@ npm run type-check
 ```
 
 TypeScript errors will block:
+
 - Development server compilation
 - Production builds
 - CI/CD pipelines
@@ -75,15 +76,18 @@ npm run lint:fix
 ### Common Issues
 
 **Unused variables:**
+
 - Prefix with `_` if intentionally unused: `_error`, `_param`
 - Remove if truly unnecessary
 
 **Unescaped entities:**
+
 - Use `&apos;` instead of `'` in JSX text
 - Use `&quot;` instead of `"` in JSX text
 - Or use template literals: `{text}`
 
 **Console statements:**
+
 - Use `console.warn()` or `console.error()` (allowed)
 - Avoid `console.log()` in production code
 - Use proper logging library for production
@@ -119,14 +123,16 @@ npm run format:check
 ### Ignored Files
 
 Configured in `.prettierignore`:
+
 - `node_modules/`
 - `.next/`
 - `build/` and `dist/`
 - Lock files
 
-## Pre-commit Hooks (Future Enhancement)
+## Pre-commit Hooks
 
-Consider adding Husky + lint-staged for automatic:
+Husky + lint-staged are installed and active (`.husky/pre-commit`), running automatic:
+
 - Linting on commit
 - Formatting on commit
 - Type checking on push
@@ -141,10 +147,7 @@ Example configuration:
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
+    "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"]
   }
 }
 ```
@@ -174,23 +177,27 @@ Block merges if any of these fail.
 ### What to Look For
 
 **TypeScript:**
+
 - No `any` types (use proper types or `unknown`)
 - Properly typed function parameters and returns
 - Avoid type assertions unless necessary
 
 **React/Next.js:**
+
 - Server Components by default
 - `"use client"` only when needed
 - Proper error boundaries
 - Accessible HTML (semantic tags, ARIA labels)
 
 **Performance:**
+
 - No unnecessary re-renders
 - Proper memoization when needed
 - Optimized images (Next.js Image component)
 - Lazy loading for heavy components
 
 **Security:**
+
 - No sensitive data in client components
 - Input validation on server
 - Proper environment variable usage
@@ -198,11 +205,13 @@ Block merges if any of these fail.
 ### Style Guide
 
 **File naming:**
+
 - Components: `PascalCase.tsx` (e.g., `ProjectCard.tsx`)
 - Utils: `camelCase.ts` (e.g., `getProjects.ts`)
 - Pages: `page.tsx` (Next.js convention)
 
 **Component structure:**
+
 ```typescript
 // Imports
 import { useState } from 'react'
@@ -227,11 +236,13 @@ export default function Component({ title }: Props) {
 ```
 
 **Function declarations:**
+
 - Use `function` for components and named functions
 - Use arrow functions for handlers and callbacks
 - Use `const` for everything else
 
 **Comments:**
+
 - JSDoc for public functions
 - Inline comments for complex logic
 - No obvious comments
@@ -239,6 +250,7 @@ export default function Component({ title }: Props) {
 ## VS Code Setup (Recommended)
 
 Install extensions:
+
 - ESLint
 - Prettier
 - TypeScript

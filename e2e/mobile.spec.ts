@@ -4,7 +4,6 @@ import { test, expect, devices } from '@playwright/test'
 test.use({ ...devices['iPhone 12'] })
 
 test.describe('Mobile Responsiveness', () => {
-
   test('mobile menu button is visible on mobile viewport', async ({ page }) => {
     await page.goto('/')
 
@@ -149,11 +148,11 @@ test.describe('Mobile Responsiveness', () => {
     await page.waitForTimeout(300)
 
     // Click on About link
-    await page.click('text=About')
+    await page.getByRole('link', { name: 'Resume' }).click()
 
     // Should navigate to About page
     await expect(page).toHaveURL('/about')
-    await expect(page.locator('h1')).toContainText('About')
+    await expect(page.locator('h1')).toContainText('Maximiliano Zavala')
   })
 
   test('mobile navigation to all pages', async ({ page }) => {
@@ -231,7 +230,7 @@ test.describe('Mobile Responsiveness', () => {
   test('theme toggle works on mobile', async ({ page }) => {
     await page.goto('/')
 
-    const themeToggle = page.locator('button[aria-label="Toggle theme"]')
+    const themeToggle = page.locator('button[aria-label^="Switch to"]')
     await expect(themeToggle).toBeVisible()
 
     // Should be tappable
@@ -282,6 +281,7 @@ test.describe('Mobile Responsiveness', () => {
 
     // Check viewport meta tag prevents zoom on focus
     const viewportMeta = await page.locator('meta[name="viewport"]').getAttribute('content')
+    expect(viewportMeta).toContain('width=device-width')
 
     // Should include user-scalable=no or maximum-scale=1 to prevent zoom on input focus
     // Or font-size should be at least 16px (iOS doesn't zoom if text is 16px+)

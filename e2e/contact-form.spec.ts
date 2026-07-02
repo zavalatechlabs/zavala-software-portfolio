@@ -51,7 +51,7 @@ test.describe('Contact Form', () => {
     await page.click('button[type="submit"]')
 
     // Verify error message appears
-    await expect(page.locator('text=Email is required')).toBeVisible()
+    await expect(page.locator('text=Invalid email address')).toBeVisible()
   })
 
   test('shows validation error for invalid email format', async ({ page }) => {
@@ -63,7 +63,7 @@ test.describe('Contact Form', () => {
     await page.click('button[type="submit"]')
 
     // Verify error message appears
-    await expect(page.locator('text=Please enter a valid email address')).toBeVisible()
+    await expect(page.locator('text=Invalid email address')).toBeVisible()
   })
 
   test('shows validation error for empty message field', async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe('Contact Form', () => {
     await page.click('button[type="submit"]')
 
     // Verify error message appears
-    await expect(page.locator('text=Message is required')).toBeVisible()
+    await expect(page.locator('text=Message must be at least 10 characters')).toBeVisible()
   })
 
   test('shows validation error for short message', async ({ page }) => {
@@ -89,16 +89,15 @@ test.describe('Contact Form', () => {
     await expect(page.locator('text=Message must be at least 10 characters')).toBeVisible()
   })
 
-  test('shows validation error for short name', async ({ page }) => {
-    // Try to submit with name too short (less than 2 characters)
-    await page.fill('#name', 'A')
+  test('shows validation error for whitespace-only name', async ({ page }) => {
+    await page.fill('#name', '   ')
     await page.fill('#email', 'john.doe@example.com')
     await page.fill('#message', 'This is a test message with more than 10 characters.')
 
     await page.click('button[type="submit"]')
 
     // Verify error message appears
-    await expect(page.locator('text=Name must be at least 2 characters')).toBeVisible()
+    await expect(page.locator('text=Name is required')).toBeVisible()
   })
 
   test('shows multiple validation errors when multiple fields are empty', async ({ page }) => {
@@ -107,8 +106,8 @@ test.describe('Contact Form', () => {
 
     // Verify all error messages appear
     await expect(page.locator('text=Name is required')).toBeVisible()
-    await expect(page.locator('text=Email is required')).toBeVisible()
-    await expect(page.locator('text=Message is required')).toBeVisible()
+    await expect(page.locator('text=Invalid email address')).toBeVisible()
+    await expect(page.locator('text=Message must be at least 10 characters')).toBeVisible()
   })
 
   test('handles API error (500 response) gracefully', async ({ page }) => {

@@ -22,12 +22,15 @@ const customJestConfig = {
     '!**/coverage/**',
     '!**/jest.config.js',
   ],
+  // Thresholds sit a few points below current coverage (~63/66/54/65) so the
+  // gate catches regressions without blocking unrelated changes. Raise them
+  // as coverage grows; keep docs/TESTING.md and CLAUDE.md in sync.
   coverageThreshold: {
     global: {
-      branches: 25,
-      functions: 35,
-      lines: 40,
-      statements: 40,
+      branches: 60,
+      functions: 50,
+      lines: 60,
+      statements: 60,
     },
   },
   testMatch: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],

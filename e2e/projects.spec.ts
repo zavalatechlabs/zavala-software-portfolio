@@ -29,6 +29,7 @@ test.describe('Projects Page', () => {
     // Click the first project card
     const firstProject = page.locator('article').first()
     await firstProject.click()
+    await page.waitForURL(/\/projects\/.+/)
 
     // Should navigate to a project detail page
     await expect(page.url()).toMatch(/\/projects\/.+/)
@@ -48,13 +49,14 @@ test.describe('Projects Page', () => {
 
     // Click the first project card
     await page.locator('article').first().click()
+    await page.waitForURL(/\/projects\/.+/)
 
     // Should be on project detail page
     await expect(page.url()).toMatch(/\/projects\/.+/)
     await page.waitForLoadState('networkidle')
 
     // Click back button
-    await page.click('text=Back to Projects')
+    await page.getByRole('link', { name: 'Back to Projects' }).first().click()
 
     // Should be back on projects list page
     await expect(page).toHaveURL('/projects')
@@ -75,7 +77,8 @@ test.describe('Projects Page', () => {
 
     // Check first project card has title (h2 or h3)
     const firstCard = projectCards.first()
-    const hasHeading = (await firstCard.locator('h2').count()) > 0 || (await firstCard.locator('h3').count()) > 0
+    const hasHeading =
+      (await firstCard.locator('h2').count()) > 0 || (await firstCard.locator('h3').count()) > 0
     expect(hasHeading).toBeTruthy()
   })
 
@@ -87,6 +90,7 @@ test.describe('Projects Page', () => {
 
     // Click the first project
     await page.locator('article').first().click()
+    await page.waitForURL(/\/projects\/.+/)
 
     // Wait for project detail page to load
     await page.waitForLoadState('networkidle')
@@ -106,6 +110,7 @@ test.describe('Projects Page', () => {
 
     // Click the first project card
     await page.locator('article').first().click()
+    await page.waitForURL(/\/projects\/.+/)
 
     // Should be on project detail page
     await expect(page.url()).toMatch(/\/projects\/.+/)
@@ -135,6 +140,7 @@ test.describe('Projects Page', () => {
 
     // Click should work
     await firstProject.click()
+    await page.waitForURL(/\/projects\/.+/)
     await expect(page.url()).toMatch(/\/projects\/.+/)
   })
 
@@ -164,8 +170,9 @@ test.describe('Projects Page', () => {
       const firstImage = images.first()
       await expect(firstImage).toBeVisible()
 
-      // Check that image has alt text for accessibility
-      await expect(firstImage).toHaveAttribute('alt', /.+/)
+      // Card images are decorative (the card title conveys the name), so
+      // they must carry an explicit empty alt rather than a missing one
+      await expect(firstImage).toHaveAttribute('alt', '')
     }
   })
 
@@ -181,15 +188,17 @@ test.describe('Projects Page', () => {
     if (count > 1) {
       // Click first project
       await projectCards.nth(0).click()
+      await page.waitForURL(/\/projects\/.+/)
       await expect(page.url()).toMatch(/\/projects\/.+/)
       const firstUrl = page.url()
 
       // Go back
-      await page.click('text=Back to Projects')
+      await page.getByRole('link', { name: 'Back to Projects' }).first().click()
       await expect(page).toHaveURL('/projects')
 
       // Click second project
       await projectCards.nth(1).click()
+      await page.waitForURL(/\/projects\/.+/)
       await expect(page.url()).toMatch(/\/projects\/.+/)
       const secondUrl = page.url()
 

@@ -1,0 +1,11 @@
+{
+  // Type-checks Jest test files with jest/jest-dom ambient globals scoped to
+  // tests only (the main tsconfig excludes tests and defines no global types).
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "@testing-library/jest-dom", "node"],
+    "noEmit": true
+  },
+  "include": ["next-env.d.ts", "**/__tests__/**/*.ts", "**/__tests__/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

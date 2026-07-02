@@ -12,7 +12,7 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Wait for theme toggle to be visible
-    const themeToggle = page.locator('button[aria-label="Toggle theme"]')
+    const themeToggle = page.locator('button[aria-label^="Switch to"]')
     await expect(themeToggle).toBeVisible()
   })
 
@@ -23,7 +23,7 @@ test.describe('Theme Toggle', () => {
     await expect(page.locator('html')).toHaveClass(/dark/)
 
     // Click theme toggle
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
 
     // Wait a bit for theme transition
     await page.waitForTimeout(300)
@@ -36,12 +36,12 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Toggle to light mode first
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
     await expect(page.locator('html')).toHaveClass(/light/)
 
     // Toggle back to dark mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
 
     // Should be back in dark mode
@@ -52,7 +52,7 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Toggle to light mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
     await expect(page.locator('html')).toHaveClass(/light/)
 
@@ -70,19 +70,19 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Toggle to light mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
     await expect(page.locator('html')).toHaveClass(/light/)
 
     // Navigate to another page
-    await page.click('text=About')
+    await page.getByRole('navigation').getByRole('link', { name: 'Resume' }).click()
     await expect(page).toHaveURL('/about')
 
     // Theme should still be light
     await expect(page.locator('html')).toHaveClass(/light/)
 
     // Navigate to projects
-    await page.click('text=Projects')
+    await page.getByRole('navigation').getByRole('link', { name: 'Projects' }).click()
     await expect(page).toHaveURL('/projects')
 
     // Theme should still be light
@@ -93,7 +93,7 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Toggle to light mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
 
     // Check localStorage
@@ -108,7 +108,7 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Toggle to light mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
 
     // Check that light theme classes are applied
@@ -140,7 +140,7 @@ test.describe('Theme Toggle', () => {
   test('theme toggle icon changes based on theme', async ({ page }) => {
     await page.goto('/')
 
-    const themeToggle = page.locator('button[aria-label="Toggle theme"]')
+    const themeToggle = page.locator('button[aria-label^="Switch to"]')
 
     // In dark mode, should show sun icon (to switch to light)
     await expect(page.locator('html')).toHaveClass(/dark/)
@@ -148,7 +148,7 @@ test.describe('Theme Toggle', () => {
     await expect(darkModeIcon).toBeVisible()
 
     // Toggle to light mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
 
     // In light mode, should show moon icon (to switch to dark)
@@ -160,10 +160,10 @@ test.describe('Theme Toggle', () => {
   test('theme toggle is accessible', async ({ page }) => {
     await page.goto('/')
 
-    const themeToggle = page.locator('button[aria-label="Toggle theme"]')
+    const themeToggle = page.locator('button[aria-label^="Switch to"]')
 
-    // Should have proper aria-label
-    await expect(themeToggle).toHaveAttribute('aria-label', 'Toggle theme')
+    // Should have a state-communicating aria-label
+    await expect(themeToggle).toHaveAttribute('aria-label', /Switch to (light|dark) theme/)
 
     // Should be focusable
     await themeToggle.focus()
@@ -185,7 +185,7 @@ test.describe('Theme Toggle', () => {
       await page.goto(path)
 
       // Theme toggle should be visible
-      const themeToggle = page.locator('button[aria-label="Toggle theme"]')
+      const themeToggle = page.locator('button[aria-label^="Switch to"]')
       await expect(themeToggle).toBeVisible()
 
       // Should be clickable
@@ -201,7 +201,7 @@ test.describe('Theme Toggle', () => {
   test('multiple rapid theme toggles work correctly', async ({ page }) => {
     await page.goto('/')
 
-    const themeToggle = page.locator('button[aria-label="Toggle theme"]')
+    const themeToggle = page.locator('button[aria-label^="Switch to"]')
 
     // Toggle multiple times rapidly
     for (let i = 0; i < 5; i++) {
@@ -218,7 +218,7 @@ test.describe('Theme Toggle', () => {
     await page.goto('/')
 
     // Toggle to light mode
-    await page.click('button[aria-label="Toggle theme"]')
+    await page.click('button[aria-label^="Switch to"]')
     await page.waitForTimeout(300)
     await expect(page.locator('html')).toHaveClass(/light/)
 

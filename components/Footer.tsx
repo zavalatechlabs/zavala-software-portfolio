@@ -1,20 +1,13 @@
-'use client'
-
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { LazyTerminalWindow } from '@/components/LazyTerminalWindow'
 
-const TerminalWindow = dynamic(() => import('@/components/TerminalWindow'), {
-  ssr: true,
-  loading: () => <div className="h-64 bg-zavala-terminal-bg rounded-lg animate-pulse" />,
-})
-
-export default function Footer() {
+export function Footer() {
   const currentYear = new Date().getFullYear()
 
   const footerLinks = {
     navigation: [
       { name: 'Home', href: '/' },
-      { name: 'About', href: '/about' },
+      { name: 'Resume', href: '/about' },
       { name: 'Projects', href: '/projects' },
       { name: 'Contact', href: '/contact' },
     ],
@@ -26,7 +19,7 @@ export default function Footer() {
       {/* Terminal Window Section */}
       <div className="bg-zavala-footer-terminal-section py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <TerminalWindow />
+          <LazyTerminalWindow />
         </div>
       </div>
 

@@ -1,9 +1,8 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { motion } from 'framer-motion'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
-import { validateContactField } from '@/lib/validation'
+import { Button, Input, Label, Textarea } from '@/components/ui'
+import { validateContactField } from '@/lib/contact-form'
 
 interface ContactFormState {
   name: string
@@ -18,11 +17,19 @@ interface ContactFormFieldErrors {
   message?: string
 }
 
-const MIN_SUBMIT_TIME_MS = 2000
+type SubmitStatus = 'idle' | 'success' | 'error'
+
+const GENERIC_ERROR_MESSAGE = 'Something went wrong. Please try again or email me directly.'
+const RATE_LIMIT_MESSAGE =
+  'Too many messages in a short time. Please wait a bit before trying again.'
+
+interface ContactApiResponse {
+  success?: boolean
+  code?: string
+  details?: Array<{ field: string; message: string }>
+}
 
 export function ContactForm() {
-  const prefersReducedMotion = useReducedMotion()
-  const renderTime = useRef(Date.now())
   const nameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
   const messageRef = useRef<HTMLTextAreaElement>(null)
@@ -35,7 +42,8 @@ export function ContactForm() {
   })
   const [errors, setErrors] = useState<ContactFormFieldErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
+  const [submitError, setSubmitError] = useState(GENERIC_ERROR_MESSAGE)
 
   const validateForm = (): boolean => {
     const newErrors: ContactFormFieldErrors = {}
@@ -60,16 +68,22 @@ export function ContactForm() {
     return Object.keys(newErrors).length === 0
   }
 
+  /** Map the API's structured validation details onto field errors. */
+  const applyServerFieldErrors = (details: ContactApiResponse['details']): boolean => {
+    if (!details || details.length === 0) return false
+    const fieldErrors: ContactFormFieldErrors = {}
+    for (const detail of details) {
+      if (detail.field === 'name' || detail.field === 'email' || detail.field === 'message') {
+        fieldErrors[detail.field] = detail.message
+      }
+    }
+    if (Object.keys(fieldErrors).length === 0) return false
+    setErrors(fieldErrors)
+    return true
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    // Timing-based bot detection — reject submissions that arrive too fast
-    if (Date.now() - renderTime.current < MIN_SUBMIT_TIME_MS) {
-      // Silently fake success so bots don't know they were caught
-      setSubmitStatus('success')
-      setFormData({ name: '', email: '', message: '', website: '' })
-      return
-    }
 
     if (!validateForm()) {
       return
@@ -87,19 +101,33 @@ export function ContactForm() {
         body: JSON.stringify(formData),
       })
 
-      const data = await response.json()
+      let data: ContactApiResponse = {}
+      try {
+        data = (await response.json()) as ContactApiResponse
+      } catch {
+        // Non-JSON response (e.g. a proxy error page) — fall through to the
+        // generic error below.
+      }
 
-      if (data.success) {
+      if (response.ok && data.success) {
         setSubmitStatus('success')
         setFormData({ name: '', email: '', message: '', website: '' })
         setErrors({})
         // Focus the success message after render
         setTimeout(() => successRef.current?.focus(), 0)
+      } else if (response.status === 429) {
+        setSubmitError(RATE_LIMIT_MESSAGE)
+        setSubmitStatus('error')
+      } else if (data.code === 'validation_error' && applyServerFieldErrors(data.details)) {
+        // Field-level messages are shown inline; no banner needed.
+        setSubmitStatus('idle')
       } else {
+        setSubmitError(GENERIC_ERROR_MESSAGE)
         setSubmitStatus('error')
       }
-    } catch (error) {
-      console.error('Form submission error:', error)
+    } catch {
+      // Network failure — fetch itself rejected.
+      setSubmitError(GENERIC_ERROR_MESSAGE)
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -115,124 +143,61 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} noValidate className="space-y-6">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-zavala-text-secondary mb-2">
-          Name *
-        </label>
-        <input
+        <Label htmlFor="name" required>
+          Name
+        </Label>
+        <Input
           ref={nameRef}
           type="text"
           id="name"
           name="name"
           value={formData.name}
           onChange={handleChange}
+          error={errors.name}
           aria-required="true"
-          aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? 'name-error' : undefined}
           autoComplete="name"
-          className={`
-            w-full px-4 py-3 bg-zavala-bg-surface
-            border ${errors.name ? 'border-zavala-accent-error' : 'border-zavala-border'}
-            rounded-lg text-zavala-text-primary placeholder:text-zavala-text-tertiary
-            transition-all duration-200 focus:outline-none
-            focus:border-zavala-accent-primary focus:ring-2 focus:ring-zavala-accent-primary/20
-            hover:border-zavala-border-strong disabled:opacity-50 disabled:cursor-not-allowed
-          `}
           placeholder="Your name"
           disabled={isSubmitting}
         />
-        {errors.name && (
-          <motion.p
-            id="name-error"
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-sm text-zavala-accent-error mt-1"
-          >
-            {errors.name}
-          </motion.p>
-        )}
       </div>
 
       <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-zavala-text-secondary mb-2"
-        >
-          Email *
-        </label>
-        <input
+        <Label htmlFor="email" required>
+          Email
+        </Label>
+        <Input
           ref={emailRef}
           type="email"
           id="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
+          error={errors.email}
           aria-required="true"
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? 'email-error' : undefined}
           autoComplete="email"
-          className={`
-            w-full px-4 py-3 bg-zavala-bg-surface
-            border ${errors.email ? 'border-zavala-accent-error' : 'border-zavala-border'}
-            rounded-lg text-zavala-text-primary placeholder:text-zavala-text-tertiary
-            transition-all duration-200 focus:outline-none
-            focus:border-zavala-accent-primary focus:ring-2 focus:ring-zavala-accent-primary/20
-            hover:border-zavala-border-strong disabled:opacity-50 disabled:cursor-not-allowed
-          `}
           placeholder="your.email@example.com"
           disabled={isSubmitting}
         />
-        {errors.email && (
-          <motion.p
-            id="email-error"
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-sm text-zavala-accent-error mt-1"
-          >
-            {errors.email}
-          </motion.p>
-        )}
       </div>
 
       <div>
-        <label
-          htmlFor="message"
-          className="block text-sm font-medium text-zavala-text-secondary mb-2"
-        >
-          Message *
-        </label>
-        <textarea
+        <Label htmlFor="message" required>
+          Message
+        </Label>
+        <Textarea
           ref={messageRef}
           id="message"
           name="message"
           value={formData.message}
           onChange={handleChange}
           rows={6}
+          error={errors.message}
           aria-required="true"
-          aria-invalid={!!errors.message}
-          aria-describedby={errors.message ? 'message-error' : undefined}
-          className={`
-            w-full px-4 py-3 bg-zavala-bg-surface
-            border ${errors.message ? 'border-zavala-accent-error' : 'border-zavala-border'}
-            rounded-lg text-zavala-text-primary placeholder:text-zavala-text-tertiary
-            transition-all duration-200 focus:outline-none
-            focus:border-zavala-accent-primary focus:ring-2 focus:ring-zavala-accent-primary/20
-            hover:border-zavala-border-strong disabled:opacity-50 disabled:cursor-not-allowed resize-none
-          `}
           placeholder="Tell me about your project or idea..."
           disabled={isSubmitting}
         />
-        {errors.message && (
-          <motion.p
-            id="message-error"
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-sm text-zavala-accent-error mt-1"
-          >
-            {errors.message}
-          </motion.p>
-        )}
       </div>
 
       {/* Honeypot field - hidden from users, visible to bots */}
@@ -249,17 +214,12 @@ export function ContactForm() {
         />
       </div>
 
-      <button
+      <Button
         type="submit"
+        variant="primary"
         disabled={isSubmitting}
         aria-busy={isSubmitting}
-        className="
-          w-full px-6 py-3 bg-zavala-accent-primary text-white font-semibold rounded-lg
-          transition-all duration-200 hover:bg-zavala-accent-primary/90 hover:shadow-lg hover:shadow-zavala-accent-primary/20
-          hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2
-          focus:ring-zavala-accent-primary focus:ring-offset-2 focus:ring-offset-zavala-bg-primary
-          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none
-        "
+        className="w-full disabled:hover:transform-none"
       >
         {isSubmitting ? (
           <span className="flex items-center justify-center gap-2">
@@ -284,35 +244,29 @@ export function ContactForm() {
         ) : (
           'Send Message'
         )}
-      </button>
+      </Button>
 
       {submitStatus === 'success' && (
-        <motion.div
+        <div
           ref={successRef}
           tabIndex={-1}
           role="status"
           aria-live="polite"
-          initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 bg-zavala-accent-secondary/10 border border-zavala-accent-secondary/30 rounded-lg"
+          className="p-4 bg-zavala-accent-secondary/10 border border-zavala-accent-secondary/30 rounded-lg animate-fade-in-up"
         >
           <p className="text-zavala-accent-secondary font-medium">
             ✓ Message sent successfully! I&apos;ll get back to you soon.
           </p>
-        </motion.div>
+        </div>
       )}
 
       {submitStatus === 'error' && (
-        <motion.div
+        <div
           role="alert"
-          initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 bg-zavala-accent-error/10 border border-zavala-accent-error/30 rounded-lg"
+          className="p-4 bg-zavala-accent-error/10 border border-zavala-accent-error/30 rounded-lg animate-fade-in-up"
         >
-          <p className="text-zavala-accent-error font-medium">
-            ✗ Something went wrong. Please try again or email me directly.
-          </p>
-        </motion.div>
+          <p className="text-zavala-accent-error font-medium">✗ {submitError}</p>
+        </div>
       )}
     </form>
   )

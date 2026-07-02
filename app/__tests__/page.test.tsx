@@ -26,12 +26,15 @@ jest.mock('@/components/ui', () => ({
   Card: ({ children, className }: { children: React.ReactNode; className?: string }) => (
     <div className={className}>{children}</div>
   ),
-}))
-
-jest.mock('@/components/ui/Button', () => ({
-  Button: ({ children }: { children: React.ReactNode; variant?: string; size?: string }) => (
-    <button>{children}</button>
-  ),
+  ButtonLink: ({
+    children,
+    href,
+  }: {
+    children: React.ReactNode
+    href: string
+    variant?: string
+    size?: string
+  }) => <a href={href}>{children}</a>,
 }))
 
 jest.mock('@/components/ProjectCard', () => ({

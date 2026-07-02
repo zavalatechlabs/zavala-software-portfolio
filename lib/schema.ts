@@ -1,3 +1,12 @@
+/**
+ * Serialize a JSON-LD object for injection via dangerouslySetInnerHTML.
+ * Escapes `<` so user- or content-derived strings can never close the
+ * script tag and break out into HTML context.
+ */
+export function serializeJsonLd(schema: object): string {
+  return JSON.stringify(schema).replace(/</g, '\\u003c')
+}
+
 export function getPersonSchema(baseUrl: string) {
   return {
     '@context': 'https://schema.org',

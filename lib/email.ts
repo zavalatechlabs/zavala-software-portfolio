@@ -91,6 +91,20 @@ export async function sendContactEmail(
       RESEND_TIMEOUT_MS
     )
 
+    // The Resend SDK does NOT throw on API errors — it resolves with
+    // { data: null, error }. Treat an error response as a failure instead of
+    // reporting success while the email was never sent.
+    if (emailResponse.error) {
+      logger.error('Resend API returned an error', {
+        errorName: emailResponse.error.name,
+        errorMessage: emailResponse.error.message,
+      })
+      return {
+        success: false,
+        error: 'Failed to send message',
+      }
+    }
+
     logger.info('Email sent successfully', {
       emailId: emailResponse.data?.id,
       name: data.name,

@@ -1,20 +1,27 @@
 import type { Metadata } from 'next'
 import { Download } from 'lucide-react'
+import { buttonClasses } from '@/components/ui'
 
+const PAGE_TITLE = 'Resume'
+const PAGE_DESCRIPTION = 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast'
+
+// og:image/twitter:image come from app/about/opengraph-image.tsx (file
+// convention) — no manual image URLs needed.
 export const metadata: Metadata = {
-  title: 'Resume',
-  description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: {
+    canonical: '/about',
+  },
   openGraph: {
-    title: 'Resume',
-    description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
-    images: [
-      { url: '/about/opengraph-image', width: 1200, height: 630, alt: 'About Maximiliano Zavala' },
-    ],
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: '/about',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Resume',
-    description: 'Learn more about Maximiliano Zavala - Software Engineer | AI Enthusiast',
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
   },
 }
 
@@ -35,7 +42,7 @@ export default function AboutPage() {
       </section>
 
       {/* Resume Section */}
-      <section className="bg-zavala-bg-surface border-t border-b border-zavala-border-default py-12 md:py-16">
+      <section className="bg-zavala-bg-surface border-t border-b border-zavala-border py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold mb-10 text-zavala-text-primary">Resume</h2>
 
@@ -48,7 +55,7 @@ export default function AboutPage() {
 
             <div className="space-y-8">
               {/* Position 1 */}
-              <div className="border-l-2 border-zavala-border-default pl-6 pb-8 last:pb-0">
+              <div className="border-l-2 border-zavala-border pl-6 pb-8 last:pb-0">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                   <h4 className="text-xl font-semibold text-zavala-text-primary">
                     Senior Software Engineer
@@ -84,7 +91,7 @@ export default function AboutPage() {
                   {['Next.js', 'TypeScript', 'PostgreSQL', 'Docker', 'AWS'].map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border-default rounded-full text-zavala-text-secondary"
+                      className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border rounded-full text-zavala-text-secondary"
                     >
                       {tech}
                     </span>
@@ -93,7 +100,7 @@ export default function AboutPage() {
               </div>
 
               {/* Position 2 */}
-              <div className="border-l-2 border-zavala-border-default pl-6 pb-8 last:pb-0">
+              <div className="border-l-2 border-zavala-border pl-6 pb-8 last:pb-0">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                   <h4 className="text-xl font-semibold text-zavala-text-primary">
                     Full-Stack Developer
@@ -127,7 +134,7 @@ export default function AboutPage() {
                   {['React', 'Node.js', 'Express', 'MongoDB', 'Redis'].map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border-default rounded-full text-zavala-text-secondary"
+                      className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border rounded-full text-zavala-text-secondary"
                     >
                       {tech}
                     </span>
@@ -136,7 +143,7 @@ export default function AboutPage() {
               </div>
 
               {/* Position 3 */}
-              <div className="border-l-2 border-zavala-border-default pl-6 pb-8 last:pb-0">
+              <div className="border-l-2 border-zavala-border pl-6 pb-8 last:pb-0">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                   <h4 className="text-xl font-semibold text-zavala-text-primary">
                     Software Engineer
@@ -162,7 +169,7 @@ export default function AboutPage() {
                   {['JavaScript', 'Vue.js', 'Python', 'Django', 'PostgreSQL'].map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border-default rounded-full text-zavala-text-secondary"
+                      className="px-3 py-1 text-xs font-mono bg-zavala-bg-elevated border border-zavala-border rounded-full text-zavala-text-secondary"
                     >
                       {tech}
                     </span>
@@ -179,7 +186,7 @@ export default function AboutPage() {
               Education
             </h3>
 
-            <div className="border-l-2 border-zavala-border-default pl-6">
+            <div className="border-l-2 border-zavala-border pl-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                 <h4 className="text-xl font-semibold text-zavala-text-primary">
                   Bachelor of Science in Computer Science
@@ -210,7 +217,7 @@ export default function AboutPage() {
                   {['TypeScript', 'JavaScript', 'Python', 'SQL', 'Go', 'Bash'].map((skill) => (
                     <span
                       key={skill}
-                      className="px-4 py-2 bg-zavala-bg-elevated border border-zavala-border-default rounded-lg text-zavala-text-primary font-mono text-sm hover:border-zavala-accent-primary/50 transition-colors"
+                      className="px-4 py-2 bg-zavala-bg-elevated border border-zavala-border rounded-lg text-zavala-text-primary font-mono text-sm hover:border-zavala-accent-primary/50 transition-colors"
                     >
                       {skill}
                     </span>
@@ -236,7 +243,7 @@ export default function AboutPage() {
                   ].map((skill) => (
                     <span
                       key={skill}
-                      className="px-4 py-2 bg-zavala-bg-elevated border border-zavala-border-default rounded-lg text-zavala-text-primary font-mono text-sm hover:border-zavala-accent-primary/50 transition-colors"
+                      className="px-4 py-2 bg-zavala-bg-elevated border border-zavala-border rounded-lg text-zavala-text-primary font-mono text-sm hover:border-zavala-accent-primary/50 transition-colors"
                     >
                       {skill}
                     </span>
@@ -263,7 +270,7 @@ export default function AboutPage() {
                   ].map((skill) => (
                     <span
                       key={skill}
-                      className="px-4 py-2 bg-zavala-bg-elevated border border-zavala-border-default rounded-lg text-zavala-text-primary font-mono text-sm hover:border-zavala-accent-primary/50 transition-colors"
+                      className="px-4 py-2 bg-zavala-bg-elevated border border-zavala-border rounded-lg text-zavala-text-primary font-mono text-sm hover:border-zavala-accent-primary/50 transition-colors"
                     >
                       {skill}
                     </span>
@@ -274,7 +281,7 @@ export default function AboutPage() {
           </div>
 
           {/* Download Resume Button */}
-          <div className="text-center pt-8 border-t border-zavala-border-default">
+          <div className="text-center pt-8 border-t border-zavala-border">
             <h3 className="text-xl font-semibold mb-4 text-zavala-text-primary">
               Want the Full Details?
             </h3>
@@ -284,9 +291,9 @@ export default function AboutPage() {
             <a
               href="/resume.pdf"
               download="Max_Zavala_Resume.pdf"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-zavala-accent-primary text-white font-semibold rounded-lg transition-all duration-200 hover:bg-zavala-accent-primary/90 hover:shadow-lg hover:shadow-zavala-accent-primary/20 hover:-translate-y-0.5 active:translate-y-0"
+              className={buttonClasses('primary', 'lg', 'gap-2')}
             >
-              <Download className="w-5 h-5" />
+              <Download className="w-5 h-5" aria-hidden="true" />
               Download Resume (PDF)
             </a>
           </div>

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import { Navbar } from '@/components/Navbar'
+import { Footer } from '@/components/Footer'
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { getPersonSchema, getWebSiteSchema } from '@/lib/schema'
+import { getPersonSchema, getWebSiteSchema, serializeJsonLd } from '@/lib/schema'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '@/lib/site'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -18,16 +19,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
 })
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
-
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Maximiliano Zavala - Full-Stack Developer & Software Engineer',
+    default: SITE_TITLE,
     template: '%s | Maximiliano Zavala',
   },
-  description:
-    'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
+  description: SITE_DESCRIPTION,
   keywords: [
     'Maximiliano Zavala',
     'full-stack developer',
@@ -40,7 +38,7 @@ export const metadata: Metadata = {
     'frontend development',
     'backend development',
   ],
-  authors: [{ name: 'Maximiliano Zavala', url: baseUrl }],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: 'Maximiliano Zavala',
   publisher: 'Maximiliano Zavala',
   robots: {
@@ -54,38 +52,29 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  // og:image and twitter:image are injected automatically from
+  // app/opengraph-image.tsx (Next.js file convention) — no manual image URLs.
+  // Canonicals are set per page, NOT here: a root-layout canonical would be
+  // inherited by every page that doesn't override it, telling search engines
+  // all pages are duplicates of the homepage.
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: baseUrl,
-    title: 'Maximiliano Zavala - Full-Stack Developer & Software Engineer',
-    description:
-      'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
-    siteName: 'Maximiliano Zavala',
-    images: [
-      {
-        url: '/opengraph-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Maximiliano Zavala - Portfolio',
-      },
-    ],
+    url: SITE_URL,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    siteName: SITE_NAME,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Maximiliano Zavala - Full-Stack Developer & Software Engineer',
-    description:
-      'Full-stack developer specializing in Next.js, TypeScript, and React. Building modern web applications with clean code and exceptional user experiences.',
-    images: ['/opengraph-image.png'],
-  },
-  alternates: {
-    canonical: baseUrl,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = getPersonSchema(baseUrl)
-  const websiteJsonLd = getWebSiteSchema(baseUrl)
+  const jsonLd = getPersonSchema(SITE_URL)
+  const websiteJsonLd = getWebSiteSchema(SITE_URL)
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -102,11 +91,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
         <ThemeProvider>
           <Navbar />

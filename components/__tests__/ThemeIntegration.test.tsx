@@ -94,10 +94,10 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
-    const button = screen.getByLabelText('Toggle theme')
+    const button = screen.getByLabelText(/switch to (light|dark) theme/i)
     fireEvent.click(button)
 
     expect(mockSetTheme).toHaveBeenCalledWith('light')
@@ -126,7 +126,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
     // Verify localStorage was checked
@@ -157,11 +157,11 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
     // Toggle theme
-    const button = screen.getByLabelText('Toggle theme')
+    const button = screen.getByLabelText(/switch to (light|dark) theme/i)
     fireEvent.click(button)
 
     expect(mockSetTheme1).toHaveBeenCalledWith('light')
@@ -186,7 +186,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
     // Verify theme was persisted
@@ -218,10 +218,10 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
-    fireEvent.click(screen.getByLabelText('Toggle theme'))
+    fireEvent.click(screen.getByLabelText(/switch to (light|dark) theme/i))
 
     await waitFor(() => {
       expect(mockSetTheme).toHaveBeenCalledWith('light')
@@ -245,7 +245,7 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      fireEvent.click(screen.getByLabelText('Toggle theme'))
+      fireEvent.click(screen.getByLabelText(/switch to (light|dark) theme/i))
     })
 
     await waitFor(() => {
@@ -276,10 +276,10 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
-    fireEvent.click(screen.getByLabelText('Toggle theme'))
+    fireEvent.click(screen.getByLabelText(/switch to (light|dark) theme/i))
 
     // Verify the correct storage key is used
     expect(window.localStorage.setItem).toHaveBeenCalledWith('zavala-theme', expect.any(String))
@@ -319,11 +319,11 @@ describe('Theme Integration - localStorage Persistence', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
     // Component should still work even if localStorage is unavailable
-    expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+    expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
   })
 
   it('integrates ThemeProvider and ThemeToggle correctly', async () => {
@@ -350,10 +350,10 @@ describe('Theme Integration - localStorage Persistence', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('app-content')).toBeInTheDocument()
-      expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+      expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
     })
 
-    const button = screen.getByLabelText('Toggle theme')
+    const button = screen.getByLabelText(/switch to (light|dark) theme/i)
     fireEvent.click(button)
 
     expect(mockSetTheme).toHaveBeenCalledWith('light')

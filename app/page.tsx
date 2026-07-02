@@ -1,9 +1,14 @@
+import type { Metadata } from 'next'
 import { HeroNameReveal, DecipherText, FadeInView } from '@/components/animations'
-import { Card } from '@/components/ui'
-import { Button } from '@/components/ui/Button'
+import { Card, ButtonLink } from '@/components/ui'
 import { ProjectCard } from '@/components/ProjectCard'
 import { getFeaturedProjects } from '@/lib/projects'
-import Link from 'next/link'
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+}
 
 export default function Home() {
   const featuredProjects = getFeaturedProjects(4)
@@ -12,10 +17,7 @@ export default function Home() {
     <div>
       {/* Hero Section with Name Reveal Animation */}
       <section>
-        <HeroNameReveal 
-          name="Maximiliano Zavala"
-          tagline="Software Engineer | AI Enthusiast"
-        />
+        <HeroNameReveal name="Maximiliano Zavala" tagline="Software Engineer | AI Enthusiast" />
       </section>
 
       {/* About Brief Section */}
@@ -30,12 +32,12 @@ export default function Home() {
           <FadeInView delay={0.1}>
             <div className="max-w-3xl mx-auto text-center mb-16">
               <p className="text-lg md:text-xl text-zavala-text-primary leading-relaxed mb-6">
-                I&apos;m a software engineer passionate about building intelligent systems and exploring 
-                the intersection of full-stack development and AI. I specialize in creating scalable 
-                web applications and experimenting with cutting-edge technologies.
+                I&apos;m a software engineer passionate about building intelligent systems and
+                exploring the intersection of full-stack development and AI. I specialize in
+                creating scalable web applications and experimenting with cutting-edge technologies.
               </p>
               <p className="text-base md:text-lg text-zavala-text-secondary leading-relaxed">
-                From e-commerce platforms to AI-powered assistants, I love turning complex problems 
+                From e-commerce platforms to AI-powered assistants, I love turning complex problems
                 into elegant solutions.
               </p>
             </div>
@@ -51,14 +53,16 @@ export default function Home() {
             <FadeInView delay={0.1}>
               <Card className="p-6 transition-all duration-200 hover:border-zavala-accent-secondary/50 hover:shadow-lg hover:shadow-black/20">
                 <div className="w-12 h-12 bg-zavala-accent-secondary/10 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">💻</span>
+                  <span className="text-2xl" aria-hidden="true">
+                    💻
+                  </span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
                   Full-Stack Development
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Building scalable web applications with modern frameworks and best practices. 
-                  From database design to responsive UIs, I handle the entire stack.
+                  Building scalable web applications with modern frameworks and best practices. From
+                  database design to responsive UIs, I handle the entire stack.
                 </p>
               </Card>
             </FadeInView>
@@ -66,13 +70,15 @@ export default function Home() {
             <FadeInView delay={0.2}>
               <Card className="p-6 transition-all duration-200 hover:border-zavala-accent-primary/50 hover:shadow-lg hover:shadow-black/20">
                 <div className="w-12 h-12 bg-zavala-accent-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">🤖</span>
+                  <span className="text-2xl" aria-hidden="true">
+                    🤖
+                  </span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
                   AI & Automation
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Exploring intelligent systems and conversational AI to solve real problems. 
+                  Exploring intelligent systems and conversational AI to solve real problems.
                   Building tools that leverage language models and machine learning.
                 </p>
               </Card>
@@ -81,13 +87,15 @@ export default function Home() {
             <FadeInView delay={0.3}>
               <Card className="p-6 transition-all duration-200 hover:border-zavala-accent-code/50 hover:shadow-lg hover:shadow-black/20">
                 <div className="w-12 h-12 bg-zavala-accent-code/10 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">☁️</span>
+                  <span className="text-2xl" aria-hidden="true">
+                    ☁️
+                  </span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-zavala-text-primary">
                   Cloud Infrastructure
                 </h3>
                 <p className="text-zavala-text-secondary">
-                  Designing and deploying reliable, scalable systems on modern cloud platforms. 
+                  Designing and deploying reliable, scalable systems on modern cloud platforms.
                   Infrastructure as code, monitoring, and DevOps best practices.
                 </p>
               </Card>
@@ -97,11 +105,9 @@ export default function Home() {
           {/* Learn More CTA */}
           <FadeInView delay={0.4}>
             <div className="text-center">
-              <Link href="/about">
-                <Button variant="secondary" size="lg">
-                  View My Resume
-                </Button>
-              </Link>
+              <ButtonLink href="/about" variant="secondary" size="lg">
+                View My Resume
+              </ButtonLink>
             </div>
           </FadeInView>
         </div>
@@ -118,8 +124,8 @@ export default function Home() {
 
           <FadeInView delay={0.1}>
             <p className="text-center text-zavala-text-secondary text-lg mb-12 max-w-2xl mx-auto">
-              A selection of recent projects showcasing full-stack development, AI integration, 
-              and cloud infrastructure.
+              A selection of recent projects showcasing full-stack development, AI integration, and
+              cloud infrastructure.
             </p>
           </FadeInView>
 
@@ -133,6 +139,7 @@ export default function Home() {
                       description={project.description}
                       tags={project.tags}
                       slug={project.slug}
+                      image={project.image}
                       demo={project.demo}
                       github={project.github}
                     />
@@ -143,11 +150,9 @@ export default function Home() {
               {/* View All Projects CTA */}
               <FadeInView delay={0.5}>
                 <div className="text-center">
-                  <Link href="/projects">
-                    <Button variant="primary" size="lg">
-                      View All Projects
-                    </Button>
-                  </Link>
+                  <ButtonLink href="/projects" variant="primary" size="lg">
+                    View All Projects
+                  </ButtonLink>
                 </div>
               </FadeInView>
             </>
@@ -174,27 +179,19 @@ export default function Home() {
 
           <FadeInView delay={0.2}>
             <p className="text-lg md:text-xl text-zavala-text-secondary mb-8 leading-relaxed">
-              Have an interesting project in mind? Whether it&apos;s a web application, AI integration, 
-              or cloud infrastructure challenge, I&apos;d love to hear about it.
+              Have an interesting project in mind? Whether it&apos;s a web application, AI
+              integration, or cloud infrastructure challenge, I&apos;d love to hear about it.
             </p>
           </FadeInView>
 
           <FadeInView delay={0.3}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact">
-                <Button variant="primary" size="lg">
-                  Get in Touch
-                </Button>
-              </Link>
-              <a 
-                href="https://github.com/zavalatechlabs" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Button variant="secondary" size="lg">
-                  View GitHub
-                </Button>
-              </a>
+              <ButtonLink href="/contact" variant="primary" size="lg">
+                Get in Touch
+              </ButtonLink>
+              <ButtonLink href="https://github.com/zavalatechlabs" variant="secondary" size="lg">
+                View GitHub
+              </ButtonLink>
             </div>
           </FadeInView>
         </div>

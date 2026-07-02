@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { DecipherText } from '../DecipherText'
-import { useInView } from 'framer-motion'
+import { useInView } from '@/hooks/useInView'
 
 // Mock useReducedMotion hook — controllable per test
 const mockUseReducedMotion = jest.fn(() => false)
@@ -8,8 +8,8 @@ jest.mock('@/hooks/useReducedMotion', () => ({
   useReducedMotion: () => mockUseReducedMotion(),
 }))
 
-// Mock framer-motion
-jest.mock('framer-motion', () => ({
+// Mock the in-view hook so tests control visibility deterministically
+jest.mock('@/hooks/useInView', () => ({
   useInView: jest.fn(),
 }))
 
@@ -31,7 +31,7 @@ describe('DecipherText', () => {
   })
 
   it('renders with initial text', () => {
-    mockUseInView.mockReturnValue(false)
+    mockUseInView.mockReturnValue([{ current: null }, false])
 
     render(<DecipherText text="Hello World" />)
 
@@ -39,7 +39,7 @@ describe('DecipherText', () => {
   })
 
   it('applies custom className', () => {
-    mockUseInView.mockReturnValue(false)
+    mockUseInView.mockReturnValue([{ current: null }, false])
 
     const { container } = render(<DecipherText text="Test" className="custom-class" />)
 
@@ -48,7 +48,7 @@ describe('DecipherText', () => {
   })
 
   it('animates when in view', async () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     render(<DecipherText text="Test" duration={100} />)
 
@@ -61,7 +61,7 @@ describe('DecipherText', () => {
   })
 
   it('respects duration prop', async () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
     const customDuration = 200
 
     render(<DecipherText text="Hello" duration={customDuration} />)
@@ -78,7 +78,7 @@ describe('DecipherText', () => {
   })
 
   it('handles stagger delay', async () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
     const staggerDelay = 500
 
     render(<DecipherText text="Test" staggerDelay={staggerDelay} duration={100} />)
@@ -99,11 +99,11 @@ describe('DecipherText', () => {
     const { rerender } = render(<DecipherText text="Initial" />)
 
     // First render - not in view
-    mockUseInView.mockReturnValue(false)
+    mockUseInView.mockReturnValue([{ current: null }, false])
     rerender(<DecipherText text="Initial" />)
 
     // Second render - in view (triggers animation)
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
     rerender(<DecipherText text="Initial" />)
 
     jest.advanceTimersByTime(1000)
@@ -113,7 +113,7 @@ describe('DecipherText', () => {
     })
 
     // Third render - still in view but should not re-animate
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
     rerender(<DecipherText text="Initial" />)
 
     // Text should remain stable (not re-animating)
@@ -121,7 +121,7 @@ describe('DecipherText', () => {
   })
 
   it('preserves spaces in text', async () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     render(<DecipherText text="Hello World" duration={100} />)
 
@@ -134,7 +134,7 @@ describe('DecipherText', () => {
   })
 
   it('does not animate when not in view', () => {
-    mockUseInView.mockReturnValue(false)
+    mockUseInView.mockReturnValue([{ current: null }, false])
 
     render(<DecipherText text="Test" />)
 
@@ -145,7 +145,7 @@ describe('DecipherText', () => {
   })
 
   it('uses default duration when not specified', async () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     render(<DecipherText text="Short" />)
 
@@ -158,7 +158,7 @@ describe('DecipherText', () => {
   })
 
   it('handles single character text', async () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     render(<DecipherText text="A" duration={50} />)
 
@@ -170,7 +170,7 @@ describe('DecipherText', () => {
   })
 
   it('handles empty text gracefully', () => {
-    mockUseInView.mockReturnValue(false)
+    mockUseInView.mockReturnValue([{ current: null }, false])
 
     const { container } = render(<DecipherText text="" />)
 
@@ -193,7 +193,7 @@ describe('DecipherText with reduced motion', () => {
   })
 
   it('renders text content immediately without scramble', () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     const { container } = render(<DecipherText text="Hello World" />)
 
@@ -205,7 +205,7 @@ describe('DecipherText with reduced motion', () => {
   })
 
   it('text stays as final value even when in view (no animation)', () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     render(<DecipherText text="Decipher Me" duration={100} staggerDelay={0} />)
 
@@ -216,7 +216,7 @@ describe('DecipherText with reduced motion', () => {
   })
 
   it('renders correctly with custom className', () => {
-    mockUseInView.mockReturnValue(true)
+    mockUseInView.mockReturnValue([{ current: null }, true])
 
     const { container } = render(<DecipherText text="Styled" className="special-class" />)
 

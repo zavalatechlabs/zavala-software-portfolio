@@ -12,7 +12,7 @@
 type LogLevel = 'info' | 'warn' | 'error'
 
 /** Keys whose values are replaced with "[REDACTED]" in production logs. */
-const PII_KEYS: ReadonlySet<string> = new Set(['ip', 'email', 'clientIp'])
+const PII_KEYS: ReadonlySet<string> = new Set(['ip', 'email', 'clientIp', 'name'])
 
 /**
  * Shallow-clone `data` and replace any PII field values with "[REDACTED]".
@@ -44,26 +44,20 @@ function log(level: LogLevel, message: string, data?: Record<string, unknown>): 
     // All structured logs go to stdout/stderr as a single JSON line.
     const output = JSON.stringify(entry)
     if (level === 'error') {
-      // eslint-disable-next-line no-console
       console.error(output)
     } else if (level === 'warn') {
-      // eslint-disable-next-line no-console
       console.warn(output)
     } else {
-      // eslint-disable-next-line no-console
       console.log(output)
     }
   } else {
     // Development: human-readable output
     const prefix = `[${level.toUpperCase()}]`
     if (level === 'error') {
-      // eslint-disable-next-line no-console
       console.error(prefix, message, data ?? '')
     } else if (level === 'warn') {
-      // eslint-disable-next-line no-console
       console.warn(prefix, message, data ?? '')
     } else {
-      // eslint-disable-next-line no-console
       console.log(prefix, message, data ?? '')
     }
   }

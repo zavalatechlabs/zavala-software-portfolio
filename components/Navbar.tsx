@@ -1,15 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { ThemeToggle } from './ThemeToggle'
 
-export default function Navbar() {
+export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleEscapeKey = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       setIsMenuOpen(false)
+      // Return keyboard focus to the toggle instead of dropping it on <body>
+      menuButtonRef.current?.focus()
     }
   }, [])
 
@@ -59,6 +62,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 text-zavala-text-secondary hover:text-zavala-text-primary focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:rounded-sm focus-visible:outline-none"

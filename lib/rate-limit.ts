@@ -11,10 +11,11 @@
  * API so call sites only need to `await` the result.
  */
 
+import { getEnv } from '@/lib/env'
 import { logger } from '@/lib/logger'
 
 // ---------------------------------------------------------------------------
-// In-memory fallback (identical to the original implementation)
+// In-memory fallback
 // ---------------------------------------------------------------------------
 
 /** Simple in-memory rate limiter using a sliding window of timestamps. */
@@ -22,15 +23,31 @@ export class RateLimiter {
   private requestMap = new Map<string, number[]>()
   private windowMs: number
   private maxRequests: number
+  private lastSweepAt = Date.now()
 
   constructor(windowMs: number, maxRequests: number) {
     this.windowMs = windowMs
     this.maxRequests = maxRequests
   }
 
+  /**
+   * Drop keys whose every timestamp has expired, so the map does not grow
+   * without bound. Runs at most once per window — O(keys) amortized.
+   */
+  private sweepExpiredKeys(now: number): void {
+    if (now - this.lastSweepAt < this.windowMs) return
+    this.lastSweepAt = now
+    for (const [key, timestamps] of this.requestMap) {
+      if (timestamps.every((timestamp) => now - timestamp >= this.windowMs)) {
+        this.requestMap.delete(key)
+      }
+    }
+  }
+
   /** Returns `true` when the key should be blocked. */
   isRateLimited(key: string): boolean {
     const now = Date.now()
+    this.sweepExpiredKeys(now)
     const requests = this.requestMap.get(key) || []
 
     const recentRequests = requests.filter((timestamp) => now - timestamp < this.windowMs)
@@ -117,31 +134,40 @@ class UpstashRateLimiter {
 // Factory — choose backend based on env vars
 // ---------------------------------------------------------------------------
 
-let hasWarnedAboutFallback = false
-
 function createContactRateLimiter(): RateLimiter | UpstashRateLimiter {
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  // Read Upstash credentials through getEnv() so the URL/token pairing
+  // refinement in lib/env.ts actually runs (a URL without a token — or vice
+  // versa — fails loudly instead of silently falling back to in-memory).
+  const { UPSTASH_REDIS_REST_URL: url, UPSTASH_REDIS_REST_TOKEN: token } = getEnv()
 
   if (url && token) {
     return new UpstashRateLimiter(url, token)
   }
 
   // Fallback to in-memory
-  if (!hasWarnedAboutFallback) {
-    hasWarnedAboutFallback = true
-    logger.warn(
-      'Rate limiting using in-memory store (not persistent across serverless ' +
-        'instances). Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN ' +
-        'for production.'
-    )
-  }
+  logger.warn(
+    'Rate limiting using in-memory store (not persistent across serverless ' +
+      'instances). Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN ' +
+      'for production.'
+  )
 
   return new RateLimiter(60 * 60 * 1000, 5)
 }
 
+let _contactRateLimiter: RateLimiter | UpstashRateLimiter | null = null
+
 /**
- * Default rate limiter instance for the contact form.
- * 5 requests per hour per IP.
+ * Default rate limiter for the contact form: 5 requests per hour per IP.
+ *
+ * The backend is created lazily on first use (not at import time) so that
+ * importing this module during static page generation never requires env
+ * vars, mirroring the lazy `getEnv()` contract.
  */
-export const contactRateLimiter = createContactRateLimiter()
+export const contactRateLimiter = {
+  async isRateLimited(key: string): Promise<boolean> {
+    if (!_contactRateLimiter) {
+      _contactRateLimiter = createContactRateLimiter()
+    }
+    return _contactRateLimiter.isRateLimited(key)
+  },
+}

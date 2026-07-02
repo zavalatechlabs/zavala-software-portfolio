@@ -28,7 +28,7 @@ describe('ThemeToggle', () => {
     it('renders placeholder button before mounting (hydration safety)', () => {
       // Before mounting, component returns a placeholder
       render(<ThemeToggle />)
-      const button = screen.getByLabelText('Toggle theme')
+      const button = screen.getByLabelText(/switch to (light|dark) theme/i)
 
       expect(button).toBeInTheDocument()
       expect(button).toHaveClass('p-2', 'rounded-lg', 'bg-zavala-bg-surface')
@@ -38,7 +38,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toBeInTheDocument()
       })
     })
@@ -100,7 +100,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         fireEvent.click(button)
       })
 
@@ -120,7 +120,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         fireEvent.click(button)
       })
 
@@ -140,13 +140,13 @@ describe('ThemeToggle', () => {
       )
 
       await waitFor(() => {
-        expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+        expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
       })
 
       await user.tab()
       await user.tab()
 
-      const themeButton = screen.getByLabelText('Toggle theme')
+      const themeButton = screen.getByLabelText(/switch to (light|dark) theme/i)
       expect(themeButton).toHaveFocus()
     })
 
@@ -165,10 +165,10 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+        expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
       })
 
-      const button = screen.getByLabelText('Toggle theme')
+      const button = screen.getByLabelText(/switch to (light|dark) theme/i)
       button.focus()
       await user.keyboard('{Enter}')
 
@@ -190,10 +190,10 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        expect(screen.getByLabelText('Toggle theme')).toBeInTheDocument()
+        expect(screen.getByLabelText(/switch to (light|dark) theme/i)).toBeInTheDocument()
       })
 
-      const button = screen.getByLabelText('Toggle theme')
+      const button = screen.getByLabelText(/switch to (light|dark) theme/i)
       button.focus()
       await user.keyboard(' ')
 
@@ -206,8 +206,8 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
-        expect(button).toHaveAttribute('aria-label', 'Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
+        expect(button.getAttribute('aria-label')).toMatch(/switch to (light|dark) theme/i)
       })
     })
 
@@ -215,7 +215,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button.tagName).toBe('BUTTON')
       })
     })
@@ -224,7 +224,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).not.toHaveAttribute('tabindex', '-1')
       })
     })
@@ -235,7 +235,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toHaveClass('p-2')
         expect(button).toHaveClass('rounded-lg')
         expect(button).toHaveClass('bg-zavala-bg-surface')
@@ -259,12 +259,12 @@ describe('ThemeToggle', () => {
       const { rerender } = render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toBeInTheDocument()
       })
 
       // First toggle: dark -> light
-      fireEvent.click(screen.getByLabelText('Toggle theme'))
+      fireEvent.click(screen.getByLabelText(/switch to (light|dark) theme/i))
       expect(mockSetTheme).toHaveBeenCalledWith('light')
 
       // Update mock to reflect new theme
@@ -287,7 +287,7 @@ describe('ThemeToggle', () => {
       })
 
       // Second toggle: light -> dark
-      fireEvent.click(screen.getByLabelText('Toggle theme'))
+      fireEvent.click(screen.getByLabelText(/switch to (light|dark) theme/i))
       expect(mockSetTheme).toHaveBeenCalledWith('dark')
     })
 
@@ -295,11 +295,11 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toBeInTheDocument()
       })
 
-      const button = screen.getByLabelText('Toggle theme')
+      const button = screen.getByLabelText(/switch to (light|dark) theme/i)
 
       // Rapid clicks
       fireEvent.click(button)
@@ -325,12 +325,12 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toBeInTheDocument()
       })
 
       // Should handle click even with undefined theme
-      fireEvent.click(screen.getByLabelText('Toggle theme'))
+      fireEvent.click(screen.getByLabelText(/switch to (light|dark) theme/i))
       expect(mockSetTheme).toHaveBeenCalled()
     })
 
@@ -338,14 +338,14 @@ describe('ThemeToggle', () => {
       const { rerender } = render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toBeInTheDocument()
       })
 
       rerender(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toBeInTheDocument()
       })
     })
@@ -356,7 +356,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toHaveClass('hover:bg-zavala-bg-elevated')
       })
     })
@@ -365,7 +365,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         expect(button).toHaveClass('transition-colors')
       })
     })
@@ -374,7 +374,7 @@ describe('ThemeToggle', () => {
       render(<ThemeToggle />)
 
       await waitFor(() => {
-        const button = screen.getByLabelText('Toggle theme')
+        const button = screen.getByLabelText(/switch to (light|dark) theme/i)
         button.focus()
         expect(button).toHaveFocus()
 

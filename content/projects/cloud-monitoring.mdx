@@ -1,10 +1,10 @@
 ---
-title: "Cloud Infrastructure Monitor"
-description: "Real-time monitoring dashboard for AWS resources with intelligent alerting"
-date: "2025-05-15"
-tags: ["TypeScript", "AWS", "Docker", "Grafana"]
-image: "/images/projects/cloud-monitor.svg"
-github: "https://github.com/maxzavala/cloud-monitor"
+title: 'Cloud Infrastructure Monitor'
+description: 'Real-time monitoring dashboard for AWS resources with intelligent alerting'
+date: '2025-05-15'
+tags: ['TypeScript', 'AWS', 'Docker', 'Grafana']
+image: '/images/projects/cloud-monitor.svg'
+github: null
 demo: null
 featured: true
 ---
@@ -40,18 +40,20 @@ This project helps DevOps teams monitor their cloud infrastructure efficiently. 
 ```typescript
 // AWS Lambda function for metric collection
 export const handler = async (event: CloudWatchEvent) => {
-  const ec2Metrics = await cloudwatch.getMetricStatistics({
-    Namespace: 'AWS/EC2',
-    MetricName: 'CPUUtilization',
-    StartTime: new Date(Date.now() - 5 * 60 * 1000),
-    EndTime: new Date(),
-    Period: 300,
-    Statistics: ['Average'],
-  }).promise()
-  
+  const ec2Metrics = await cloudwatch
+    .getMetricStatistics({
+      Namespace: 'AWS/EC2',
+      MetricName: 'CPUUtilization',
+      StartTime: new Date(Date.now() - 5 * 60 * 1000),
+      EndTime: new Date(),
+      Period: 300,
+      Statistics: ['Average'],
+    })
+    .promise()
+
   // Store in TimescaleDB for long-term analysis
   await storeMetrics(ec2Metrics.Datapoints)
-  
+
   // Check alert thresholds
   await checkAlertRules(ec2Metrics)
 }

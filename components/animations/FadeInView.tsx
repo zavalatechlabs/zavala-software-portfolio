@@ -1,17 +1,30 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ReactNode } from 'react'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { CSSProperties, ReactNode } from 'react'
+import { clsx } from 'clsx'
+import { useInView } from '@/hooks/useInView'
 
 interface FadeInViewProps {
   children: ReactNode
   className?: string
+  /** Transition delay in seconds. */
   delay?: number
   direction?: 'up' | 'down' | 'left' | 'right'
   once?: boolean
 }
 
+const DIRECTION_TRANSFORMS: Record<NonNullable<FadeInViewProps['direction']>, string> = {
+  up: 'translateY(50px)',
+  down: 'translateY(-50px)',
+  left: 'translateX(50px)',
+  right: 'translateX(-50px)',
+}
+
+/**
+ * Fades content in when it scrolls into view. CSS transition driven — no
+ * animation library. Reduced-motion users and no-JS visitors see content
+ * immediately (handled by the `.fade-in-view` rules in globals.css).
+ */
 export function FadeInView({
   children,
   className = '',
@@ -19,41 +32,22 @@ export function FadeInView({
   direction = 'up',
   once = true,
 }: FadeInViewProps) {
-  const prefersReducedMotion = useReducedMotion()
+  const [ref, isInView] = useInView<HTMLDivElement>({ amount: 0.3, once })
 
-  const directions = {
-    up: { y: 50 },
-    down: { y: -50 },
-    left: { x: 50 },
-    right: { x: -50 },
+  const style: CSSProperties = {
+    transitionDelay: delay ? `${delay}s` : undefined,
+  }
+  if (!isInView) {
+    style.transform = DIRECTION_TRANSFORMS[direction]
   }
 
-  const staticState = { opacity: 1, x: 0, y: 0 }
-
   return (
-    <motion.div
-      initial={
-        prefersReducedMotion
-          ? staticState
-          : {
-              opacity: 0,
-              ...directions[direction],
-            }
-      }
-      whileInView={staticState}
-      viewport={{ once, amount: 0.3 }}
-      transition={
-        prefersReducedMotion
-          ? { duration: 0 }
-          : {
-              duration: 0.6,
-              delay,
-              ease: 'easeOut',
-            }
-      }
-      className={className}
+    <div
+      ref={ref}
+      className={clsx('fade-in-view', isInView && 'is-in-view', className)}
+      style={style}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }

@@ -1,63 +1,52 @@
 import { z } from 'zod'
+import {
+  CONTACT_MESSAGES,
+  EMAIL_MAX_LENGTH,
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+  NAME_MAX_LENGTH,
+} from './contact-form'
 
 /**
  * Contact Form Validation Schema
  *
- * Validates contact form submissions with:
- * - Name: 1-100 characters, trimmed
+ * Server-side source of truth for contact form submissions:
+ * - Name: 1-100 characters after trimming
  * - Email: Valid email format, lowercase, max 255 chars
- * - Message: 10-5000 characters, trimmed
+ * - Message: 10-5000 characters after trimming
  * - Website: Honeypot field (should be empty)
+ *
+ * `.trim()` runs BEFORE the length checks so whitespace-only values are
+ * rejected (a single space must not satisfy `min(1)`).
+ *
+ * Field limits and error messages are shared with the client-side validator
+ * in `lib/contact-form.ts`.
  */
 export const contactFormSchema = z.object({
   name: z
     .string()
-    .min(1, 'Name is required')
-    .max(100, 'Name must be less than 100 characters')
-    .regex(/^[^\r\n\0\u2028\u2029]*$/, 'Name must not contain control characters')
-    .trim(),
+    .trim()
+    .min(1, CONTACT_MESSAGES.nameRequired)
+    .max(NAME_MAX_LENGTH, CONTACT_MESSAGES.nameTooLong)
+    .regex(/^[^\r\n\0\u2028\u2029]*$/, CONTACT_MESSAGES.nameControlChars),
   email: z
     .string()
     .trim()
-    .regex(/^[^\r\n\0\u2028\u2029]*$/, 'Email must not contain control characters')
+    .regex(/^[^\r\n\0\u2028\u2029]*$/, CONTACT_MESSAGES.emailControlChars)
     .toLowerCase()
-    .email('Invalid email address')
-    .max(255, 'Email must be less than 255 characters'),
+    .email(CONTACT_MESSAGES.emailInvalid)
+    .max(EMAIL_MAX_LENGTH, CONTACT_MESSAGES.emailTooLong),
   message: z
     .string()
-    .min(10, 'Message must be at least 10 characters')
-    .max(5000, 'Message must be less than 5000 characters')
-    .regex(/^[^\0\u2028\u2029]*$/, 'Message must not contain control characters')
-    .trim(),
+    .trim()
+    .min(MESSAGE_MIN_LENGTH, CONTACT_MESSAGES.messageTooShort)
+    .max(MESSAGE_MAX_LENGTH, CONTACT_MESSAGES.messageTooLong)
+    .regex(/^[^\0\u2028\u2029]*$/, CONTACT_MESSAGES.messageControlChars),
   // Honeypot field - should be empty (bots typically fill all fields)
   website: z.string().optional(),
 })
 
 export type ContactFormData = z.infer<typeof contactFormSchema>
-
-/**
- * Validate a single contact form field using the shared Zod schema.
- * Returns the first error message for the field, or null if valid.
- * Safe to use in 'use client' components.
- */
-export function validateContactField(
-  field: 'name' | 'email' | 'message',
-  value: string
-): string | null {
-  // Build a partial object with defaults so other fields don't cause errors
-  const defaults: Record<string, string> = {
-    name: 'placeholder',
-    email: 'placeholder@example.com',
-    message: 'placeholder text that is long enough',
-  }
-  const testData = { ...defaults, [field]: value }
-
-  const result = contactFormSchema.safeParse(testData)
-  if (result.success) return null
-
-  const fieldError = result.error.issues.find((issue) => issue.path[0] === field)
-  return fieldError ? fieldError.message : null
-}
 
 /**
  * Check if honeypot was triggered

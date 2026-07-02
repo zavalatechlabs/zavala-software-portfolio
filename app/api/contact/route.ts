@@ -9,11 +9,15 @@ import { logger } from '@/lib/logger'
 /** Contact Form API Route - Handles validation, rate limiting, honeypot, and email sending */
 
 function getClientIp(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for')
-  if (forwarded) return forwarded.split(',')[0].trim()
+  // Prefer x-real-ip: it is set by the terminating proxy (Vercel writes the
+  // verified client IP here) and cannot be extended by the client. The first
+  // x-forwarded-for entry is client-controllable behind proxy chains that
+  // append rather than overwrite, so it is only a fallback.
   const realIp = request.headers.get('x-real-ip')
   if (realIp) return realIp.trim()
-  return 'unknown'
+  const forwarded = request.headers.get('x-forwarded-for')
+  const firstForwarded = forwarded?.split(',')[0]?.trim()
+  return firstForwarded || 'unknown'
 }
 
 export async function POST(request: NextRequest) {

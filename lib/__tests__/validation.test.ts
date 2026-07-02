@@ -1,10 +1,5 @@
 import { describe, it, expect } from '@jest/globals'
-import {
-  contactFormSchema,
-  isHoneypotTriggered,
-  sanitizeHtml,
-  validateContactField,
-} from '../validation'
+import { contactFormSchema, isHoneypotTriggered, sanitizeHtml } from '../validation'
 
 describe('contactFormSchema', () => {
   it('should validate valid contact form data', () => {
@@ -128,31 +123,33 @@ describe('contactFormSchema', () => {
     }
     expect(() => contactFormSchema.parse(data)).toThrow()
   })
-})
 
-describe('validateContactField', () => {
-  it('returns null for valid name', () => {
-    expect(validateContactField('name', 'John Doe')).toBeNull()
+  // .trim() runs BEFORE .min(), so whitespace-only values must fail
+  it('should reject whitespace-only name', () => {
+    const data = {
+      name: '   ',
+      email: 'john@example.com',
+      message: 'Valid message here',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
   })
 
-  it('returns error for empty name', () => {
-    expect(validateContactField('name', '')).toBeTruthy()
+  it('should reject whitespace-only message', () => {
+    const data = {
+      name: 'John Doe',
+      email: 'john@example.com',
+      message: '          ',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
   })
 
-  it('returns null for valid email', () => {
-    expect(validateContactField('email', 'john@example.com')).toBeNull()
-  })
-
-  it('returns error for invalid email', () => {
-    expect(validateContactField('email', 'not-an-email')).toBeTruthy()
-  })
-
-  it('returns error for short message', () => {
-    expect(validateContactField('message', 'Short')).toBeTruthy()
-  })
-
-  it('returns null for valid message', () => {
-    expect(validateContactField('message', 'This is a valid message.')).toBeNull()
+  it('should reject message that is too short after trimming', () => {
+    const data = {
+      name: 'John Doe',
+      email: 'john@example.com',
+      message: '   hi   ',
+    }
+    expect(() => contactFormSchema.parse(data)).toThrow()
   })
 })
 

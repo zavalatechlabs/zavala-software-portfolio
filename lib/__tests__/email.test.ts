@@ -1,13 +1,14 @@
-// Mock Resend before importing email module
+// Controllable Resend mock: each test decides what emails.send resolves to.
+const mockSend = jest.fn()
 jest.mock('resend', () => ({
   Resend: jest.fn().mockImplementation(() => ({
     emails: {
-      send: jest.fn().mockResolvedValue({ data: { id: 'test-id' } }),
+      send: mockSend,
     },
   })),
 }))
 
-import { sendContactEmail } from '../email'
+import { sendContactEmail, sanitizeForHeader } from '../email'
 import { ContactFormData } from '../validation'
 
 describe('sendContactEmail', () => {
@@ -26,40 +27,108 @@ describe('sendContactEmail', () => {
   // RESEND_API_KEY is validated lazily via getEnv() and injected by
   // jest.setup.js as a dummy test key.
 
-  it('should succeed with a validated test API key', async () => {
+  beforeEach(() => {
+    mockSend.mockReset()
+  })
+
+  it('returns success with the email id when Resend accepts the send', async () => {
+    mockSend.mockResolvedValue({ data: { id: 'email-123' }, error: null })
+
     const result = await sendContactEmail(mockContactData, mockConfig)
 
     expect(result.success).toBe(true)
+    expect(result.emailId).toBe('email-123')
   })
 
-  it('should handle config without clientIp', async () => {
-    const configWithoutIp = {
+  it('returns failure when Resend resolves with an API error (SDK does not throw)', async () => {
+    mockSend.mockResolvedValue({
+      data: null,
+      error: { name: 'validation_error', message: 'Domain is not verified' },
+    })
+
+    const result = await sendContactEmail(mockContactData, mockConfig)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Failed to send message')
+  })
+
+  it('returns failure when the Resend call rejects', async () => {
+    mockSend.mockRejectedValue(new Error('network down'))
+
+    const result = await sendContactEmail(mockContactData, mockConfig)
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Failed to send message')
+  })
+
+  it('returns failure when Resend hangs past the timeout', async () => {
+    jest.useFakeTimers()
+    mockSend.mockImplementation(() => new Promise(() => {})) // never resolves
+
+    const resultPromise = sendContactEmail(mockContactData, mockConfig)
+    await jest.advanceTimersByTimeAsync(10_001)
+    const result = await resultPromise
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Failed to send message')
+    jest.useRealTimers()
+  })
+
+  it('sanitizes the submitter name in the subject header', async () => {
+    mockSend.mockResolvedValue({ data: { id: 'email-123' }, error: null })
+
+    await sendContactEmail(
+      { ...mockContactData, name: 'Evil\r\nBcc: victim@example.com' },
+      mockConfig
+    )
+
+    const sentPayload = mockSend.mock.calls[0]?.[0]
+    expect(sentPayload.subject).not.toContain('\r')
+    expect(sentPayload.subject).not.toContain('\n')
+  })
+
+  it('uses the submitter email as reply_to (sanitized)', async () => {
+    mockSend.mockResolvedValue({ data: { id: 'email-123' }, error: null })
+
+    await sendContactEmail(mockContactData, mockConfig)
+
+    const sentPayload = mockSend.mock.calls[0]?.[0]
+    expect(sentPayload.reply_to).toBe('john@example.com')
+    expect(sentPayload.from).toBe(mockConfig.from)
+    expect(sentPayload.to).toBe(mockConfig.to)
+  })
+
+  it('escapes HTML in the email body', async () => {
+    mockSend.mockResolvedValue({ data: { id: 'email-123' }, error: null })
+
+    await sendContactEmail(
+      { ...mockContactData, message: '<script>alert("xss")</script> long enough' },
+      mockConfig
+    )
+
+    const sentPayload = mockSend.mock.calls[0]?.[0]
+    expect(sentPayload.html).not.toContain('<script>')
+    expect(sentPayload.html).toContain('&lt;script&gt;')
+  })
+
+  it('handles config without clientIp', async () => {
+    mockSend.mockResolvedValue({ data: { id: 'email-123' }, error: null })
+
+    const result = await sendContactEmail(mockContactData, {
       from: 'Test <test@example.com>',
       to: 'recipient@example.com',
-    }
-
-    const result = await sendContactEmail(mockContactData, configWithoutIp)
+    })
 
     expect(result.success).toBe(true)
   })
-
-  it('should have correct function signature', () => {
-    expect(typeof sendContactEmail).toBe('function')
-  })
-
-  it('should accept valid contact form data', () => {
-    const validData: ContactFormData = {
-      name: 'Test User',
-      email: 'test@example.com',
-      message: 'Test message content',
-    }
-
-    expect(validData.name).toBe('Test User')
-    expect(validData.email).toBe('test@example.com')
-  })
 })
 
-// Note: These tests focus on critical error paths and type safety.
-// Full integration testing with mocked Resend responses is complex with ESM.
-// The email sending logic is straightforward HTML generation that has been
-// tested in production. Manual/E2E testing recommended after deployment.
+describe('sanitizeForHeader', () => {
+  it('strips CR, LF, null bytes, and unicode line separators', () => {
+    expect(sanitizeForHeader('a\rb\nc\0d e f')).toBe('abcdef')
+  })
+
+  it('leaves normal strings untouched', () => {
+    expect(sanitizeForHeader('John Doe')).toBe('John Doe')
+  })
+})

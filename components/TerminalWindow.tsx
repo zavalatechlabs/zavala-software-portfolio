@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react'
 
-export default function TerminalWindow() {
+// NOTE on colors: the macOS traffic-light dots and the VS Code Dark+ syntax
+// palette below are intentionally hardcoded hex values — they imitate other
+// software's chrome and must not shift with the site theme. This is the one
+// documented exception to the "zavala-* tokens only" rule (see CLAUDE.md).
+export function TerminalWindow() {
   const [isMinimized, setIsMinimized] = useState(false)
 
   const code = `const Developer = {
@@ -111,24 +115,22 @@ export default function TerminalWindow() {
       <div className="bg-zavala-terminal-bg rounded-lg shadow-2xl overflow-hidden border border-zavala-terminal-border">
         {/* Window Header */}
         <div className="bg-zavala-terminal-header px-4 py-2 flex items-center justify-between">
-          {/* Window Controls - Left */}
+          {/* Window Controls - Left. Only the yellow dot does anything
+              (collapse/expand); the red and green dots are decoration, so
+              they are not focusable and are hidden from assistive tech. */}
           <div className="flex items-center gap-2">
+            <span aria-hidden="true" className="w-3 h-3 rounded-full bg-[#ff5f56]" />
             <button
-              className="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff4d44] transition-colors"
-              aria-label="Close"
-              title="Close"
-            />
-            <button
+              type="button"
               onClick={() => setIsMinimized(!isMinimized)}
-              className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffab00] transition-colors"
-              aria-label={isMinimized ? 'Maximize' : 'Minimize'}
-              title={isMinimized ? 'Maximize' : 'Minimize'}
-            />
-            <button
-              className="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#1fb32f] transition-colors"
-              aria-label="Maximize"
-              title="Maximize"
-            />
+              aria-expanded={!isMinimized}
+              aria-controls="terminal-code-panel"
+              aria-label={isMinimized ? 'Expand code panel' : 'Collapse code panel'}
+              className="p-1.5 -m-1.5 rounded-full focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-terminal-header focus-visible:outline-none"
+            >
+              <span className="block w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffab00] transition-colors" />
+            </button>
+            <span aria-hidden="true" className="w-3 h-3 rounded-full bg-[#27c93f]" />
           </div>
 
           {/* Spacer for center */}
@@ -136,14 +138,17 @@ export default function TerminalWindow() {
 
           {/* File Tab - Right aligned */}
           <div className="bg-zavala-terminal-bg px-4 py-1 rounded-t-md flex items-center gap-2 -mb-2">
-            <span className="text-[#3b82f6] text-xs">📄</span>
+            <span aria-hidden="true" className="text-xs">
+              📄
+            </span>
             <span className="text-zavala-terminal-text text-xs font-mono">Developer Info.ts</span>
           </div>
         </div>
 
         {/* Code Content */}
         <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          id="terminal-code-panel"
+          className={`transition-all duration-200 ease-in-out overflow-hidden ${
             isMinimized ? 'max-h-0' : 'max-h-[600px]'
           }`}
         >

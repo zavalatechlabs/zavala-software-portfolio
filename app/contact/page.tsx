@@ -1,9 +1,20 @@
 import type { Metadata } from 'next'
 import { ContactForm } from '@/components/contact/ContactForm'
 
+const PAGE_TITLE = 'Contact'
+const PAGE_DESCRIPTION = 'Get in touch with me for projects, collaborations, or just to say hi'
+
 export const metadata: Metadata = {
-  title: 'Contact',
-  description: 'Get in touch with me for projects, collaborations, or just to say hi',
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
+  alternates: {
+    canonical: '/contact',
+  },
+  openGraph: {
+    title: PAGE_TITLE,
+    description: PAGE_DESCRIPTION,
+    url: '/contact',
+  },
 }
 
 export default function ContactPage() {

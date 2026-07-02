@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useInView } from 'framer-motion'
+import { useInView } from '@/hooks/useInView'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface DecipherTextProps {
@@ -20,9 +20,8 @@ export function DecipherText({
   const prefersReducedMotion = useReducedMotion()
   const [displayText, setDisplayText] = useState(text)
   const [hasAnimated, setHasAnimated] = useState(false)
-  const ref = useRef<HTMLSpanElement>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.5 })
+  const [ref, isInView] = useInView<HTMLSpanElement>({ once: true, amount: 0.5 })
 
   useEffect(() => {
     if (!isInView || hasAnimated || prefersReducedMotion) return
@@ -76,9 +75,11 @@ export function DecipherText({
     }
   }, [isInView, text, duration, hasAnimated, staggerDelay, prefersReducedMotion])
 
+  // aria-label keeps a stable accessible name while the visible text cycles
+  // through scramble characters; the animated text is hidden from AT.
   return (
-    <span ref={ref} className={className}>
-      {displayText}
+    <span ref={ref} className={className} aria-label={text}>
+      <span aria-hidden="true">{displayText}</span>
     </span>
   )
 }

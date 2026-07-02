@@ -7,11 +7,15 @@ This directory contains static assets served directly by Next.js.
 ```
 public/
 ├── images/
-│   └── projects/       # Project screenshots and images
-├── resume.pdf          # Downloadable resume (to be added)
-├── favicon.ico         # Favicon (to be added)
+│   └── projects/       # Project illustrations (SVG)
+├── icon-192.png        # PWA icon (referenced by app/manifest.ts)
+├── icon-512.png        # PWA icon (referenced by app/manifest.ts)
+├── resume.pdf          # Downloadable resume
 └── README.md           # This file
 ```
+
+Favicons and OG images are generated from code: `app/icon.tsx`,
+`app/apple-icon.tsx`, and `app/opengraph-image.tsx` (Next.js file conventions).
 
 ## Guidelines
 
@@ -24,7 +28,6 @@ public/
 
 ```tsx
 import Image from 'next/image'
-
 ;<Image
   src="/images/projects/project-screenshot.jpg"
   alt="Project screenshot"

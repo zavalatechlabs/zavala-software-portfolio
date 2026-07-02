@@ -5,7 +5,9 @@ import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { getProjectBySlug, getAllProjectSlugs } from '@/lib/projects'
-import { getBreadcrumbSchema } from '@/lib/schema'
+import { getBreadcrumbSchema, serializeJsonLd } from '@/lib/schema'
+import { SITE_URL } from '@/lib/site'
+import { buttonClasses } from '@/components/ui'
 
 type ProjectPageProps = {
   params: Promise<{
@@ -23,28 +25,25 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
-
+  // og:image / twitter:image intentionally omitted: project illustrations are
+  // SVGs, which social crawlers do not render. Pages inherit the generated
+  // PNG from app/opengraph-image.tsx instead.
   return {
     title: project.title,
     description: project.description,
     openGraph: {
       title: project.title,
       description: project.description,
-      url: `${baseUrl}/projects/${slug}`,
+      url: `/projects/${slug}`,
       type: 'article',
-      images: project.image
-        ? [{ url: project.image, width: 1200, height: 630, alt: project.title }]
-        : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: project.title,
       description: project.description,
-      images: project.image ? [project.image] : undefined,
     },
     alternates: {
-      canonical: `${baseUrl}/projects/${slug}`,
+      canonical: `/projects/${slug}`,
     },
   }
 }
@@ -57,19 +56,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound()
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
-
   const breadcrumbJsonLd = getBreadcrumbSchema([
-    { name: 'Home', url: baseUrl },
-    { name: 'Projects', url: `${baseUrl}/projects` },
-    { name: project.title, url: `${baseUrl}/projects/${slug}` },
+    { name: 'Home', url: SITE_URL },
+    { name: 'Projects', url: `${SITE_URL}/projects` },
+    { name: project.title, url: `${SITE_URL}/projects/${slug}` },
   ])
 
   return (
     <div className="min-h-screen bg-zavala-bg-primary">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <div className="max-w-5xl mx-auto px-6 py-16 md:py-24">
         {/* Back Link */}
@@ -98,10 +95,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <div className="relative aspect-video mb-8 rounded-lg overflow-hidden border border-zavala-border">
               <Image
                 src={project.image}
-                alt={project.title}
+                alt={`${project.title} illustration`}
                 fill
+                sizes="(min-width: 1024px) 960px, 100vw"
                 className="object-cover"
                 priority
+                // Local SVG illustrations: the image optimizer rejects SVG
+                // sources unless dangerouslyAllowSVG is enabled globally.
+                unoptimized={project.image.endsWith('.svg')}
               />
             </div>
           )}
@@ -177,19 +178,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="
-                  inline-flex items-center
-                  px-6 py-3 
-                  bg-zavala-accent-primary 
-                  text-white 
-                  font-semibold 
-                  rounded-lg 
-                  transition-all duration-200
-                  hover:bg-zavala-accent-primary/90
-                  hover:shadow-lg hover:shadow-zavala-accent-primary/20
-                  hover:-translate-y-0.5
-                  active:translate-y-0
-                "
+                className={buttonClasses('primary', 'md')}
               >
                 <ExternalLink className="w-5 h-5 mr-2" aria-hidden="true" />
                 Live Demo
@@ -221,7 +210,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           prose-hr:border-zavala-border
         "
         >
-          <MDXRemote source={project.content} />
+          <MDXRemote
+            source={project.content}
+            components={{
+              // The page header already renders the project title as the
+              // page's single <h1>; demote MDX body headings one level so
+              // the document keeps a valid heading hierarchy.
+              h1: (props) => <h2 {...props} />,
+            }}
+          />
         </article>
 
         {/* Back to Projects Link (Bottom) */}

@@ -1,11 +1,11 @@
 ---
-title: "E-commerce Platform"
-description: "A modern, full-stack e-commerce platform with Stripe integration and real-time inventory management"
-date: "2026-01-15"
-tags: ["Next.js", "TypeScript", "Stripe", "PostgreSQL", "Prisma", "Tailwind CSS"]
-image: "/images/projects/ecommerce-platform.svg"
-github: "https://github.com/zavala/ecommerce-platform"
-demo: "https://ecommerce-demo.vercel.app"
+title: 'E-commerce Platform'
+description: 'A modern, full-stack e-commerce platform with Stripe integration and real-time inventory management'
+date: '2026-01-15'
+tags: ['Next.js', 'TypeScript', 'Stripe', 'PostgreSQL', 'Prisma', 'Tailwind CSS']
+image: '/images/projects/ecommerce-platform.svg'
+github: null
+demo: null
 featured: true
 ---
 
@@ -20,6 +20,7 @@ Small businesses need affordable, customizable e-commerce solutions that can han
 ## Solution
 
 Built a lightweight yet powerful e-commerce platform that provides:
+
 - **Secure Checkout:** Stripe integration with PCI-compliant payment processing
 - **Real-time Inventory:** Live stock tracking with automatic reorder notifications
 - **Admin Dashboard:** Comprehensive analytics and product management
@@ -28,18 +29,21 @@ Built a lightweight yet powerful e-commerce platform that provides:
 ## Tech Stack
 
 ### Frontend
+
 - **Next.js 14:** App Router with React Server Components
 - **TypeScript:** Type-safe development with strict mode
 - **Tailwind CSS:** Utility-first styling with custom design system
 - **Framer Motion:** Smooth animations and transitions
 
 ### Backend
+
 - **PostgreSQL:** Relational database for complex queries
 - **Prisma ORM:** Type-safe database access
 - **Stripe API:** Payment processing and subscription management
 - **NextAuth.js:** Secure authentication with multiple providers
 
 ### Infrastructure
+
 - **Vercel:** Serverless deployment with edge functions
 - **Cloudinary:** Image optimization and CDN
 - **Resend:** Transactional email service
@@ -47,18 +51,21 @@ Built a lightweight yet powerful e-commerce platform that provides:
 ## Key Features
 
 ### Customer Experience
+
 - **Smart Search:** Real-time product search with filters and suggestions
 - **Wishlist & Cart:** Persistent shopping cart across sessions
 - **Order Tracking:** Live shipment updates with carrier integration
 - **Product Reviews:** Verified purchase reviews with photo uploads
 
 ### Admin Features
+
 - **Analytics Dashboard:** Sales metrics, conversion rates, customer insights
 - **Inventory Management:** Bulk imports, stock alerts, supplier tracking
 - **Order Processing:** Automated fulfillment workflows
 - **Discount Engine:** Flexible coupon and promotion system
 
 ### Performance
+
 - **Image Optimization:** Lazy loading with progressive enhancement
 - **Edge Caching:** CDN-first architecture for global speed
 - **Database Indexing:** Optimized queries for large catalogs
@@ -67,6 +74,7 @@ Built a lightweight yet powerful e-commerce platform that provides:
 ## Technical Highlights
 
 ### Database Schema
+
 ```typescript
 model Product {
   id          String   @id @default(cuid())
@@ -84,11 +92,12 @@ model Product {
 ```
 
 ### Stripe Integration
+
 ```typescript
 export async function createCheckoutSession(items: CartItem[]) {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    line_items: items.map(item => ({
+    line_items: items.map((item) => ({
       price_data: {
         currency: 'usd',
         product_data: { name: item.name },
@@ -100,7 +109,7 @@ export async function createCheckoutSession(items: CartItem[]) {
     success_url: `${process.env.NEXT_PUBLIC_URL}/checkout/success`,
     cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
   })
-  
+
   return session
 }
 ```
@@ -108,14 +117,17 @@ export async function createCheckoutSession(items: CartItem[]) {
 ## Challenges & Solutions
 
 ### Challenge: Race Conditions in Inventory
+
 **Problem:** Multiple simultaneous purchases could oversell inventory.  
 **Solution:** Implemented database transactions with row-level locking in Prisma to ensure atomic inventory updates.
 
 ### Challenge: Image Loading Performance
+
 **Problem:** Product pages with multiple high-res images had slow initial load times.  
 **Solution:** Integrated Cloudinary for automatic format conversion (WebP/AVIF), responsive image generation, and progressive loading.
 
 ### Challenge: Cart Persistence
+
 **Problem:** Users lost cart contents when switching devices or clearing cookies.  
 **Solution:** Hybrid approach - guest carts stored in localStorage with server-side persistence for authenticated users.
 

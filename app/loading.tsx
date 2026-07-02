@@ -1,6 +1,11 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Loading page"
+      className="min-h-screen flex items-center justify-center px-6"
+    >
       <div className="max-w-2xl w-full text-center">
         {/* Spinner */}
         <div className="flex justify-center mb-8">
@@ -12,9 +17,7 @@ export default function Loading() {
         </div>
 
         {/* Loading Text */}
-        <h2 className="text-2xl md:text-3xl font-bold text-zavala-text-primary mb-4">
-          Loading...
-        </h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-zavala-text-primary mb-4">Loading...</h2>
         <p className="text-base text-zavala-text-secondary">
           Please wait while we prepare your content
         </p>

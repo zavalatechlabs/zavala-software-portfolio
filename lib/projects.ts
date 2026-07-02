@@ -1,9 +1,17 @@
 import fs from 'fs'
 import path from 'path'
+import { cache } from 'react'
 import matter from 'gray-matter'
 import { z } from 'zod'
 
 const projectsDirectory = path.join(process.cwd(), 'content/projects')
+
+/**
+ * The slug contract: file names (minus .mdx) must match this pattern.
+ * `getProjectBySlug` rejects anything else, so listing functions filter with
+ * the same rule — a file that can be listed can always be resolved.
+ */
+const SLUG_PATTERN = /^[a-z0-9-]+$/
 
 /**
  * Zod schema for MDX project frontmatter.
@@ -17,7 +25,12 @@ const projectsDirectory = path.join(process.cwd(), 'content/projects')
 export const projectMetadataSchema = z.object({
   title: z.string(),
   description: z.string(),
-  date: z.string(),
+  // A parseability check on top of z.string(): an invalid date would
+  // otherwise produce NaN sort comparisons and crash sitemap generation
+  // (`new Date(date).toISOString()`) far from the offending MDX file.
+  date: z
+    .string()
+    .refine((value) => !Number.isNaN(Date.parse(value)), 'date must be a parseable ISO date'),
   tags: z.array(z.string()),
   image: z.string().optional(),
   github: z.string().nullable().optional(),
@@ -41,6 +54,7 @@ export function getAllProjectSlugs(): string[] {
     return fileNames
       .filter((fileName) => fileName.endsWith('.mdx'))
       .map((fileName) => fileName.replace(/\.mdx$/, ''))
+      .filter((slug) => SLUG_PATTERN.test(slug))
   } catch {
     return []
   }
@@ -48,35 +62,28 @@ export function getAllProjectSlugs(): string[] {
 
 /**
  * Get all projects sorted by date (newest first).
+ *
+ * Wrapped in React's `cache()` so repeated calls within a single render pass
+ * (listing page + featured section + sitemap during one build) parse the MDX
+ * files from disk only once.
  */
-export function getAllProjects(): Project[] {
-  const fileNames = (() => {
-    try {
-      return fs.readdirSync(projectsDirectory)
-    } catch {
-      return []
+export const getAllProjects = cache((): Project[] => {
+  const projects = getAllProjectSlugs().map((slug) => {
+    const fullPath = path.join(projectsDirectory, `${slug}.mdx`)
+    const fileContents = fs.readFileSync(fullPath, 'utf8')
+    const { data, content } = matter(fileContents)
+
+    const metadata = projectMetadataSchema.parse(data)
+
+    return {
+      slug,
+      content,
+      ...metadata,
     }
-  })()
-
-  const projects = fileNames
-    .filter((fileName) => fileName.endsWith('.mdx'))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.mdx$/, '')
-      const fullPath = path.join(projectsDirectory, fileName)
-      const fileContents = fs.readFileSync(fullPath, 'utf8')
-      const { data, content } = matter(fileContents)
-
-      const metadata = projectMetadataSchema.parse(data)
-
-      return {
-        slug,
-        content,
-        ...metadata,
-      }
-    })
+  })
 
   return projects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}
+})
 
 /**
  * Get featured projects, optionally limited to a maximum count.
@@ -97,7 +104,7 @@ export function getFeaturedProjects(limit?: number): Project[] {
  */
 export function getProjectBySlug(slug: string): Project | undefined {
   // Reject slugs with dots, slashes, spaces, uppercase, etc. (defense-in-depth)
-  if (!/^[a-z0-9-]+$/.test(slug)) return undefined
+  if (!SLUG_PATTERN.test(slug)) return undefined
 
   try {
     const fullPath = path.join(projectsDirectory, `${slug}.mdx`)

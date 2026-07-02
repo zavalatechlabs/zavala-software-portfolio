@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import typography from '@tailwindcss/typography'
 
 const config: Config = {
   darkMode: 'class',
@@ -25,11 +26,18 @@ const config: Config = {
             inverse: 'var(--text-inverse)',
           },
           accent: {
-            primary: '#3b82f6',
-            secondary: '#10b981',
-            code: '#f97316',
-            warning: '#f59e0b',
-            error: '#ef4444',
+            // Theme-aware: light mode uses darker shades so accent text
+            // meets WCAG AA contrast on white backgrounds.
+            primary: {
+              DEFAULT: 'var(--accent-primary)',
+              // Fill color for solid buttons: white text on this passes AA
+              // (4.5:1+) in BOTH themes. The DEFAULT shade is for text/icons.
+              strong: '#2563eb',
+            },
+            secondary: 'var(--accent-secondary)',
+            code: 'var(--accent-code)',
+            warning: 'var(--accent-warning)',
+            error: 'var(--accent-error)',
           },
           terminal: {
             bg: 'var(--terminal-bg)',
@@ -55,6 +63,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typography],
 }
 export default config

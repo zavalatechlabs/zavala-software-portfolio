@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { FileQuestion, Home, ArrowLeft } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { Button, ButtonLink } from '@/components/ui'
 import { useRouter } from 'next/navigation'
 
 export default function NotFound() {
@@ -30,53 +30,47 @@ export default function NotFound() {
 
         {/* Description */}
         <p className="text-lg text-zavala-text-secondary mb-12 leading-relaxed max-w-lg mx-auto">
-          Looks like you&apos;ve ventured into uncharted territory. The page you&apos;re looking for 
+          Looks like you&apos;ve ventured into uncharted territory. The page you&apos;re looking for
           doesn&apos;t exist or has been moved.
         </p>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <Link href="/" className="w-full sm:w-auto">
-            <Button
-              variant="primary"
-              size="md"
-              className="w-full"
-            >
-              <Home className="w-5 h-5 mr-2" />
-              Go Home
-            </Button>
-          </Link>
+          <ButtonLink href="/" variant="primary" size="md" className="w-full sm:w-auto">
+            <Home className="w-5 h-5 mr-2" aria-hidden="true" />
+            Go Home
+          </ButtonLink>
           <Button
             variant="secondary"
             size="md"
             className="w-full sm:w-auto"
             onClick={() => router.back()}
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
+            <ArrowLeft className="w-5 h-5 mr-2" aria-hidden="true" />
             Go Back
           </Button>
         </div>
 
         {/* Quick Links */}
-        <div className="p-6 bg-zavala-bg-surface border border-zavala-border-default rounded-lg">
+        <div className="p-6 bg-zavala-bg-surface border border-zavala-border rounded-lg">
           <h3 className="text-sm font-semibold text-zavala-text-secondary mb-4 uppercase tracking-wide">
             You might be looking for:
           </h3>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link 
-              href="/projects" 
+            <Link
+              href="/projects"
               className="px-4 py-2 bg-zavala-bg-elevated hover:bg-zavala-bg-primary border border-zavala-border-subtle rounded-lg text-zavala-text-primary text-sm font-medium transition-colors"
             >
               Projects
             </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className="px-4 py-2 bg-zavala-bg-elevated hover:bg-zavala-bg-primary border border-zavala-border-subtle rounded-lg text-zavala-text-primary text-sm font-medium transition-colors"
             >
               About Me
             </Link>
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               className="px-4 py-2 bg-zavala-bg-elevated hover:bg-zavala-bg-primary border border-zavala-border-subtle rounded-lg text-zavala-text-primary text-sm font-medium transition-colors"
             >
               Contact

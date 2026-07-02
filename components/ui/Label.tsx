@@ -6,18 +6,10 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean
 }
 
-export function Label({ 
-  children, 
-  required = false, 
-  className, 
-  ...props 
-}: LabelProps) {
+export function Label({ children, required = false, className, ...props }: LabelProps) {
   return (
     <label
-      className={clsx(
-        'block text-sm font-medium text-zavala-text-secondary mb-2',
-        className
-      )}
+      className={clsx('block text-sm font-medium text-zavala-text-secondary mb-2', className)}
       {...props}
     >
       {children}

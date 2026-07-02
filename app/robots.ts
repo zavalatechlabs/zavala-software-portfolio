@@ -1,8 +1,7 @@
 import { MetadataRoute } from 'next'
+import { SITE_URL as baseUrl } from '@/lib/site'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
-
   return {
     rules: [
       {

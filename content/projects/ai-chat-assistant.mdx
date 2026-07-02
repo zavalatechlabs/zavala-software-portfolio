@@ -1,11 +1,11 @@
 ---
-title: "AI Chat Assistant"
-description: "Intelligent conversational AI powered by OpenAI and LangChain with context-aware responses and memory"
-date: "2026-02-01"
-tags: ["Python", "OpenAI", "LangChain", "FastAPI", "Redis", "Docker"]
-image: "/images/projects/ai-chat-assistant.svg"
-github: "https://github.com/zavala/ai-chat-assistant"
-demo: "https://ai-chat-demo.vercel.app"
+title: 'AI Chat Assistant'
+description: 'Intelligent conversational AI powered by OpenAI and LangChain with context-aware responses and memory'
+date: '2026-02-01'
+tags: ['Python', 'OpenAI', 'LangChain', 'FastAPI', 'Redis', 'Docker']
+image: '/images/projects/ai-chat-assistant.svg'
+github: null
+demo: null
 featured: true
 ---
 
@@ -20,6 +20,7 @@ Businesses need intelligent chat assistants that can understand context, remembe
 ## Solution
 
 Developed a production-ready AI chat system with:
+
 - **Context Management:** Long-term conversation memory across sessions
 - **Document Grounding:** RAG (Retrieval Augmented Generation) for accurate answers
 - **Custom Personalities:** Configurable tone, expertise, and response style
@@ -28,6 +29,7 @@ Developed a production-ready AI chat system with:
 ## Tech Stack
 
 ### Backend
+
 - **Python 3.11:** Core application with async/await patterns
 - **FastAPI:** High-performance API framework with WebSocket support
 - **LangChain:** LLM orchestration and chain management
@@ -36,12 +38,14 @@ Developed a production-ready AI chat system with:
 - **PostgreSQL:** User data and analytics
 
 ### Frontend
+
 - **Next.js:** React-based web interface
 - **TypeScript:** Type-safe client implementation
 - **Tailwind CSS:** Responsive chat UI
 - **Server-Sent Events:** Real-time streaming responses
 
 ### Infrastructure
+
 - **Docker:** Containerized deployment
 - **Nginx:** Reverse proxy and load balancing
 - **Prometheus:** Metrics and monitoring
@@ -50,24 +54,28 @@ Developed a production-ready AI chat system with:
 ## Key Features
 
 ### Conversation Management
+
 - **Session Persistence:** Resume conversations across multiple visits
 - **Context Windows:** Intelligent truncation of long conversations
 - **Memory Types:** Short-term working memory + long-term semantic memory
 - **Thread Branching:** Explore alternative conversation paths
 
 ### Document Intelligence
+
 - **Vector Storage:** Embeddings-based document retrieval with Pinecone
 - **Semantic Search:** Find relevant context from large knowledge bases
 - **Citation Generation:** Reference sources in responses
 - **Multi-Format Support:** PDF, Markdown, HTML, plain text
 
 ### Customization
+
 - **System Prompts:** Define assistant personality and expertise
 - **Temperature Control:** Adjust response creativity
 - **Token Limits:** Budget-aware response generation
 - **Function Calling:** Tool use for calculations, lookups, API calls
 
 ### Admin Features
+
 - **Analytics Dashboard:** Usage metrics, popular queries, user satisfaction
 - **A/B Testing:** Compare different prompting strategies
 - **Cost Tracking:** Per-user and per-session token usage
@@ -76,6 +84,7 @@ Developed a production-ready AI chat system with:
 ## Technical Highlights
 
 ### LangChain Implementation
+
 ```python
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
@@ -98,13 +107,14 @@ qa_chain = ConversationalRetrievalChain.from_llm(
 ```
 
 ### Streaming Response
+
 ```python
 @app.post("/chat/stream")
 async def stream_chat(message: ChatMessage):
     async def generate():
         async for chunk in llm.astream(message.content):
             yield f"data: {json.dumps({'token': chunk})}\n\n"
-    
+
     return StreamingResponse(
         generate(),
         media_type="text/event-stream"
@@ -112,18 +122,19 @@ async def stream_chat(message: ChatMessage):
 ```
 
 ### Memory Management
+
 ```python
 class ConversationMemory:
     def __init__(self, redis_client: Redis, max_tokens: int = 2000):
         self.redis = redis_client
         self.max_tokens = max_tokens
-    
+
     async def add_message(self, session_id: str, role: str, content: str):
         key = f"conversation:{session_id}"
         message = {"role": role, "content": content, "timestamp": time.time()}
         await self.redis.lpush(key, json.dumps(message))
         await self.redis.expire(key, 86400)  # 24 hour TTL
-    
+
     async def get_history(self, session_id: str) -> List[dict]:
         key = f"conversation:{session_id}"
         messages = await self.redis.lrange(key, 0, -1)
@@ -133,18 +144,22 @@ class ConversationMemory:
 ## Challenges & Solutions
 
 ### Challenge: Token Budget Management
+
 **Problem:** Long conversations exceed GPT-4's context window (8k tokens), causing errors.  
 **Solution:** Implemented sliding window memory with semantic summarization - old messages are compressed into summaries while preserving key information.
 
 ### Challenge: Hallucination Prevention
+
 **Problem:** Model sometimes generated confident but incorrect answers.  
 **Solution:** RAG architecture with citation requirements - every factual claim must reference a source document or the model admits uncertainty.
 
 ### Challenge: Latency Issues
+
 **Problem:** Cold starts and large context windows caused slow responses (5-10s).  
 **Solution:** Response streaming, prompt caching, and warm standby replicas reduced perceived latency to less than 1s.
 
 ### Challenge: Cost Optimization
+
 **Problem:** GPT-4 API costs scaled linearly with usage.  
 **Solution:** Hybrid model approach - GPT-3.5 for simple queries, GPT-4 for complex reasoning, with automatic fallback.
 

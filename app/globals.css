@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  /* Default to dark theme */
+  /* Light theme values. Dark theme (the default, applied via the `dark`
+     class by next-themes) overrides these below. */
   :root {
     --bg-primary: #ffffff;
     --bg-surface: #f5f5f5;
@@ -13,8 +14,15 @@
     --border-strong: #a3a3a3;
     --text-primary: #0a0a0a;
     --text-secondary: #525252;
-    --text-tertiary: #737373;
+    --text-tertiary: #6b6b6b;
     --text-inverse: #ffffff;
+
+    /* Accent colors - Light mode (darker shades: AA contrast on white) */
+    --accent-primary: #2563eb;
+    --accent-secondary: #047857;
+    --accent-code: #c2410c;
+    --accent-warning: #b45309;
+    --accent-error: #dc2626;
 
     /* Terminal colors - Light mode */
     --terminal-bg: #ffffff;
@@ -42,8 +50,16 @@
     --border-strong: #4a4a4a;
     --text-primary: #f5f5f5;
     --text-secondary: #a3a3a3;
-    --text-tertiary: #737373;
+    /* #8a8a8a (not #737373): >=4.5:1 on both bg-primary and bg-surface */
+    --text-tertiary: #8a8a8a;
     --text-inverse: #0a0a0a;
+
+    /* Accent colors - Dark mode (brighter shades: AA contrast on near-black) */
+    --accent-primary: #3b82f6;
+    --accent-secondary: #10b981;
+    --accent-code: #f97316;
+    --accent-warning: #f59e0b;
+    --accent-error: #ef4444;
 
     /* Terminal colors - Dark mode */
     --terminal-bg: #1e1e1e;
@@ -139,9 +155,64 @@
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Entrance animations.
+   Server-rendered content stays in the HTML and animates via CSS only, so
+   first paint never waits on JavaScript. `both` fill-mode keeps elements
+   hidden through their stagger delay, and the reduced-motion block below
+   collapses every animation to its final frame. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise-in {
+  animation: rise-in 0.5s cubic-bezier(0.6, 0.05, 0.01, 0.9) both;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out both;
+}
+
+/* Scroll-reveal elements: hidden until useInView adds `.is-in-view`.
+   Uses a transition (not animation) so content is fully visible without
+   JavaScript only after the reduced-motion block or :not() fallback —
+   the `no-js-visible` guard below keeps content visible if JS never runs. */
+.fade-in-view {
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.fade-in-view.is-in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Without JavaScript the IntersectionObserver never fires; keep content
+   visible rather than permanently hidden. */
+@media (scripting: none) {
+  .fade-in-view {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -151,16 +222,22 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0.01ms !important;
+  }
+
+  .fade-in-view {
+    opacity: 1;
+    transform: none;
   }
 }
 
 /* Print stylesheet */
 @media print {
   nav,
-  footer,
-  .no-print {
+  footer {
     display: none !important;
   }
   body {

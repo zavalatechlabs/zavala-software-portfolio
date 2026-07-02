@@ -13,23 +13,30 @@ export function ThemeToggle() {
   }, [])
 
   if (!mounted) {
+    // Pre-hydration placeholder keeps layout stable. It is inert, so it must
+    // not be focusable or announced as an actionable control.
     return (
       <button
-        className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:outline-none"
-        aria-label="Toggle theme"
+        disabled
+        aria-hidden="true"
+        tabIndex={-1}
+        className="p-2 rounded-lg bg-zavala-bg-surface"
       >
         <div className="w-5 h-5" />
       </button>
     )
   }
 
+  const isDark = theme === 'dark'
+
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-pressed={isDark}
+      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
       className="p-2 rounded-lg bg-zavala-bg-surface hover:bg-zavala-bg-elevated transition-colors focus-visible:ring-2 focus-visible:ring-zavala-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zavala-bg-primary focus-visible:outline-none"
-      aria-label="Toggle theme"
     >
-      {theme === 'dark' ? (
+      {isDark ? (
         <svg
           className="w-5 h-5 text-zavala-text-secondary"
           fill="none"

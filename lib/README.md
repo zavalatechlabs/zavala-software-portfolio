@@ -4,18 +4,23 @@ This directory contains utility functions and helper modules.
 
 ## Files
 
-- **utils.ts** - General utility functions (class merging, date formatting, etc.)
-- **getProjects.ts** - MDX file reader and parser for project content (to be created)
-- **email.ts** - Email sending utilities with Resend (to be created)
+- **projects.ts** - MDX file reader/parser with Zod-validated frontmatter
+- **email.ts** - Email sending via Resend (timeout guard, header sanitization, error handling)
+- **validation.ts** - Server-side Zod schema for the contact form
+- **contact-form.ts** - Client-safe field limits/messages and per-field validator (no Zod in the client bundle)
+- **rate-limit.ts** - Upstash-backed rate limiter with in-memory fallback
+- **env.ts** - Lazy, Zod-validated server environment access
+- **logger.ts** - Structured logger with PII redaction in production
+- **schema.ts** - JSON-LD builders and safe serializer
+- **site.ts** - Shared site URL/title/description constants
 
 ## Usage
 
 ```typescript
-import { cn, formatDate } from '@/lib/utils'
+import { getAllProjects, getProjectBySlug } from '@/lib/projects'
+import { validateContactField } from '@/lib/contact-form'
+import { SITE_URL } from '@/lib/site'
 
-// Merge Tailwind classes
-const className = cn('text-lg', isActive && 'font-bold', 'text-gray-900')
-
-// Format dates
-const formattedDate = formatDate('2024-01-01') // "January 1, 2024"
+const projects = getAllProjects() // newest first, Zod-validated frontmatter
+const nameError = validateContactField('name', value) // string | null
 ```

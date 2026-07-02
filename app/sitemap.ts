@@ -1,14 +1,13 @@
 import { MetadataRoute } from 'next'
 import { getAllProjects } from '@/lib/projects'
+import { SITE_URL as baseUrl } from '@/lib/site'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://zavalatechlabs.com'
-
-  const projects = await getAllProjects()
+  const projects = getAllProjects()
 
   // Use the most recent project date for pages that change when projects are added
-  const latestProjectDate =
-    projects.length > 0 ? new Date(projects[0].date) : new Date('2026-04-12')
+  const newestProject = projects[0]
+  const latestProjectDate = newestProject ? new Date(newestProject.date) : new Date('2026-04-12')
 
   // Static pages — use fixed dates to avoid telling search engines every page
   // changed on every build. Update these when page content actually changes.

@@ -3,39 +3,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ContactForm } from '../ContactForm'
 
-// Mock useReducedMotion hook — default to no reduced motion
-jest.mock('@/hooks/useReducedMotion', () => ({
-  useReducedMotion: () => false,
-}))
-
-// Mock framer-motion to avoid animation complexities in tests
-jest.mock('framer-motion', () => ({
-  motion: {
-    p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-      <p {...props}>{children}</p>
-    ),
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-      <div {...props}>{children}</div>
-    ),
-  },
-}))
-
 describe('ContactForm', () => {
-  // Mock Date.now so the timing-based honeypot (2 s minimum) never triggers.
-  // Render "happens" at t = 0; every subsequent call returns t = 10 000.
-  let dateNowCallCount: number
-
   beforeEach(() => {
     // Reset fetch mock before each test
     global.fetch = jest.fn()
-
-    dateNowCallCount = 0
-    jest.spyOn(Date, 'now').mockImplementation(() => {
-      dateNowCallCount++
-      // First call is inside useRef(Date.now()) during mount → returns 0
-      // All later calls (inside handleSubmit) → return 10 000 (well past 2 s)
-      return dateNowCallCount === 1 ? 0 : 10000
-    })
   })
 
   afterEach(() => {
@@ -280,21 +251,19 @@ describe('ContactForm', () => {
 
   describe('Loading State', () => {
     it('shows loading spinner during submission', async () => {
-      const mockFetch = jest
-        .fn()
-        .mockImplementation(
-          () =>
-            new Promise((resolve) =>
-              setTimeout(
-                () =>
-                  resolve({
-                    ok: true,
-                    json: async () => ({ success: true, message: 'Message sent successfully!' }),
-                  }),
-                100
-              )
+      const mockFetch = jest.fn().mockImplementation(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  json: async () => ({ success: true, message: 'Message sent successfully!' }),
+                }),
+              100
             )
-        )
+          )
+      )
       global.fetch = mockFetch
 
       render(<ContactForm />)
@@ -316,21 +285,19 @@ describe('ContactForm', () => {
     })
 
     it('disables all inputs during submission', async () => {
-      const mockFetch = jest
-        .fn()
-        .mockImplementation(
-          () =>
-            new Promise((resolve) =>
-              setTimeout(
-                () =>
-                  resolve({
-                    ok: true,
-                    json: async () => ({ success: true, message: 'Message sent successfully!' }),
-                  }),
-                100
-              )
+      const mockFetch = jest.fn().mockImplementation(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  json: async () => ({ success: true, message: 'Message sent successfully!' }),
+                }),
+              100
             )
-        )
+          )
+      )
       global.fetch = mockFetch
 
       render(<ContactForm />)
@@ -537,9 +504,16 @@ describe('ContactForm', () => {
       expect(messageInput.value).toBe('This is a test message.')
     })
 
-    it('logs error to console on submission failure', async () => {
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
-      const mockFetch = jest.fn().mockRejectedValue(new Error('Network error'))
+    it('shows the rate-limit message on a 429 response', async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 429,
+        json: async () => ({
+          success: false,
+          message: 'Too many requests',
+          code: 'rate_limited',
+        }),
+      })
       global.fetch = mockFetch
 
       render(<ContactForm />)
@@ -551,10 +525,61 @@ describe('ContactForm', () => {
       fireEvent.click(screen.getByRole('button', { name: /send message/i }))
 
       await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Form submission error:', expect.any(Error))
+        expect(screen.getByText(/too many messages/i)).toBeInTheDocument()
       })
+    })
 
-      consoleErrorSpy.mockRestore()
+    it('maps server-side validation details onto field errors', async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 400,
+        json: async () => ({
+          success: false,
+          message: 'Validation failed',
+          code: 'validation_error',
+          details: [{ field: 'email', message: 'Invalid email address' }],
+        }),
+      })
+      global.fetch = mockFetch
+
+      render(<ContactForm />)
+
+      // Client validation is bypassed here by typing values the client
+      // accepts; the server response drives the error display.
+      await userEvent.type(screen.getByLabelText(/name/i), 'John Doe')
+      await userEvent.type(screen.getByLabelText(/email/i), 'john@weird-but-client-ok.x')
+      await userEvent.type(screen.getByLabelText(/message/i), 'This is a test message.')
+
+      fireEvent.click(screen.getByRole('button', { name: /send message/i }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/invalid email address/i)).toBeInTheDocument()
+      })
+      // Field-level errors, not the generic banner
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    })
+
+    it('shows the generic error when the response body is not JSON', async () => {
+      const mockFetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 502,
+        json: async () => {
+          throw new Error('not json')
+        },
+      })
+      global.fetch = mockFetch
+
+      render(<ContactForm />)
+
+      await userEvent.type(screen.getByLabelText(/name/i), 'John Doe')
+      await userEvent.type(screen.getByLabelText(/email/i), 'john@example.com')
+      await userEvent.type(screen.getByLabelText(/message/i), 'This is a test message.')
+
+      fireEvent.click(screen.getByRole('button', { name: /send message/i }))
+
+      await waitFor(() => {
+        expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+      })
     })
   })
 })

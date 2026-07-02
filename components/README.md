@@ -6,12 +6,16 @@ This directory contains reusable React components used throughout the applicatio
 
 ```
 components/
-├── ui/                 # Shared UI components (buttons, inputs, cards)
-├── Navbar.tsx         # Navigation bar component
-├── Footer.tsx         # Footer component
-├── ProjectCard.tsx    # Project card for listing projects
-├── ContactForm.tsx    # Contact form (client component)
-└── README.md          # This file
+├── ui/                     # Shared UI primitives (Button, ButtonLink, Card, Input, Textarea, Label)
+├── animations/             # CSS-driven entrance animations (HeroNameReveal, FadeInView, DecipherText)
+├── contact/                # ContactForm (client component)
+├── Navbar.tsx              # Navigation bar (client: mobile menu state)
+├── Footer.tsx              # Footer (server component)
+├── LazyTerminalWindow.tsx  # Loads TerminalWindow when the footer nears the viewport
+├── TerminalWindow.tsx      # Decorative code terminal (client: collapse toggle)
+├── ThemeProvider.tsx       # next-themes provider
+├── ThemeToggle.tsx         # Dark/light toggle with hydration guard
+└── README.md               # This file
 ```
 
 ## Guidelines
